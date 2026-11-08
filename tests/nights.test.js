@@ -15,7 +15,7 @@ test("the sample month has exactly one night with a still face, and it is the ca
   const still = m.filter((n) => n.kind === "no_pulse");
   assert.equal(still.length, 1);
   assert.equal(still[0].date, "2026-11-02");
-  assert.equal(still[0].caseId, "the-coat");
+  assert.equal(still[0].caseId, "the-door");
 });
 test("totals count only opened nights", () => {
   const t = monthTotals(sampleMonth());

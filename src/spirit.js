@@ -21,14 +21,14 @@ export function answer(qid, ev) {
   const jump = find(ev, "pulse_jump"), shadow = find(ev, "only_shadow");
   const pick = {
     who: face2 && {
-      board: "BEHIND THE COAT", cites: [face2.id],
-      luna: `It says it was behind the coat. Presage counted a second face from second ${sec(face2.t0)}.`,
-      bigotes: `Two faces in the frame is what the SDK reported. It does not say whose.`,
+      board: "BEHIND HER", cites: [face2.id],
+      luna: `It says it stood behind her. Presage counted a second face from second ${sec(face2.t0)}, and she never turned around.`,
+      bigotes: `Two faces in the frame is what the SDK reported. It does not say whose. A reflection counts too.`,
     },
     alive: still ? {
       board: "NO", cites: [still.id],
-      luna: `No. The face on the wall gave 0 beats while the scope watched it.`,
-      bigotes: `A face with no pulse is a photo, a mask or a screen. Ordinary, but it is a face.`,
+      luna: `No. That face gave 0 beats while the scope watched it. Nothing alive holds that still.`,
+      bigotes: `A face with no pulse is a photo, a mask or a screen. Ordinary. I just cannot tell you who put it there.`,
     } : shadow && {
       board: "NO FACE", cites: [shadow.id],
       luna: `It has no face to show us. Only a shape.`,
@@ -36,20 +36,20 @@ export function answer(qid, ev) {
     },
     why: (held || jump) && {
       board: "DONT GO", cites: [held?.id, jump?.id].filter(Boolean),
-      luna: held ? `She held her breath at second ${sec(held.t0)}. That is when it whispered: don't go.` : `Her pulse jumped. That is when it reached her.`,
-      bigotes: jump ? `Her pulse rose ${Math.round(jump.value)} bpm in a few seconds. A startle does that. So does a flickering lamp.` : `Holding your breath is what people do when they listen.`,
+      luna: held ? `She held her breath at second ${sec(held.t0)}. She felt it, she never saw it. It was telling her: don't go.` : `Her pulse jumped. That is when it reached her.`,
+      bigotes: jump ? `Her pulse rose ${Math.round(jump.value)} bpm in a few seconds. A startle does that. So does a flickering lamp. A bad feeling is not a ghost.` : `Holding your breath is what people do when they listen.`,
     },
     where: face2 && {
-      board: "UNDER THE COAT", cites: [face2.id],
-      luna: `She hung the coat back at second ${sec(face2.t1)}. It is still there. Under the coat.`,
-      bigotes: `The second face disappeared at second ${sec(face2.t1)}, when the coat went back on the stand. Covered, not gone.`,
+      board: "STILL INSIDE", cites: [face2.id],
+      luna: `The second face left the frame at second ${sec(face2.t1)}. The glass says it did not leave the house.`,
+      bigotes: `The SDK stopped counting a second face at second ${sec(face2.t1)}. People walk out of frame. That is all I can sign.`,
     },
     bye: { board: "GOODBYE", cites: ev.slice(0, 1).map((e) => e.id), luna: `It said goodbye.`, bigotes: `Session closed.` },
     // Luna's last question, asked on her own after GOODBYE. The glass moves without waiting for a breath.
     return: (still || face2) && {
       board: "I AM HERE", cites: [(still || face2).id],
-      luna: `It never left. The face is still on the wall, under the coat.`,
-      bigotes: `Okay. There is no explanation for that.`,
+      luna: `It never left. It is still in the hallway, right where she cannot see it.`,
+      bigotes: `Okay. I have no explanation for that. Yet.`,
     },
   }[qid];
   if (!pick) return { board: "NO", cites: [], luna: "The glass will not move.", bigotes: "Nothing measured to answer with.", vanished: true };
@@ -69,13 +69,18 @@ export function reading(ev) {
   if (still) lines.push({ who: "bigotes", text: `I pointed the scope at it for ${Math.round(still.t1 - still.t0)} seconds. 0 beats per minute. A living face in good light shows a pulse; this one showed none.`, cites: [still.id] });
   if (held) lines.push({ who: "luna", text: `She stopped at the door and held her breath for ${held.value} seconds.`, cites: [held.id] });
   if (jump) lines.push({ who: "bigotes", text: `Then her pulse rose ${jump.value} bpm. A startle, most likely.`, cites: [jump.id] });
+  // Luna reads what the spirit meant, Bigotes refuses to. The case never settles it.
+  if (still && held) {
+    lines.push({ who: "luna", text: `Here is what I think it meant. It stood behind her and she stayed home. It was not hunting her. It was keeping her in.`, cites: [still.id, held.id] });
+    lines.push({ who: "bigotes", text: `Or a dark hallway and a bad feeling. I measured a face with no pulse. I did not measure a ghost.`, cites: [still.id] });
+  }
   return lines.filter((l) => !citeOrVanish(l, ev));
 }
 
 /** Who answers: a fictional spirit chosen from the evidence, like a case file card. */
 export function spiritFor(ev) {
   const still = find(ev, "no_pulse"), held = find(ev, "held_breath"), face2 = find(ev, "second_face");
-  if (still && held) return { archetype: "The Guardian", name: "Odette", story: "The woman in the oval portrait. She has watched this hallway for a long time.", goal: "to keep whoever lives here inside tonight", cites: [still.id, held.id] };
+  if (still && held) return { archetype: "The Guardian", name: "Odette", story: "The shape at the foot of the stairs. She has stood in this hallway for a long time.", goal: "to keep whoever lives here inside tonight", cites: [still.id, held.id] };
   if (still) return { archetype: "The Watcher", name: "Odette", story: "A face on the wall that never blinks.", goal: "to be noticed", cites: [still.id] };
   if (face2) return { archetype: "The Visitor", name: "Nobody", story: "A second face the scope could not place.", goal: "unknown", cites: [face2.id] };
   return null;
@@ -87,7 +92,7 @@ export function matchQuestion(text) {
   const rules = [
     ["bye", /\b(bye|goodbye|leave|adeus|tchau)\b/],
     ["alive", /\b(alive|dead|breath|breathe|heart|pulse|vivo|viva|morto|morta|coração|respira)/],
-    ["where", /\b(where|now|still|coat|onde|agora|casaco)\b/],
+    ["where", /\b(where|now|still|shadow|onde|agora|vulto|sombra)\b/],
     ["why", /\b(why|stop|stopped|door|stay|warn|por ?que|porta|ficar|parou)\b/],
     ["who", /\b(who|name|you|quem|nome)\b/],
   ];

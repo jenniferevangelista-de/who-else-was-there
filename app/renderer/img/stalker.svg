@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 80 150" role="img" aria-label="A tall shadow with pale eyes">
+  <defs><radialGradient id="g" cx=".5" cy=".3" r=".8"><stop offset="0" stop-color="#1b1228"/><stop offset="1" stop-color="#050308"/></radialGradient></defs>
+  <path d="M40 3C24 3 18 16 19 30c-13 8-16 34-17 60-1 22-2 44-1 58l9-11 8 11 9-11 8 11 9-11 8 11 9-11 8 11 8-11c1-14 0-36-1-58-1-26-4-52-17-60 1-14-5-27-21-27z" fill="url(#g)"/>
+  <ellipse cx="31" cy="27" rx="4" ry="6" fill="#ff8aa0"/><ellipse cx="49" cy="27" rx="4" ry="6" fill="#ff8aa0"/>
+  <path d="M34 41h12" stroke="#ff8aa0" stroke-width="1.5" stroke-linecap="round" opacity=".6"/>
+</svg>

@@ -30,8 +30,8 @@ export function sampleMonth() {
     if ([3, 11, 17, 24].includes(i)) n = { date: iso, faces: 0, livingFaces: 0, stillFaces: 0 };          // she was out
     if (iso === "2026-10-18") n = { date: iso, faces: 2, livingFaces: 2, stillFaces: 0, note: "Her sister visited. Two faces, two pulses." };
     if (iso === "2026-10-31") n = { date: iso, faces: 3, livingFaces: 3, stillFaces: 0, note: "Halloween. Three trick-or-treaters at the door, all alive." };
-    if (iso === "2026-11-02") n = { date: iso, faces: 2, livingFaces: 1, stillFaces: 1, caseId: "the-coat", note: "The night she did not go out." };
-    if (iso === "2026-11-03") n = { date: iso, locked: true, note: "Case 02. The coat is on the floor." };
+    if (iso === "2026-11-02") n = { date: iso, faces: 2, livingFaces: 1, stillFaces: 1, caseId: "the-door", note: "The night she did not go out." };
+    if (iso === "2026-11-03") n = { date: iso, locked: true, note: "Case 02. It is outside her bedroom." };
     if (iso === "2026-11-04") n = { date: iso, locked: true, note: "Not sent yet." };
     nights.push({ ...n, kind: nightKind(n) });
   }

@@ -4,7 +4,8 @@ import { answer, reading, QUESTIONS, spiritFor, matchQuestion, roomEvidence } fr
 import { sampleScans, SAMPLE_CASE } from "../../src/sample.js";
 import { sampleMonth, monthTotals, NIGHT_LABEL } from "../../src/nights.js";
 import { createScope, scopeHTML } from "./scope.js";
-import { drawScene, marinaFace, portraitFace } from "./scene.js";
+import { drawScene, marinaFace, shadowFace } from "./scene.js";
+import { voice } from "./voice.js";
 import { boardHTML, spell } from "./board.js";
 import * as presage from "./presage.js";
 import { sound } from "./sound.js";
@@ -87,13 +88,13 @@ function tapeHTML() {
     <button class="torch" title="Flashlight">🔦</button></div>
     <div class="timeline" id="timeline"><div class="head" id="head"></div></div>`;
 }
-function playTape({ until, onTime }) {
+function playTape({ until, onTime, rate = 1 }) {
   // replay: draws the sample scene; live: plays the client's video
   return new Promise((resolve) => {
     const start = performance.now(), from = state.tapeT ?? 0;
     const cvs = $("#tape canvas"), ctx = cvs?.getContext("2d");
     const step = () => {
-      const t = state.mode === "replay" ? from + (performance.now() - start) / 1000 : state.video.currentTime;
+      const t = state.mode === "replay" ? from + ((performance.now() - start) / 1000) * rate : state.video.currentTime;
       if (ctx) drawScene(ctx, cvs.width, cvs.height, t);
       $("#stamp").textContent = `NOV 02 · 21:43:${String(Math.floor(t)).padStart(2, "0")}`;
       $("#head").style.left = (t / state.duration) * 100 + "%";
@@ -156,6 +157,49 @@ async function regionScan(region, from, to, onTick) {
   return presage.scanVideo(state.video, { region, from, to, onTick });
 }
 
+// The sample case runs itself: finds the faces, locks on the one behind her, reads it, and says so at every step.
+async function autoScope(el, scope, R, box, ov) {
+  const alive = () => document.body.contains(el);
+  const msg = (m, pct) => { $("#scanMsg", el).textContent = m; if (pct != null) $("#scanFill", el).style.width = pct + "%"; };
+  const place = (t) => { const f = shadowFace(t); Object.assign(box.style, { left: (f.x - R.w / 2) * 100 + "%", top: (f.y - R.h * 0.45) * 100 + "%", width: R.w * 100 + "%", height: R.h * 100 + "%" }); return f; };
+  const tape = $("#tape", el), st = $("#scopePoint [data-state]", el), bpm = $("#scopePoint [data-bpm]", el);
+  const C = SAMPLE_CASE, until = C.shadowOutAt - 4, from = C.shadowInAt;
+  box.style.display = "none"; tape.classList.add("sweeping"); tape.style.cursor = "default";
+  st.textContent = "SEARCHING"; msg("The scope is running. Looking for faces in the frame…", 8); sound.beep(520, 90, 0.04);
+  await sleep(1700); if (!alive()) return;
+  msg("One face with a pulse: Marina. Still looking…", 18); sound.beep(880, 80, 0.05); heartBadge(ov, { ...marinaFace(from + 4), bpm: 74 });
+  await sleep(1400); if (!alive()) return;
+  tape.classList.remove("sweeping"); place(from + 4); box.style.display = ""; box.classList.add("found"); box.querySelector(".tag").textContent = "second face";
+  st.textContent = "LOCKED ON"; msg("A second face, right behind her. Locking the scope on it…", 28); sound.sting();
+  await sleep(1500); if (!alive()) return;
+  state.tapeT = from; st.textContent = "READING";
+  await playTape({ until, rate: 2.4, onTime: (t) => {
+    place(t); bpm.textContent = "--";
+    const k = (t - from) / (until - from);
+    msg(`Analysis running, please wait. Reading its pulse: ${Math.min(100, Math.round(k * 100))}%`, 28 + 72 * k);
+    heartBadge(ov, { ...marinaFace(t), bpm: 74 });
+  } });
+  if (!alive()) return;
+  state.scans.regions = [sampleScans().regions[0]];
+  state.evidence = buildEvidence(state.scans);
+  const verdict = state.evidence.find((e) => e.region), f = place(until);
+  scope.flatline(); sound.flat(); $("#scopePoint", el).classList.add("flat"); box.classList.remove("found"); box.classList.add("flat");
+  box.querySelector(".tag").textContent = "a face · 0 bpm";
+  heartBadge(ov, { x: f.x, y: R.y + R.h + 0.2, dead: true });
+  bpm.textContent = "0"; st.textContent = "NO PULSE";
+  $("#pointNotes", el).innerHTML = `<div class="cliff" style="padding:0"><div class="line" style="font-size:40px">A face.<br><em>0 beats per minute.</em></div>
+    <p class="sub">The scope watched it for ${Math.round(verdict.t1 - verdict.t0)} seconds. It never breathed. <b>And it was standing right behind her.</b></p></div>`;
+  state.flat = true; updateNav();
+}
+
+// the crew's seats at the board; the mouths are the Witching Hour talking-face overlays
+const FACE = {
+  xochi: '<g class="jaw" style="transform-origin:120px 137px"><path d="M106 137 Q120 151 134 137 Z" fill="#2a2048" stroke="#2a2048" stroke-width="3" stroke-linejoin="round"/><path d="M114 144 Q120 154 126 144 Z" fill="#ff7a9a"/></g>',
+  bigotes: '<g class="jaw" style="transform-origin:120px 134px"><path d="M111 134 Q120 147 129 134 Q120 137 111 134 Z" fill="#2a2048"/><path d="M115 139 Q120 145 125 139 Z" fill="#ff7a9a"/></g>',
+  luna: '<defs><radialGradient id="ballpulse"><stop offset="0" stop-color="#e6d4ff" stop-opacity=".95"/><stop offset=".55" stop-color="#a77bff" stop-opacity=".55"/><stop offset="1" stop-color="#a77bff" stop-opacity="0"/></radialGradient></defs><circle class="ball" cx="120" cy="196" r="34" fill="url(#ballpulse)"/>',
+};
+const seat = (who, name) => `<span class="face ${who}"><img src="img/${who}.svg" alt="${name}"><svg class="talk-layer" viewBox="0 0 240 260" aria-hidden="true">${FACE[who]}</svg></span>`;
+
 // ------------------------------------------------------------------ screens
 const SCREENS = [
   { id: "cold", chapter: "Cold open", next: "Open the case →", html: () => `
@@ -167,7 +211,8 @@ const SCREENS = [
     </div>`,
     enter(el) {
       const ecg = createScope($("#ecg", el)); ecg.set(64);
-      setTimeout(() => { ecg.flatline(); $("#c2", el).style.cssText = "opacity:1;transition:opacity 1.2s"; }, 3200);
+      voice.say("Every face in this video has a heartbeat.");
+      setTimeout(() => { if (!document.body.contains(el)) return; ecg.flatline(); sound.flat(); voice.say("Except one."); $("#c2", el).style.cssText = "opacity:1;transition:opacity 1.2s"; }, 3200);
     } },
 
   { id: "title", chapter: "The crew",
@@ -219,24 +264,52 @@ const SCREENS = [
   { id: "case", chapter: "The case", next: "Play the tape →", html: () => `
     <div class="grid2">
       <div class="card">
-        <div class="kicker">Case 01 · The Coat · a message from Marina</div>
+        <div class="kicker">Case 01 · The Door · a message from Marina</div>
         <h2>"Something told me to stay."</h2>
-        <p class="lead">"It was the night of November 2nd. Bag ready, keys in my hand, coat on. I got to the door and I just… couldn't. I walked back and hung the coat up again. I live alone. The hallway camera was on. Can you look?"</p>
-        <p class="muted">Marina is a character, and her tape is staged for this demo with everyone's consent. The readings on the next screens are ${state.mode === "replay" ? "<b>sample numbers</b> until the staged tape is measured" : "measured from that tape by Presage SmartSpectra"}.</p>
+        <p class="lead">"It was the night of November 2nd. Bag ready, keys in my hand, coat on. Everything was fine. Then I got to the door and this feeling hit me, so strong I couldn't breathe. <b>Stay home.</b> I took my coat off and I stayed. I live alone, and I saw nothing. But the hallway camera was on. Can you look?"</p>
+        <p class="muted">Marina is a character. ${state.mode === "replay" ? "Her tape is drawn for this demo and the readings on the next screens are <b>sample numbers</b>" : "Her tape is staged for this demo with everyone's consent and the readings are measured from it by Presage SmartSpectra"}.</p>
         ${say("luna", "A woman alone, a door she couldn't open. Let's see who else was in that hallway.")}
       </div>
       <div class="card dark" style="text-align:center">
         <img src="img/wisp.svg" alt="" style="width:140px;margin:10px auto;display:block">
-        <p class="lead">Bring your own tape?</p>
-        <p class="muted">Only recordings where everyone agreed to be in them.</p>
-        <label class="btn-main ghost" style="display:inline-block">Choose a video<input type="file" accept="video/*" id="ownTape" class="sr"></label>
+        <p class="lead">A voice message from Marina</p>
+        <p class="muted">She sent it at 7:12 in the morning. The tape came with it.</p>
+        <button class="btn-soft" id="playMsg" style="color:var(--cream)">▶ Hear it again</button>
       </div>
     </div>`,
     enter(el) {
+      voice.say(MARINA_LINE);
+      $("#playMsg", el).addEventListener("click", () => { voice.clear(); voice.say(MARINA_LINE); });
+    } },
+
+  { id: "dare", chapter: "Do you dare?", next: "Enter the Room →", html: () => `
+    <div class="dare-wrap">
+      <img src="img/wisp.svg" alt="" style="width:110px">
+      <div class="cliff" style="padding:6px 0 0"><div class="line">Do you <em>dare?</em></div>
+      <p class="sub">That was Marina's hallway. Now try it yourself.</p></div>
+      <div class="grid2 dare-cards">
+        <div class="card dark">
+          <div class="kicker">Bring your own tape</div><h2>Who else was in yours?</h2>
+          <p class="muted">The scope reads every face in it, and Luna opens the board. Was it a spirit? The crew will never agree.</p>
+          <label class="agree"><input type="checkbox" id="tapeAgree"> Everyone in this recording agreed to be in it and to have it read.</label>
+          <label class="btn-main ghost locked-btn" id="ownTapeBtn" style="display:inline-block;margin-top:10px">Choose a video<input type="file" accept="video/*" id="ownTape" class="sr" disabled></label>
+        </div>
+        <div class="card dark">
+          <div class="kicker">Or let it read you</div><h2>Your heart on the table</h2>
+          <p class="muted">Your own camera, live and blurred, nothing saved. Ask the room a question and stay very still.</p>
+          <button class="btn-main mint" id="goRoom" style="margin-top:10px">Enter the Room</button>
+        </div>
+      </div>
+    </div>`,
+    enter(el) {
+      voice.say("Do you dare?");
+      $("#goRoom", el).addEventListener("click", () => go(state.i + 1));
+      $("#tapeAgree", el).addEventListener("change", (e) => { $("#ownTape", el).disabled = !e.target.checked; $("#ownTapeBtn", el).classList.toggle("locked-btn", !e.target.checked); });
       $("#ownTape", el).addEventListener("change", (e) => {
         const f = e.target.files[0]; if (!f) return;
-        if (!state.liveSdk) return toast("Bringing a tape needs the Presage key on this computer. Replay mode uses Marina's sample.");
-        state.ownTape = URL.createObjectURL(f); state.mode = "live"; toast(`Loaded ${f.name}. Press Play the tape.`);
+        if (!state.liveSdk) return toast("Reading your own tape needs the Presage key on this computer. Add it and reopen the app.", 6000);
+        state.ownTape = URL.createObjectURL(f); state.mode = "live"; state.evidence = []; state.scans = null; toast(`Loaded ${f.name}. The scope is reading it.`);
+        go(SCREENS.findIndex((s) => s.id === "tape"));
       });
     } },
 
@@ -247,9 +320,11 @@ const SCREENS = [
       : [...Array(n.livingFaces)].map(() => '<img src="img/heart.svg" alt="">').join("") + (n.stillFaces ? '<img src="img/heart-still.svg" alt="">' : "");
     return `
     <div class="grid2" style="grid-template-columns:1.5fr 1fr">
-      <div class="card dark">
+      <div class="card dark haunted">
         <div class="kicker">The haunting map · Marina's hallway camera · ${state.mode === "replay" ? "sample month" : "your tapes"}</div>
-        <h2>Thirty nights, one clip each</h2>
+        <h2>Thirty nights. <span style="color:var(--danger)">Something is getting closer.</span></h2>
+        <div class="cal-wrap" id="calWrap"><svg class="scratches" viewBox="0 0 400 300" preserveAspectRatio="none" aria-hidden="true"><path d="M40 20l26 90M56 16l24 98M72 18l20 88M300 180l34 96M318 176l30 104M336 182l24 88"/></svg>
+        <img class="stalker" id="stalker" src="img/stalker.svg" alt="">
         <div class="cal" style="margin-top:14px">
           ${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map((d) => `<div class="dow">${d}</div>`).join("")}
           ${'<div></div>'.repeat(first)}
@@ -257,7 +332,7 @@ const SCREENS = [
             <span class="d">${+n.date.slice(8)}${n.date.slice(5, 7) === "11" ? "<small style='font-size:12px'> Nov</small>" : ""}</span>
             <span class="faces">${icon(n)}</span>
             ${n.caseId ? '<span class="tag">case 01</span>' : n.date === "2026-11-03" ? '<span class="tag">case 02</span>' : ""}</button>`).join("")}
-        </div>
+        </div></div>
         <div class="legend"><span><i style="background:#ffffff14"></i>one living face</span><span><i style="background:#ff86b833"></i>a visitor, alive</span>
           <span><i style="background:#ff668088"></i>a face with no pulse</span><span><i style="background:#ffffff06"></i>nobody</span><span>🔒 not opened yet</span></div>
       </div>
@@ -267,11 +342,30 @@ const SCREENS = [
           <div class="stat"><b>${tot.livingFaces}</b><span>living faces</span></div>
           <div class="stat"><b style="color:var(--danger)">${tot.stillFaces}</b><span>with no pulse</span></div>
         </div>
-        <div class="card" style="margin-top:18px" id="nightNote">${say("xochi", "I kept watch every night. Pick a square. One of them is not like the others.")}</div>
+        <div class="card" style="margin-top:18px" id="nightNote">${say("xochi", "I kept watch every night. It only moves when the lights go out. Pick a square before it stops.")}</div>
       </div>
     </div>`; },
     enter(el) {
       const m = sampleMonth();
+      // Story art, not data: a figure that crosses the month one blackout at a time and stops on the night of the case.
+      const cells = [...el.querySelectorAll(".night")], wrap = $("#calWrap", el), stalker = $("#stalker", el);
+      const target = cells.findIndex((c) => c.dataset.date === "2026-11-02");
+      cells.forEach((c, i) => { c.style.setProperty("--near", Math.max(0, 1 - Math.abs(i - target) / 16).toFixed(2)); c.style.animationDelay = `${(i * 0.37) % 5}s`; });
+      const stand = (i) => { const c = cells[i], w = wrap.getBoundingClientRect(), b = c.getBoundingClientRect(); stalker.style.left = `${b.left - w.left + b.width / 2}px`; stalker.style.top = `${b.bottom - w.top}px`; stalker.style.height = `${b.height * 1.5}px`; stalker.classList.add("on"); };
+      const arrive = () => cells[target].classList.add("arrived");
+      if (matchMedia("(prefers-reduced-motion: reduce)").matches) { setTimeout(() => { stand(target); arrive(); }, 300); }
+      else {
+        let at = Math.max(0, target - 21);
+        setTimeout(() => stand(at), 400);
+        const hop = setInterval(() => {
+          if (!document.body.contains(el)) return clearInterval(hop);
+          at = Math.min(target, at + 3 + Math.floor(Math.random() * 2));
+          wrap.classList.add("blackout"); sound.beep(62, 320, 0.09);
+          setTimeout(() => { stand(at); }, 90);
+          setTimeout(() => { wrap.classList.remove("blackout"); if (at === target) arrive(); }, 240);
+          if (at === target) clearInterval(hop);
+        }, 2300);
+      }
       el.querySelectorAll(".night").forEach((b) => b.addEventListener("click", () => {
         el.querySelectorAll(".night.sel").forEach((x) => x.classList.remove("sel")); b.classList.add("sel");
         const n = m.find((x) => x.date === b.dataset.date);
@@ -306,7 +400,7 @@ const SCREENS = [
       const sample = sampleScans().full;
       let warned = false;
       await playTape({
-        until: state.mode === "replay" ? SAMPLE_CASE.coatOffAt + 4 : state.duration,
+        until: state.mode === "replay" ? SAMPLE_CASE.shadowInAt + 4 : state.duration,
         onTime: (t) => {
           const src = full ?? sample;
           const p = [...src.pulse].reverse().find((q) => q.t <= t && q.conf >= 50);
@@ -314,7 +408,7 @@ const SCREENS = [
           heartBadge(tapeTape, { ...marinaFace(t), bpm: p?.v });
           const two = src.validation.find((v) => Math.abs(v.t - t) < 0.5)?.code === 2;
           if (two && !warned) {
-            warned = true;
+            warned = true; sound.sting();
             $("#tapeNotes", el).innerHTML = say("bigotes", `Wait. Presage just reported <b>two faces</b> in the frame. At ${fmt(t)}.`) + say("luna", "Marina said she lives alone.");
           }
         },
@@ -329,10 +423,10 @@ const SCREENS = [
 
   { id: "point", chapter: "Point the scope", next: "Open the evidence →", canNext: () => state.flat, html: () => `
     <div class="grid2">
-      <div>${tapeHTML()}<p class="muted">Click the spot you want the scope to read. The crew suggests the wall behind the coat stand.</p></div>
+      <div>${tapeHTML()}${state.mode === "replay" ? "" : `<p class="muted">Click the spot you want the scope to read, then press the button.</p>`}</div>
       <div>${scopeHTML("scopePoint", "PULSE-O-SCOPE · ONE SPOT")}
-        <div class="card" style="margin-top:16px" id="pointNotes">${say("xochi", "Pick a spot. The scope needs about fifteen seconds of a face to find a heartbeat.")}
-          <button class="btn-main mint" id="scanBtn">Read the wall behind the coat</button></div></div>
+        <div class="card" style="margin-top:16px" id="pointNotes">${say("xochi", "The scope needs a face to find a heartbeat. Let it work.")}
+          ${state.mode === "replay" ? `<div class="scanstat"><div class="msg" id="scanMsg"></div><div class="bar"><div class="fill" id="scanFill"></div></div></div>` : `<button class="btn-main mint" id="scanBtn">Read this spot</button>`}</div></div>
     </div>`,
     enter(el) {
       state.flat = false; updateNav(); wireTape(el);
@@ -350,14 +444,15 @@ const SCREENS = [
         R.y = Math.min(1 - R.h, Math.max(0, (e.clientY - b.top) / b.height - R.h / 2)); place();
       });
       tape.style.cursor = "crosshair";
-      const cvs = $("#tape canvas", el); if (cvs) drawScene(cvs.getContext("2d"), cvs.width, cvs.height, SAMPLE_CASE.coatOffAt + 4);
+      const cvs = $("#tape canvas", el); if (cvs) drawScene(cvs.getContext("2d"), cvs.width, cvs.height, SAMPLE_CASE.shadowInAt + 4);
+      if (state.mode === "replay") { autoScope(el, scope, R, box, ov); return; }
       $("#scanBtn", el).addEventListener("click", async (ev) => {
         ev.target.disabled = true;
         $("#scopePoint [data-state]", el).textContent = "LISTENING";
         // read the spot while the second face was in frame (or the whole tape if the SDK never saw two faces)
         const two = state.mode === "replay" ? null : validationRuns(state.scans.full.validation, 2, 1)[0];
-        const from = state.mode === "replay" ? SAMPLE_CASE.coatOffAt : two?.t0 ?? 0;
-        const to = state.mode === "replay" ? SAMPLE_CASE.coatBackAt : two?.t1 ?? state.duration;
+        const from = state.mode === "replay" ? SAMPLE_CASE.shadowInAt : two?.t0 ?? 0;
+        const to = state.mode === "replay" ? SAMPLE_CASE.shadowOutAt : two?.t1 ?? state.duration;
         state.tapeT = from;
         let reg;
         const scanning = regionScan({ ...R }, from, to).then((s) => (reg = s)).catch((e) => toast(e.message, 6000));
@@ -386,7 +481,7 @@ const SCREENS = [
 
   { id: "locker", chapter: "The evidence", next: "Summon it →", html: () => `
     <div class="card dark">
-      <div class="kicker">Evidence locker · every card measured by Presage SmartSpectra</div>
+      <div class="kicker">Evidence locker · ${state.mode === "replay" ? "sample numbers, in the shape Presage SmartSpectra reports them" : "every card measured by Presage SmartSpectra"}</div>
       <h2>What the tape says</h2>
       <div class="locker" style="margin-top:18px">${state.evidence.map((e) => `
         <div class="ev ${e.kind}" data-ev="${e.id}" role="button" tabindex="0" title="Show this moment"><span class="id">${e.id}</span>
@@ -401,7 +496,7 @@ const SCREENS = [
       const NOTES = {
         living: ["xochi", "Marina, alive the whole time. This is the line every other card is compared to."],
         second_face: ["luna", "Here. The SDK counted two faces, and Marina was the only one breathing."],
-        no_pulse: ["bigotes", "The spot behind the coat. A face, and no pulse at all. A portrait does that. So does a ghost, says Luna."],
+        no_pulse: ["bigotes", "Right behind her. A face, and no pulse at all. A mask does that. So does a ghost, says Luna."],
         only_shadow: ["bigotes", "No face in that spot at all. A coat, a shadow."],
         unreadable: ["bigotes", "Too dark to read. I will not call it a ghost."],
         held_breath: ["luna", "She stopped at the door and held her breath. Listening to something."],
@@ -412,7 +507,7 @@ const SCREENS = [
         const t = e.kind === "living" ? 3 : (e.t0 + e.t1) / 2;
         if (state.mode === "replay" || !state.video) drawScene(ctx, cvs.width, cvs.height, t);
         else { state.video.currentTime = t; state.video.addEventListener("seeked", () => ctx.drawImage(state.video, 0, 0, cvs.width, cvs.height), { once: true }); }
-        if (e.region) { ctx.strokeStyle = "#ff6680"; ctx.lineWidth = 4; ctx.setLineDash([10, 8]); ctx.strokeRect(e.region.x * cvs.width, e.region.y * cvs.height, e.region.w * cvs.width, e.region.h * cvs.height); }
+        if (e.region) { const rx = state.mode === "replay" ? shadowFace(t).x - e.region.w / 2 : e.region.x; ctx.strokeStyle = "#ff6680"; ctx.lineWidth = 4; ctx.setLineDash([10, 8]); ctx.strokeRect(rx * cvs.width, e.region.y * cvs.height, e.region.w * cvs.width, e.region.h * cvs.height); }
         const [who, text] = NOTES[e.kind];
         $("#peekSay", el).innerHTML = `<div class="kicker" style="color:var(--gold)">${e.id} · ${fmt(e.t0)}</div>` + say(who, text, [e.id]);
         el.querySelectorAll(".ev").forEach((x) => x.classList.toggle("sel", x.dataset.ev === id));
@@ -427,8 +522,9 @@ const SCREENS = [
       <div class="card">
         <div class="kicker">The séance needs a living hand</div><h2>Yours.</h2>
         <p class="lead">The glass moves only when <b>you breathe out</b>. It stops while you talk. The scope reads you, live, the same way it read the tape.</p>
-        <p class="muted">Your camera image is blurred on screen and never saved. You can turn it off at the top right at any moment; the board then moves on a slow timer instead.</p>
+        <p class="muted">You will see yourself here, blurred, and nothing is saved. You can turn it off at the top right at any moment; the board then moves on a slow timer instead.</p>
         <div class="row"><button class="btn-main mint" id="camOn">Turn my camera on</button><button class="btn-soft" id="noCam">Play without a camera</button></div>
+        <div class="scanstat" id="liveStat" style="margin-top:14px" hidden><div class="msg" id="liveMsg"></div><div class="bar"><div class="fill"></div></div></div>
       </div>
       <div>${scopeHTML("scopeMe", "PULSE-O-SCOPE · YOU, LIVE")}
         <div class="tape" style="margin-top:16px;aspect-ratio:16/10"><video id="me" playsinline muted style="filter:blur(18px) saturate(.8)"></video>
@@ -448,12 +544,12 @@ const SCREENS = [
     return `
     ${sp ? `<div class="card spirit-card"><div class="kicker">${sp.archetype} · cites ${sp.cites.join(", ")}</div>
       <h2 style="margin:2px 0">${sp.name}</h2><p style="margin:0">${sp.story} <i class="muted">Its goal: ${sp.goal}.</i></p></div>` : ""}
-    <div class="grid2" style="margin-top:18px;grid-template-columns:1.45fr 1fr">
+    <div class="grid2" style="margin-top:18px;grid-template-columns:2fr 1fr">
       <div class="seance-stage">
-        <div class="crew-top"><img src="img/luna.svg" alt="Luna"><span>Luna reads the glass</span></div>
-        <div class="crew-left"><img src="img/bigotes.svg" alt="Dr. Bigotes"><i class="candle"></i><span>Dr. Bigotes checks the evidence</span></div>
+        <div class="crew-top">${seat("luna", "Luna")}<span>Luna reads the glass</span></div>
+        <div class="crew-left">${seat("bigotes", "Dr. Bigotes")}<i class="candle"></i><span>Dr. Bigotes checks the evidence</span></div>
         ${boardHTML()}
-        <div class="crew-right"><img src="img/xochi.svg" alt="Xochi"><i class="candle"></i><span>Xochi keeps watch</span></div>
+        <div class="crew-right">${seat("xochi", "Xochi")}<i class="candle"></i><span>Xochi keeps watch</span></div>
         <div class="spell" id="spell"></div>
       </div>
       <div class="card dark">
@@ -475,19 +571,20 @@ const SCREENS = [
         $("#hush", el).textContent = "";
         $("#answers", el).innerHTML = `<p class="muted" style="margin:6px 0">“${label}”</p>` + say("luna", a.luna, a.cites) + say("bigotes", a.bigotes, a.cites);
         el.querySelectorAll(".q, #askForm button").forEach((x) => (x.disabled = false));
-        if (qid === "where") toast("Under the coat. It is still there.", 4000);
+        if (qid === "where") toast("It did not use the door.", 4000);
         if (qid === "bye") await finale(el);
       };
       el.querySelectorAll(".q").forEach((b) => b.addEventListener("click", () => ask(b.dataset.q, b.textContent)));
       $("#askForm", el).addEventListener("submit", (e) => { e.preventDefault(); const t = $("#askText", el).value.trim(); if (t) ask(matchQuestion(t), t); });
     } },
 
-  { id: "dossier", chapter: "Xochi's dossier", next: "Enter the Room →",
+  { id: "dossier", chapter: "Xochi's dossier", next: "Close the case →",
     enter(el) { $("#dl", el)?.addEventListener("click", downloadDossier); }, html: () => `
     <div class="card">
-      <div class="kicker">Xochi's dossier · Case 01 · The Coat</div><h2>What we know, and what we don't</h2>
+      <div class="kicker">Xochi's dossier · ${state.ownTape ? "Your tape" : "Case 01 · The Door"}</div><h2>What we know, and what we don't</h2>
       ${reading(state.evidence).map((l) => say(l.who, l.text, l.cites)).join("")}
-      ${say("xochi", "The measurements are real. The spirit is fiction. Marina stayed home, and that is the part that matters.")}
+      ${say("xochi", `${state.mode === "replay" ? "These numbers are samples." : "The measurements are real."} The spirit is fiction. ${state.ownTape ? "What you felt is yours." : "Marina stayed home, and that is the part that matters."}`)}
+      ${state.ownTape ? "" : `<p class="cliff" style="padding:6px 0 0"><span class="line" style="font-size:30px">The front door never opened. <em>So where did it go?</em></span></p>`}
       <div class="row" style="margin-top:10px"><button class="btn-main" id="dl">Download Xochi's dossier</button>
       <span class="muted">${state.mode === "replay" ? "These are sample numbers. " : ""}Nothing from this session was saved unless you download it.</span></div>
     </div>` },
@@ -499,6 +596,7 @@ const SCREENS = [
         <p>Turn your camera on and sit still. The Pulse-o-Scope finds your pulse and your breath, the same way it read Marina. Then ask the room's spirit a question and <b>stay still while the glass stops</b>.</p>
         <p class="muted">If your pulse jumps right after the glass stops, the game will notice. That is the only trick: it is your own heartbeat.</p>
         <div class="row"><button class="btn-main mint" id="roomOn">Turn my camera on</button><button class="btn-soft" id="roomAsk" disabled>Is someone here?</button></div>
+        <div class="scanstat" id="liveStat" style="margin-top:14px" hidden><div class="msg" id="liveMsg"></div><div class="bar"><div class="fill"></div></div></div>
         <div id="roomNotes" style="margin-top:12px">${say("xochi", "I will write down what the scope sees. Nothing else.")}</div>
       </div>
       <div>${scopeHTML("scopeRoom", "PULSE-O-SCOPE · YOU, LIVE")}
@@ -531,7 +629,7 @@ const SCREENS = [
       });
     } },
 
-  { id: "tested", chapter: "How it was tested", next: "One more thing →", html: () => {
+  { id: "tested", chapter: "How it was tested", next: "Start again ↺", html: () => {
     const P = MEASURED.planted, R = MEASURED.receipts;
     const pct = (a, b) => Math.round((100 * a) / b) + "%";
     const faceRows = [["living", "A living face, good light"], ["still", "A still face (photo, mask)"], ["shadow", "No face at all"], ["dim_living", "A living face, too dark"], ["dim_still", "A still face, too dark"]];
@@ -561,15 +659,24 @@ const SCREENS = [
       ${say("bigotes", "A held breath right at the 3-second line is noticed only some of the time. Below it, never. I would rather miss a gasp than invent one.")}
     </div>`; } },
 
-  { id: "end", chapter: "Case open", next: "Start again ↺", html: () => `
+  { id: "end", chapter: "Case open", next: "Do you dare? →", html: () => state.ownTape ? `
     <div class="cliff">
       <img src="img/wisp.svg" alt="" style="width:120px">
-      <div class="line">She hung the coat back at ${fmt(SAMPLE_CASE.coatBackAt)}.</div>
-      <div class="line"><em>She covered it.</em></div>
-      <p class="sub">The next morning Marina sent us a second tape. In it, the coat is on the floor.</p>
-      <p class="sub" style="font-size:18px">Case 02 · coming soon · bring your own tape on the case screen</p>
+      <div class="line">Your tape is read.</div>
+      <div class="line"><em>Was it a spirit?</em></div>
+      <p class="sub">The scope only knows what it measured. The rest is yours.</p>
+    </div>` : `
+    <div class="cliff">
+      <img src="img/wisp.svg" alt="" style="width:120px">
+      <div class="line">It left the frame at ${fmt(SAMPLE_CASE.shadowOutAt)}.</div>
+      <div class="line"><em>The front door never opened.</em></div>
+      <p class="sub">The next morning Marina sent us a second tape. In it, the shadow is outside her bedroom.</p>
+      <p class="sub" style="font-size:18px">Case 02 · coming soon</p>
     </div>` },
 ];
+const ORDER = ["cold", "title", "consent", "case", "calendar", "tape", "point", "locker", "prep", "board", "dossier", "end", "dare", "room", "tested"];
+SCREENS.sort((a, b) => ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
+const MARINA_LINE = "It was the night of November 2nd. Bag ready, keys in my hand, coat on. Everything was fine. Then I got to the door and this feeling hit me, so strong I couldn't breathe. Stay home. I took my coat off and I stayed. I live alone, and I saw nothing. But the hallway camera was on. Can you look?";
 
 // ------------------------------------------------------------------ the end of the séance: I AM HERE, and the glass breaks
 async function finale(el) {
@@ -627,9 +734,10 @@ async function startLive(el, scope, sel = "#scopeMe") {
   state.view = { scope, sel };
   const st0 = document.querySelector(`${sel} [data-state]`);
   if (state.live || state.fakeLive) { if (st0) st0.textContent = state.live ? "WARMING UP" : "SIMULATED"; return; }
+  const stat = $("#liveStat"), say_ = (m, wait) => { if (!stat) return; stat.hidden = false; stat.classList.toggle("waiting", !!wait); $("#liveMsg").textContent = m; if (!wait) stat.querySelector(".fill").style.width = "100%"; };
   if (!state.liveSdk) {   // no key: a gentle simulated breath and pulse, clearly labelled
     camUI(false);
-    toast("Replay mode: no Presage key on this computer, so your camera stays off and the readings are simulated.", 5000);
+    say_("This copy has no Presage key, so your camera stays off and these readings are simulated.");
     const t0 = performance.now(), fake = { t0: 0, t1: 0, pulse: [], trace: [] };
     state.fakeScan = fake;
     let lastP = -1;
@@ -650,11 +758,14 @@ async function startLive(el, scope, sel = "#scopeMe") {
   }
   try {
     camUI(true);
+    say_("Starting your camera…", true);
+    let found = false;
     state.live = await presage.live({
-      onStream: (s) => { const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); } },
+      onStream: (s) => { const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); } say_("Camera on. Sit still and look at the screen: the scope is finding your pulse, usually 15 to 20 seconds.", true); },
       onSample: ({ pulse, talking }) => {
         state.talking = talking; $("#talkFlag") && ($("#talkFlag").textContent = talking ? "you're talking · the glass waits" : "");
         const { scope: sc, sel: at } = state.view;
+        if (pulse && !found) { found = true; sound.chime(); say_("Got you. That heartbeat is yours."); }
         if (pulse) { sc.set(pulse); const b = document.querySelector(`${at} [data-bpm]`); if (b) b.textContent = Math.round(pulse); }
         const st = document.querySelector(`${at} [data-state]`); if (st) st.textContent = pulse ? "LIVE" : "WARMING UP";
       },
@@ -677,24 +788,24 @@ async function startLive(el, scope, sel = "#scopeMe") {
 async function waitExhale() {
   if (!state.live && !state.fakeLive) return sleep(900);
   const asked = performance.now();
-  while (state.lastExhale < asked) { await sleep(80); if (performance.now() - asked > 6000) break; }
+  while (state.lastExhale < asked) { await sleep(80); if (performance.now() - asked > 4000) break; }
 }
 
 // ------------------------------------------------------------------ the dossier file (numbers and words only, never images)
 function downloadDossier() {
   const ev = state.evidence, sp = spiritFor(ev);
   const lines = [
-    "XOCHI'S DOSSIER · Ghost Hunt: Who Else Was There? · Case 01 · The Coat",
+    `XOCHI'S DOSSIER · Ghost Hunt: Who Else Was There? · ${state.ownTape ? "Your tape" : "Case 01 · The Door"}`,
     state.mode === "replay" ? "SAMPLE NUMBERS (the staged tape has not been measured yet)" : "Measured by Presage SmartSpectra on this computer",
     "", "EVIDENCE",
     ...ev.map((e) => `${e.id}  ${KIND[e.kind].name}: ${e.value} ${e.unit}, ${fmt(e.t0)}${e.t1 !== e.t0 ? " to " + fmt(e.t1) : ""}`),
     "", "THE CREW", ...reading(ev).map((l) => `${l.who.toUpperCase()}: ${l.text} [${l.cites.join(", ")}]`),
     "", sp ? `THE SPIRIT (fiction): ${sp.name}, ${sp.archetype}. ${sp.story}` : "",
-    "", "The measurements are real. The spirit is fiction. No frames, images or faces are in this file.",
+    "", `${state.mode === "replay" ? "These numbers are samples." : "The measurements are real."} The spirit is fiction. No frames, images or faces are in this file.`,
   ];
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/plain" }));
-  a.download = "xochi-dossier-the-coat.txt"; a.click();
+  a.download = "xochi-dossier.txt"; a.click();
   toast("Dossier saved. It holds numbers and words only.");
 }
 
@@ -704,9 +815,9 @@ const SECTIONS = [
   { name: "The Map", ids: ["case", "calendar"] },
   { name: "The Tape", ids: ["tape", "point", "locker"] },
   { name: "The Séance", ids: ["prep", "board", "dossier"] },
-  { name: "The Room", ids: ["room"] },
-  { name: "How it was tested", ids: ["tested"] },
   { name: "The end", ids: ["end"] },
+  { name: "Do you dare?", ids: ["dare", "room"] },
+  { name: "How it was tested", ids: ["tested"] },
 ];
 function updateNav() {
   const s = SCREENS[state.i];
@@ -725,7 +836,7 @@ function updateNav() {
 function go(i) {
   if (i < 0 || i >= SCREENS.length) i = 0;
   if (i >= SCREENS.findIndex((x) => x.id === "locker") && !state.evidence.length) state.evidence = buildEvidence(sampleScans());
-  state.seen.add(state.i); state.i = i;
+  state.seen.add(state.i); state.i = i; voice.clear();
   const stage = $("#stage"); stage.innerHTML = "";
   const sec = document.createElement("section"); sec.className = "screen on"; sec.innerHTML = SCREENS[i].html();
   stage.append(sec);
@@ -741,7 +852,8 @@ async function boot() {
   $("#mode").hidden = state.mode !== "replay";
   $("#mode").textContent = state.liveSdk ? "SAMPLE TAPE · LIVE CAMERA" : "SAMPLE DATA";
   $("#camPill").addEventListener("click", cameraOff);
-  $("#soundPill").addEventListener("click", () => { const on = sound.toggle(); $("#soundPill").textContent = on ? "🔊 Sound on" : "🔇 Sound off"; $("#soundPill").setAttribute("aria-pressed", on); if (on) sound.chime(); });
+  voice.watch($("#stage"));
+  $("#soundPill").addEventListener("click", () => { const on = sound.toggle(); if (!on) voice.clear(); $("#soundPill").textContent = on ? "🔊 Sound on" : "🔇 Sound off"; $("#soundPill").setAttribute("aria-pressed", on); if (on) sound.chime(); });
   $("#next").addEventListener("click", () => go(state.i + 1));
   $("#back").addEventListener("click", () => go(state.i - 1));
   document.addEventListener("keydown", (e) => { if (e.key === "ArrowRight" && !$("#next").disabled) go(state.i + 1); if (e.key === "ArrowLeft") go(state.i - 1); });

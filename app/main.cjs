@@ -9,7 +9,7 @@ const fs = require('node:fs');
 const { app, BrowserWindow, ipcMain, session } = require('electron');
 
 const REPLAY = process.argv.includes('--replay') || !process.env.PRESAGE_API_KEY;
-const CASE_VIDEO = path.join(__dirname, '..', 'case', 'the-coat.mp4');
+const CASE_VIDEO = path.join(__dirname, '..', 'case', 'the-door.mp4');
 
 if (app.isPackaged && !process.env.SMARTSPECTRA_CAPI_PATH) {
   const LIB = { darwin: 'libsmartspectra_capi.dylib', win32: 'smartspectra_capi.dll', linux: 'libsmartspectra_capi.so' }[process.platform];

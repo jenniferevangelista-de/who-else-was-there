@@ -42,9 +42,10 @@ export async function spell(root, message, { nextExhale, isSilent, onChar } = {}
   const pos = layout();
   const glass = root.querySelector(".planchette");
   let shown = "";
+  let step = 0;
   for (const c of sequence(message)) {
     while (isSilent && !isSilent()) await sleep(200);
-    if (nextExhale) await nextExhale();
+    if (nextExhale && step++ % 3 === 0) await nextExhale();     // one breath out carries the glass three letters
     const p = pos[c] ?? pos[" "];
     glass.style.left = p.x + "%"; glass.style.top = p.y + "%";
     root.querySelectorAll(".ch.lit").forEach((e) => e.classList.remove("lit"));

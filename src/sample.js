@@ -30,17 +30,17 @@ export function shadowScan({ t0 = 18, t1 = 40 } = {}) {
   return { t0, t1, region: { x: 0.1, y: 0.2, w: 0.2, h: 0.5 }, pulse: [], breathing: [], trace: [], validation };
 }
 
-/** The sample case "The Coat": Marina lifts her coat at 8 s and a face on the wall is uncovered until 38 s. */
+/** The sample case "The Door": Marina is about to go out, stops at the door, and a shape with a face stands behind her from 8 s to 38 s. */
 export const SAMPLE_CASE = {
   sample: true,
   durationSec: 45,
-  coatOffAt: 8, stopAt: 21, coatBackAt: 38,
+  shadowInAt: 8, stopAt: 21, shadowOutAt: 38,
   region: { x: 0.08, y: 0.2, w: 0.14, h: 0.24 },
 };
 export function sampleScans() {
   const c = SAMPLE_CASE;
   return {
-    full: livingScan({ dur: c.durationSec, jumpAt: 22, holdAt: c.stopAt, ghostFrom: c.coatOffAt, ghostTo: c.coatBackAt }),
-    regions: [{ ...stillFaceScan({ t0: c.coatOffAt, t1: c.coatBackAt }), region: c.region }],
+    full: livingScan({ dur: c.durationSec, jumpAt: 22, holdAt: c.stopAt, ghostFrom: c.shadowInAt, ghostTo: c.shadowOutAt }),
+    regions: [{ ...stillFaceScan({ t0: c.shadowInAt, t1: c.shadowOutAt }), region: c.region }],
   };
 }

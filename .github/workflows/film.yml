@@ -1,0 +1,41 @@
+name: film
+on: workflow_dispatch
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tools
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg fonts-noto-color-emoji
+          pip install edge-tts pillow numpy soundfile playwright
+          playwright install --with-deps chromium
+      - name: Build the app (replay mode only, no key is used here)
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+        env:
+          ELECTRON_SKIP_BINARY_DOWNLOAD: "1"
+      - name: Voices, tour, film
+        run: |
+          python video/script.py
+          python video/record_tour.py
+          python video/build.py render
+        env:
+          GH_PROCS: "4"
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ghost-hunt-film
+          retention-days: 7
+          path: |
+            video/out/ghost_hunt_film.mp4
+            video/out/ghost_hunt_film.srt
+            video/SCRIPT.md

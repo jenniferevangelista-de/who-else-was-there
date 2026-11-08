@@ -1,1 +1,18 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 116"><path d="M50 4C24 4 6 30 6 58c0 22 16 40 44 54 28-14 44-32 44-54C94 30 76 4 50 4z" fill="#fbf6ff" stroke="#2a1840" stroke-width="6" stroke-linejoin="round"/><circle cx="50" cy="48" r="20" fill="#bfeedd" stroke="#2a1840" stroke-width="5"/><circle cx="43" cy="41" r="6" fill="#fff" opacity=".8"/><path d="M30 84q20 12 40 0" stroke="#ff7eb6" stroke-width="5" fill="none" stroke-linecap="round"/></svg>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 120" role="img" aria-label="An upturned drinking glass">
+  <defs>
+    <linearGradient id="wall" x1="0" x2="1" y1="0" y2="0">
+      <stop offset="0" stop-color="#ffffff" stop-opacity=".62"/><stop offset=".22" stop-color="#dff4ff" stop-opacity=".16"/>
+      <stop offset=".72" stop-color="#cfeaff" stop-opacity=".12"/><stop offset="1" stop-color="#ffffff" stop-opacity=".55"/>
+    </linearGradient>
+    <radialGradient id="base" cx=".4" cy=".4" r=".8"><stop offset="0" stop-color="#ffffff" stop-opacity=".9"/><stop offset="1" stop-color="#bfe3f5" stop-opacity=".55"/></radialGradient>
+  </defs>
+  <ellipse cx="51" cy="103" rx="45" ry="15" fill="#3b2412" opacity=".22"/>
+  <path d="M23 15 L8 98 A42 15 0 0 0 92 98 L77 15 Z" fill="url(#wall)" stroke="#6b879c" stroke-width="2.6" stroke-linejoin="round"/>
+  <ellipse cx="50" cy="98" rx="42" ry="15" fill="#ffffff" fill-opacity=".1" stroke="#6b879c" stroke-width="2.6"/>
+  <ellipse cx="50" cy="98" rx="37" ry="12" fill="none" stroke="#ffffff" stroke-opacity=".6" stroke-width="1.6"/>
+  <ellipse cx="50" cy="15" rx="27" ry="9" fill="url(#base)" stroke="#6b879c" stroke-width="2.6"/>
+  <ellipse cx="47" cy="13.5" rx="16" ry="4" fill="#ffffff" opacity=".75"/>
+  <path d="M30 26 L20 88" stroke="#ffffff" stroke-opacity=".85" stroke-width="5" stroke-linecap="round"/>
+  <path d="M39 26 L34 74" stroke="#ffffff" stroke-opacity=".4" stroke-width="2.6" stroke-linecap="round"/>
+  <path d="M72 30 L80 84" stroke="#ffffff" stroke-opacity=".45" stroke-width="3" stroke-linecap="round"/>
+</svg>

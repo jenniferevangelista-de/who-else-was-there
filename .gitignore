@@ -4,3 +4,13 @@ case/*.mp4
 case/*.mov
 *.log
 .env
+video/out/
+video/music/
+video/sfx/
+video/voice/
+video/assets/
+video/recordings/_*
+video/recordings/*.webm
+video/recordings/scenes.json
+video/timeline.json
+video/SCRIPT.md

@@ -1,4 +1,4 @@
-// Electron main process for Pulse of the Dead.
+// Electron main process for Ghost Hunt: Who Else Was There?
 //  - hosts the SmartSpectra SDK through the package's IPC binding (frames stay on this computer)
 //  - hands the API key from the PRESAGE_API_KEY environment variable to our own page only
 //  - grants the camera (video only, never the microphone) to our own bundled page only
@@ -21,7 +21,7 @@ const ownPage = (url) => typeof url === 'string' && url.startsWith('file://') &&
 
 function createWindow() {
   const win = new BrowserWindow({
-    width: 1400, height: 900, minWidth: 1100, minHeight: 720, backgroundColor: '#1a0f2e', title: 'Pulse of the Dead',
+    width: 1400, height: 900, minWidth: 1100, minHeight: 720, backgroundColor: '#120a1f', title: 'Ghost Hunt: Who Else Was There?',
     webPreferences: { preload: path.join(__dirname, '..', 'dist', 'preload.cjs'), contextIsolation: true, sandbox: true, nodeIntegration: false },
   });
   if (!REPLAY) require('@smartspectra/node-sdk/main').bindSmartSpectraIpc(win);

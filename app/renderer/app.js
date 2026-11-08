@@ -1,4 +1,4 @@
-// Pulse of the Dead: the story, one screen at a time.
+// Ghost Hunt: Who Else Was There? The story, one screen at a time.
 import { buildEvidence } from "../../src/evidence.js";
 import { answer, reading, QUESTIONS } from "../../src/spirit.js";
 import { sampleScans, SAMPLE_CASE } from "../../src/sample.js";
@@ -8,6 +8,7 @@ import { boardHTML, spell } from "./board.js";
 import * as presage from "./presage.js";
 
 const $ = (s, r = document) => r.querySelector(s);
+const ORN = `<svg class="ornament" viewBox="0 0 220 18" aria-hidden="true"><path d="M0 9h86M134 9h86" stroke="currentColor" stroke-width="1"/><path d="M110 2c-6 0-9 4-9 7s3 7 9 7 9-4 9-7-3-7-9-7zM96 9c-4-4-8-4-10 0 2 4 6 4 10 0zM124 9c4-4 8-4 10 0-2 4-6 4-10 0z" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="110" cy="9" r="2" fill="currentColor"/></svg>`;
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 const fmt = (t) => `0:${String(Math.floor(t)).padStart(2, "0")}`;
 const KIND = {
@@ -136,14 +137,15 @@ const SCREENS = [
 
   { id: "title", chapter: "The crew", html: () => `
     <div style="text-align:center">
-      <div class="kicker" style="color:var(--pink)">A ghost hunt for the living · built on Presage SmartSpectra</div>
-      <h1>Pulse of the Dead</h1>
-      <p class="lead">Three tiny ghost hunters. One new instrument. It reads a heartbeat from any face in a video.<br>
+            <div class="kicker" style="color:var(--gold);letter-spacing:6px;font-size:16px">GHOST HUNT</div>
+      <h1>Who Else <span class="accent">Was There?</span></h1>
+      ${ORN}
+      <p class="lead center">Three tiny ghost hunters. One new instrument, built on Presage SmartSpectra: it reads a heartbeat from any face in a video.<br>
       Living faces beat. <b style="color:var(--danger)">The ones that don't are the case.</b></p>
       <div class="crew" style="margin-top:22px">
-        <div class="member"><img src="img/luna.svg" alt="Luna"><b>Luna</b><span>the medium · opens the board</span></div>
-        <div class="member"><img src="img/bigotes.svg" alt="Dr. Bigotes"><b>Dr. Bigotes</b><span>the skeptic · checks the scope</span></div>
-        <div class="member"><img src="img/xochi.svg" alt="Xochi"><b>Xochi</b><span>the night watch · writes it down</span></div>
+        <div class="member"><div class="halo"><img src="img/luna.svg" alt="Luna"></div><b>Luna</b><span>the medium · opens the board</span></div>
+        <div class="member"><div class="halo"><img src="img/bigotes.svg" alt="Dr. Bigotes"></div><b>Dr. Bigotes</b><span>the skeptic · checks the scope</span></div>
+        <div class="member"><div class="halo"><img src="img/xochi.svg" alt="Xochi"></div><b>Xochi</b><span>the night watch · writes it down</span></div>
       </div>
     </div>` },
 

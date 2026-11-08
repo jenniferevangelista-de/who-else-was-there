@@ -1,13 +1,15 @@
 {
-  "name": "pulse-of-the-dead",
+  "name": "who-else-was-there",
   "version": "0.1.0",
   "private": true,
-  "description": "A cute, spooky ghost hunt where the evidence is a heartbeat. Presage SmartSpectra reads every face in a recording; the one with no pulse is the case.",
+  "description": "Ghost Hunt: Who Else Was There? A cute, spooky ghost hunt where Presage SmartSpectra reads every face in a recording. Living faces have a heartbeat. The one that does not is the case.",
   "license": "MIT",
   "author": "Jennifer Evangelista",
   "type": "module",
   "main": "app/main.cjs",
-  "engines": { "node": ">=22.12" },
+  "engines": {
+    "node": ">=22.12"
+  },
   "scripts": {
     "build": "node scripts/build.js",
     "start": "npm run build && electron .",
@@ -18,6 +20,7 @@
     "@smartspectra/node-sdk": "3.4.0"
   },
   "devDependencies": {
+    "@fontsource/cormorant-garamond": "^5.2.11",
     "@fontsource/creepster": "5.3.0",
     "@fontsource/fredoka": "5.3.0",
     "@fontsource/vt323": "5.3.0",

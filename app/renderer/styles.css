@@ -207,3 +207,24 @@ nav.story .where { text-align: center; font-size: 14px; color: #d8c6ea; margin-t
 #toast.on { display: block; animation: rise .3s; }
 
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
+
+/* ---------- the haunting calendar ---------- */
+.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+.cal .dow { text-align: center; font-size: 12px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
+.night { position: relative; aspect-ratio: 1 / .82; border-radius: 16px; border: 1px solid #e8c27a44; background: #ffffff08; color: var(--cream); padding: 8px 10px; text-align: left; display: flex; flex-direction: column; justify-content: space-between; transition: transform .15s, background .15s; }
+.night:hover { transform: translateY(-3px); background: #ffffff14; }
+.night .d { font: 600 italic 22px/1 var(--f-title); }
+.night .faces { display: flex; gap: 2px; align-items: center; min-height: 22px; }
+.night .faces img { width: 20px; height: 20px; }
+.night.empty { opacity: .5; }
+.night.visitor { background: #ff86b81a; border-color: #ff86b866; }
+.night.no_pulse { background: radial-gradient(120% 120% at 50% 0%, #ff668055, #2a1838); border-color: var(--danger); box-shadow: 0 0 0 0 #ff668088; animation: haunt 1.8s ease-in-out infinite; }
+@keyframes haunt { 50% { box-shadow: 0 0 26px 2px #ff668088; } }
+.night.locked { background: repeating-linear-gradient(45deg, #ffffff06 0 8px, #ffffff0d 8px 16px); color: #cdbbe0; }
+.night.sel { outline: 2px solid var(--gold); outline-offset: 2px; }
+.night .tag { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #ffd2e3; }
+.legend { display: flex; flex-wrap: wrap; gap: 14px; font-size: 14px; color: #d8c6ea; margin-top: 14px; }
+.legend i { display: inline-block; width: 14px; height: 14px; border-radius: 4px; margin-right: 6px; vertical-align: -2px; border: 1px solid #e8c27a66; }
+.stat { text-align: center; }
+.stat b { display: block; font: 600 italic 50px/1 var(--f-title); color: var(--blush); }
+.stat span { font-size: 14px; color: #d8c6ea; }

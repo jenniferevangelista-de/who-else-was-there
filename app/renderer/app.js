@@ -2,6 +2,7 @@
 import { buildEvidence, validationRuns } from "../../src/evidence.js";
 import { answer, reading, QUESTIONS } from "../../src/spirit.js";
 import { sampleScans, SAMPLE_CASE } from "../../src/sample.js";
+import { sampleMonth, monthTotals, NIGHT_LABEL } from "../../src/nights.js";
 import { createScope, scopeHTML } from "./scope.js";
 import { drawScene, marinaFace, portraitFace } from "./scene.js";
 import { boardHTML, spell } from "./board.js";
@@ -194,6 +195,50 @@ const SCREENS = [
         if (!state.liveSdk) return toast("Bringing a tape needs the Presage key on this computer. Replay mode uses Marina's sample.");
         state.ownTape = URL.createObjectURL(f); state.mode = "live"; toast(`Loaded ${f.name}. Press Play the tape.`);
       });
+    } },
+
+  { id: "calendar", chapter: "The haunting map", next: "Open November 2 →", html: () => {
+    const m = sampleMonth(), tot = monthTotals(m);
+    const first = (new Date(m[0].date + "T00:00:00Z").getUTCDay() + 6) % 7;   // Monday first
+    const icon = (n) => n.kind === "locked" ? "🔒" : n.kind === "empty" ? "<span style='opacity:.7'>☾</span>"
+      : [...Array(n.livingFaces)].map(() => '<img src="img/heart.svg" alt="">').join("") + (n.stillFaces ? '<img src="img/heart-still.svg" alt="">' : "");
+    return `
+    <div class="grid2" style="grid-template-columns:1.5fr 1fr">
+      <div class="card dark">
+        <div class="kicker">The haunting map · Marina's hallway camera · ${state.mode === "replay" ? "sample month" : "your tapes"}</div>
+        <h2>Thirty nights, one clip each</h2>
+        <div class="cal" style="margin-top:14px">
+          ${["Mon","Tue","Wed","Thu","Fri","Sat","Sun"].map((d) => `<div class="dow">${d}</div>`).join("")}
+          ${'<div></div>'.repeat(first)}
+          ${m.map((n) => `<button class="night ${n.kind}" data-date="${n.date}" aria-label="${n.date}: ${NIGHT_LABEL[n.kind]}">
+            <span class="d">${+n.date.slice(8)}${n.date.slice(5, 7) === "11" ? "<small style='font-size:12px'> Nov</small>" : ""}</span>
+            <span class="faces">${icon(n)}</span>
+            ${n.caseId ? '<span class="tag">case 01</span>' : n.date === "2026-11-03" ? '<span class="tag">case 02</span>' : ""}</button>`).join("")}
+        </div>
+        <div class="legend"><span><i style="background:#ffffff14"></i>one living face</span><span><i style="background:#ff86b833"></i>a visitor, alive</span>
+          <span><i style="background:#ff668088"></i>a face with no pulse</span><span><i style="background:#ffffff06"></i>nobody</span><span>🔒 not opened yet</span></div>
+      </div>
+      <div>
+        <div class="card dark" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;padding:22px 16px">
+          <div class="stat"><b>${tot.opened}</b><span>nights read</span></div>
+          <div class="stat"><b>${tot.livingFaces}</b><span>living faces</span></div>
+          <div class="stat"><b style="color:var(--danger)">${tot.stillFaces}</b><span>with no pulse</span></div>
+        </div>
+        <div class="card" style="margin-top:18px" id="nightNote">${say("xochi", "I kept watch every night. Pick a square. One of them is not like the others.")}</div>
+      </div>
+    </div>`; },
+    enter(el) {
+      const m = sampleMonth();
+      el.querySelectorAll(".night").forEach((b) => b.addEventListener("click", () => {
+        el.querySelectorAll(".night.sel").forEach((x) => x.classList.remove("sel")); b.classList.add("sel");
+        const n = m.find((x) => x.date === b.dataset.date);
+        const who = n.kind === "no_pulse" ? "luna" : n.kind === "visitor" ? "bigotes" : "xochi";
+        const text = n.kind === "no_pulse" ? `${n.note} Two faces. One heartbeat. <b>Who else was there?</b>`
+          : n.note ?? (n.kind === "empty" ? "She was out. The hallway stayed dark." : n.kind === "locked" ? "Not opened yet." : "Just Marina, coming home. One face, one pulse.");
+        $("#nightNote", el).innerHTML = say(who, text) + (n.caseId ? `<button class="btn-main" id="openCase">Open the tape of November 2</button>` : "");
+        $("#openCase", el)?.addEventListener("click", () => go(state.i + 1));
+      }));
+      setTimeout(() => el.querySelector('[data-date="2026-11-02"]')?.focus(), 300);
     } },
 
   { id: "tape", chapter: "The tape", next: "Point the scope →", canNext: () => state.tapeDone, html: () => `

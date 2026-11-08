@@ -623,7 +623,10 @@ async function finale(el) {
 
 // ------------------------------------------------------------------ live camera (the investigator)
 async function startLive(el, scope, sel = "#scopeMe") {
-  if (state.live || state.fakeLive) return;              // already on
+  // The camera may already be on from an earlier screen: point the readings at this screen's scope.
+  state.view = { scope, sel };
+  const st0 = document.querySelector(`${sel} [data-state]`);
+  if (state.live || state.fakeLive) { if (st0) st0.textContent = state.live ? "WARMING UP" : "SIMULATED"; return; }
   if (!state.liveSdk) {   // no key: a gentle simulated breath and pulse, clearly labelled
     camUI(false);
     toast("Replay mode: no Presage key on this computer, so your camera stays off and the readings are simulated.", 5000);
@@ -637,7 +640,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
         lastP = Math.floor(t);
         const scare = state.glassStoppedAt != null && t > state.glassStoppedAt + 3 ? 12 : 0;
         fake.pulse.push({ t, v: 70 + scare + Math.sin(t) * 0.8, conf: 85 });
-        scope.set(fake.pulse.at(-1).v); const bpm = document.querySelector(`${sel} [data-bpm]`); if (bpm) bpm.textContent = Math.round(fake.pulse.at(-1).v);
+        state.view.scope.set(fake.pulse.at(-1).v); const bpm = document.querySelector(`${state.view.sel} [data-bpm]`); if (bpm) bpm.textContent = Math.round(fake.pulse.at(-1).v);
       }
       const f = document.getElementById("breathFill"); if (f) f.style.width = v * 100 + "%";
       if (v < 0.05) state.lastExhale = performance.now();
@@ -651,8 +654,9 @@ async function startLive(el, scope, sel = "#scopeMe") {
       onStream: (s) => { const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); } },
       onSample: ({ pulse, talking }) => {
         state.talking = talking; $("#talkFlag") && ($("#talkFlag").textContent = talking ? "you're talking · the glass waits" : "");
-        if (pulse) { scope.set(pulse); const b = document.querySelector(`${sel} [data-bpm]`); if (b) b.textContent = Math.round(pulse); }
-        const st = document.querySelector(`${sel} [data-state]`); if (st) st.textContent = pulse ? "LIVE" : "WARMING UP";
+        const { scope: sc, sel: at } = state.view;
+        if (pulse) { sc.set(pulse); const b = document.querySelector(`${at} [data-bpm]`); if (b) b.textContent = Math.round(pulse); }
+        const st = document.querySelector(`${at} [data-state]`); if (st) st.textContent = pulse ? "LIVE" : "WARMING UP";
       },
       onTrace: (trace) => {
         const recent = trace.slice(-60); if (recent.length < 5) return;
@@ -662,6 +666,11 @@ async function startLive(el, scope, sel = "#scopeMe") {
         if (level < 0.15) state.lastExhale = performance.now();
       },
       onValidation: (code, hint) => { if (code && hint) toast(hint, 1800); },
+      onError: (code, message) => {
+        console.error("SmartSpectra error", code, message);
+        const st = document.querySelector(`${state.view.sel} [data-state]`); if (st) st.textContent = "ERROR";
+        toast(`Presage error ${code}: ${message}`, 8000);
+      },
     });
   } catch (e) { camUI(false); toast(e.message, 6000); }
 }

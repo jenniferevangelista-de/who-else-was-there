@@ -82,13 +82,15 @@ export async function scanVideo(video, { from = 0, to = video.duration, region =
 }
 
 /** The investigator's own camera, live. Returns a handle; `stop()` releases the camera. */
-export async function live({ onStream, onSample, onTrace, onValidation, onStatus } = {}) {
+export async function live({ onStream, onSample, onTrace, onValidation, onStatus, onError } = {}) {
   const sdk = await makeSdk();
   const t0 = performance.now();
   const scan = collector(sdk, () => (performance.now() - t0) / 1000);
   sdk.on("streamAvailable", (s) => onStream?.(s));
   sdk.on("validationStatus", (code, ts, hint) => onValidation?.(code, hint));
   sdk.on("processingStatus", (s) => onStatus?.(s));
+  // Without this, a bad key (kAuthenticationFailed) or a camera failure after start() would leave the scope on WARMING UP forever.
+  sdk.on("error", (code, message, retryable) => onError?.(code, message, retryable));
   sdk.on("metrics", () => {
     const p = scan.pulse.at(-1), b = scan.breathing.at(-1), k = scan.talking.at(-1);
     onSample?.({ pulse: p?.conf >= 50 ? p.v : null, breathing: b?.conf >= 50 ? b.v : null, talking: !!k?.on });

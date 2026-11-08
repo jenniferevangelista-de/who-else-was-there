@@ -22,7 +22,7 @@ export function boardHTML() {
   const chars = Object.entries(pos).filter(([k]) => k !== " ")
     .map(([k, p]) => `<span class="ch ${k.length > 1 ? "big" : ""}" data-ch="${k}" style="left:${p.x}%;top:${p.y}%">${k}</span>`).join("");
   return `<div class="board-wrap"><div class="board"><div class="letters">${chars}</div>
-    <img src="img/wisp.svg" alt="" style="position:absolute;left:8%;top:74%;width:44px;opacity:.85">
+    <img class="board-ghost" src="img/wisp.svg" alt="" style="position:absolute;left:8%;top:74%;width:44px;opacity:.85">
     <span style="position:absolute;left:11%;top:22%;transform:translateX(-50%);font-size:30px">☀</span><span style="position:absolute;left:89%;top:22%;transform:translateX(-50%);font-size:30px">☾</span>
     <img class="planchette" src="img/planchette.svg" alt="the glass" style="left:50%;top:62%"></div></div>`;
 }

@@ -476,6 +476,7 @@ const SCREENS = [
         $("#answers", el).innerHTML = `<p class="muted" style="margin:6px 0">“${label}”</p>` + say("luna", a.luna, a.cites) + say("bigotes", a.bigotes, a.cites);
         el.querySelectorAll(".q, #askForm button").forEach((x) => (x.disabled = false));
         if (qid === "where") toast("Under the coat. It is still there.", 4000);
+        if (qid === "bye") await finale(el);
       };
       el.querySelectorAll(".q").forEach((b) => b.addEventListener("click", () => ask(b.dataset.q, b.textContent)));
       $("#askForm", el).addEventListener("submit", (e) => { e.preventDefault(); const t = $("#askText", el).value.trim(); if (t) ask(matchQuestion(t), t); });
@@ -569,6 +570,56 @@ const SCREENS = [
       <p class="sub" style="font-size:18px">Case 02 · coming soon · bring your own tape on the case screen</p>
     </div>` },
 ];
+
+// ------------------------------------------------------------------ the end of the séance: I AM HERE, and the glass breaks
+async function finale(el) {
+  const a = answer("return", state.evidence);
+  if (a.vanished) return;
+  el.querySelectorAll(".q, #askForm button, #askText").forEach((x) => (x.disabled = true));
+  $("#answers", el).innerHTML = say("luna", "Wait… before you go. <i>Will you come back?</i>");
+  await sleep(1800);
+  $("#hush", el).textContent = "Nobody is breathing. The glass is moving on its own.";
+  $("#spell", el).textContent = "";
+  await spell($(".board", el), a.board, { onChar: (t) => { $("#spell", el).textContent = t; sound.beep(300 - t.length * 12, 160, 0.04); } });
+  $("#hush", el).textContent = "";
+  await sleep(600);
+  // the glass breaks
+  const board = $(".board", el), glass = $(".planchette", el);
+  const r = glass.getBoundingClientRect(), b = board.getBoundingClientRect();
+  const cx = r.left - b.left + r.width / 2, cy = r.top - b.top + r.height / 2;
+  glass.style.visibility = "hidden";
+  sound.crash();
+  document.body.classList.add("shake", "flash");
+  board.insertAdjacentHTML("beforeend", `<svg class="cracks" viewBox="0 0 100 100" preserveAspectRatio="none" style="--cx:${(cx / b.width) * 100}%;--cy:${(cy / b.height) * 100}%">
+    ${[...Array(9)].map((_, i) => { const ang = (i / 9) * Math.PI * 2 + Math.random() * 0.4, len = 20 + Math.random() * 35; const x0 = (cx / b.width) * 100, y0 = (cy / b.height) * 100;
+      const mx = x0 + Math.cos(ang) * len * 0.5 + (Math.random() - 0.5) * 6, my = y0 + Math.sin(ang) * len * 0.5 + (Math.random() - 0.5) * 6;
+      return `<path d="M${x0} ${y0} L${mx} ${my} L${x0 + Math.cos(ang) * len} ${y0 + Math.sin(ang) * len}" />`; }).join("")}</svg>`);
+  for (let i = 0; i < 16; i++) {
+    const sh = document.createElement("i"); sh.className = "shard";
+    const ang = Math.random() * Math.PI * 2, dist = 120 + Math.random() * 260;
+    sh.style.cssText = `left:${cx}px;top:${cy}px;--dx:${Math.cos(ang) * dist}px;--dy:${Math.sin(ang) * dist}px;--rot:${Math.random() * 720 - 360}deg;--s:${0.5 + Math.random()}`;
+    board.append(sh);
+  }
+  $("#spell", el).classList.add("broken");
+  setTimeout(() => document.body.classList.remove("flash"), 260);
+  setTimeout(() => document.body.classList.remove("shake"), 700);
+  await sleep(900);
+  $("#answers", el).innerHTML = say("bigotes", a.bigotes, a.cites);
+  await sleep(1700);
+  $("#answers", el).insertAdjacentHTML("beforeend", `<div class="scream">RUN! RUN! RUN!</div>`);
+  sound.beep(180, 120, 0.06);
+  await sleep(500);
+  $("#answers", el).insertAdjacentHTML("beforeend", say("luna", "<b>EVERYBODY OUT!</b> Out, out, out!"));
+  el.querySelector(".crew-left")?.classList.add("flee-left");
+  el.querySelector(".crew-right")?.classList.add("flee-right");
+  el.querySelector(".crew-top")?.classList.add("flee-up");
+  setTimeout(() => el.querySelector(".board-ghost")?.classList.add("stays"), 1200);   // everyone ran. It did not.
+  await sleep(1800);
+  $("#answers", el).innerHTML = `<div class="cliff" style="padding:10px 0"><div class="line" style="font-size:40px">The glass is broken.</div>
+    <div class="line" style="font-size:40px"><em>The board is yours now.</em></div>
+    <p class="sub" style="font-size:17px">${a.luna} <span class="muted">· cites ${a.cites.join(", ")}</span></p></div>`;
+  toast("The crew ran away. Read Xochi's dossier, if you dare.", 4000);
+}
 
 // ------------------------------------------------------------------ live camera (the investigator)
 async function startLive(el, scope, sel = "#scopeMe") {

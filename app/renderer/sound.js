@@ -25,5 +25,16 @@ export const sound = {
     o.connect(g).connect(ctx.destination); o.start(); flat = { o, g };
     setTimeout(() => this.stopFlat(), 2600);
   },
+  // glass breaking: a burst of filtered noise plus a few high pings
+  crash() {
+    if (!on || !ctx) return;
+    const len = ctx.sampleRate * 0.6, buf = ctx.createBuffer(1, len, ctx.sampleRate), d = buf.getChannelData(0);
+    for (let i = 0; i < len; i++) d[i] = (Math.random() * 2 - 1) * Math.pow(1 - i / len, 3);
+    const src = ctx.createBufferSource(), f = ctx.createBiquadFilter(), g = ctx.createGain();
+    f.type = "highpass"; f.frequency.value = 1800; g.gain.value = 0.25;
+    src.buffer = buf; src.connect(f).connect(g).connect(ctx.destination); src.start();
+    [2400, 3100, 3900, 2900].forEach((hz, i) => setTimeout(() => this.beep(hz, 140, 0.03), 40 + i * 70));
+    this.beep(70, 500, 0.12);
+  },
   stopFlat() { if (flat) { try { flat.o.stop(); } catch {} flat = null; } },
 };

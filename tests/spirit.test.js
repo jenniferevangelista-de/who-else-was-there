@@ -53,3 +53,11 @@ test("room evidence: your pulse, your held breath, your jump", () => {
   assert.deepEqual(r.map((e) => e.kind), ["you_alive", "you_held_breath", "you_jumped"]);
   assert.ok(r.every((e) => e.id.startsWith("R")));
 });
+
+test("the last answer: I AM HERE, citing the face that never left", () => {
+  const a = answer("return", ev);
+  assert.equal(a.board, "I AM HERE");
+  assert.ok(!a.vanished);
+  assert.equal(ev.find((e) => e.id === a.cites[0]).kind, "no_pulse");
+  assert.equal(answer("return", []).vanished, true);
+});

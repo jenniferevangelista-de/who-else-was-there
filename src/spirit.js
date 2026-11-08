@@ -45,6 +45,12 @@ export function answer(qid, ev) {
       bigotes: `The second face disappeared at second ${sec(face2.t1)}, when the coat went back on the stand. Covered, not gone.`,
     },
     bye: { board: "GOODBYE", cites: ev.slice(0, 1).map((e) => e.id), luna: `It said goodbye.`, bigotes: `Session closed.` },
+    // Luna's last question, asked on her own after GOODBYE. The glass moves without waiting for a breath.
+    return: (still || face2) && {
+      board: "I AM HERE", cites: [(still || face2).id],
+      luna: `It never left. The face is still on the wall, under the coat.`,
+      bigotes: `Okay. There is no explanation for that.`,
+    },
   }[qid];
   if (!pick) return { board: "NO", cites: [], luna: "The glass will not move.", bigotes: "Nothing measured to answer with.", vanished: true };
   for (const text of [pick.luna, pick.bigotes]) {

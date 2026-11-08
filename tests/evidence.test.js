@@ -47,3 +47,11 @@ test("cite or vanish", () => {
   assert.match(citeOrVanish({ text: "x", cites: ["E99"] }, ev), /does not exist/);
   assert.match(citeOrVanish({ text: "77 beats", cites: [np.id] }, ev), /number 77/);
 });
+
+test("a dim face with no pulse is unreadable, never a ghost", () => {
+  const dim = stillFaceScan();
+  dim.validation = dim.validation.map((v, i) => ({ ...v, code: i % 2 ? 5 : 0 }));   // half the updates say "too dark"
+  assert.equal(readFace(dim).verdict, "unreadable");
+  const ev = buildEvidence({ full: null, regions: [dim] });
+  assert.equal(ev[0].kind, "unreadable");
+});

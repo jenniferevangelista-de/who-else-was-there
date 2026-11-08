@@ -1,0 +1,126 @@
+{
+  "planted": {
+    "what": "Synthetic scans with a known answer, run through src/evidence.js. They test the app's logic, not Presage SmartSpectra's accuracy, and no person is in them.",
+    "generated_by": "npm run benchmark",
+    "runs_per_case": 200,
+    "rules": {
+      "minPulseConf": 50,
+      "minFaceShare": 0.6,
+      "maxPoorShare": 0.3,
+      "minWindowSec": 15,
+      "heldBreathSec": 3,
+      "heldBreathFlat": 0.15,
+      "pulseJumpBpm": 8,
+      "pulseJumpSec": 10,
+      "multiFaceMinSec": 1
+    },
+    "faces": {
+      "living": {
+        "expected": "alive",
+        "runs": 200,
+        "correct": 200,
+        "verdicts": {
+          "alive": 200
+        },
+        "called_a_ghost": 0
+      },
+      "still": {
+        "expected": "no_pulse",
+        "runs": 200,
+        "correct": 200,
+        "verdicts": {
+          "no_pulse": 200
+        },
+        "called_a_ghost": 200
+      },
+      "shadow": {
+        "expected": "no_face",
+        "runs": 200,
+        "correct": 200,
+        "verdicts": {
+          "no_face": 200
+        },
+        "called_a_ghost": 0
+      },
+      "dim_living": {
+        "expected": "unreadable",
+        "runs": 200,
+        "correct": 200,
+        "verdicts": {
+          "unreadable": 200
+        },
+        "called_a_ghost": 0
+      },
+      "dim_still": {
+        "expected": "unreadable",
+        "runs": 200,
+        "correct": 200,
+        "verdicts": {
+          "unreadable": 200
+        },
+        "called_a_ghost": 0
+      }
+    },
+    "held_breath": {
+      "1s": {
+        "runs": 200,
+        "detected": 0,
+        "should_detect": false
+      },
+      "2s": {
+        "runs": 200,
+        "detected": 0,
+        "should_detect": false
+      },
+      "3s": {
+        "runs": 200,
+        "detected": 69,
+        "should_detect": true
+      },
+      "4s": {
+        "runs": 200,
+        "detected": 200,
+        "should_detect": true
+      },
+      "6s": {
+        "runs": 200,
+        "detected": 200,
+        "should_detect": true
+      }
+    },
+    "pulse_jump": {
+      "+0 bpm": {
+        "runs": 200,
+        "detected": 0,
+        "should_detect": false
+      },
+      "+4 bpm": {
+        "runs": 200,
+        "detected": 0,
+        "should_detect": false
+      },
+      "+8 bpm": {
+        "runs": 200,
+        "detected": 199,
+        "should_detect": true
+      },
+      "+12 bpm": {
+        "runs": 200,
+        "detected": 200,
+        "should_detect": true
+      },
+      "+16 bpm": {
+        "runs": 200,
+        "detected": 200,
+        "should_detect": true
+      }
+    }
+  },
+  "receipts": {
+    "unit_tests": 24,
+    "frames_saved": 0,
+    "video_recorded": false,
+    "sdk_telemetry": "off",
+    "language_model_calls": 0
+  }
+}

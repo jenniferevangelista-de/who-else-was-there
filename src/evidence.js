@@ -10,10 +10,14 @@
 //   validation:  [{ t, code }]         SmartSpectra ValidationCode over time (0 ok, 1 no face, 2 multiple faces, ...)
 
 export const VALIDATION = Object.freeze({ OK: 0, NO_FACE: 1, MULTIPLE_FACES: 2 });
+// Codes that mean "a face is there but the picture is not good enough to read it":
+// too dark, too bright, low frame rate, excessive motion, face too close/far/high/low, not facing forward.
+export const POOR_READING = new Set([5, 6, 11, 12, 13, 14, 15, 16, 17]);
 
 export const RULES = Object.freeze({
   minPulseConf: 50,      // a pulse reading counts from this confidence up
-  minFaceShare: 0.6,     // share of validation updates that saw exactly one face, to say "a face was there"
+  minFaceShare: 0.6,     // share of validation updates that saw a face, to say "a face was there"
+  maxPoorShare: 0.3,     // above this share of poor-picture updates, "no pulse" becomes "unreadable"
   minWindowSec: 15,      // a region must be watched this long before "no pulse" can be said
   heldBreathSec: 3,      // flat chest trace for this long = held breath
   heldBreathFlat: 0.15,  // flat = range under 15 % of the typical breathing range
@@ -51,9 +55,11 @@ export function readFace(scan, rules = RULES) {
   const goodBreath = (scan.breathing ?? []).filter((b) => b.conf >= rules.minPulseConf);
   const span = scan.t1 - scan.t0;
   const maxConf = Math.max(0, ...(scan.pulse ?? []).map((p) => p.conf ?? 0));
+  const poorShare = val.length ? val.filter((v) => POOR_READING.has(v.code)).length / val.length : 0;
   let verdict;
   if (faceShare < rules.minFaceShare) verdict = "no_face";
   else if (good.length) verdict = "alive";
+  else if (poorShare > rules.maxPoorShare) verdict = "unreadable";   // never call a badly lit face a ghost
   else if (span >= rules.minWindowSec) verdict = "no_pulse";
   else verdict = "too_short";
   return {
@@ -131,10 +137,10 @@ export function buildEvidence({ full, regions = [] }, rules = RULES) {
   for (const reg of regions) {
     const f = readFace(reg, rules);
     if (f.verdict === "too_short") continue;
-    const kind = { alive: "region_alive", no_pulse: "no_pulse", no_face: "only_shadow" }[f.verdict];
+    const kind = { alive: "region_alive", no_pulse: "no_pulse", no_face: "only_shadow", unreadable: "unreadable" }[f.verdict];
     cards.push({ kind, t0: reg.t0, t1: reg.t1, value: f.verdict === "alive" ? f.pulseBpm : 0, unit: "bpm", region: reg.region, detail: f });
   }
-  const ORDER = ["living", "second_face", "no_pulse", "only_shadow", "region_alive", "held_breath", "pulse_jump"];
+  const ORDER = ["living", "second_face", "no_pulse", "only_shadow", "unreadable", "region_alive", "held_breath", "pulse_jump"];
   cards.sort((a, b) => a.t0 - b.t0 || ORDER.indexOf(a.kind) - ORDER.indexOf(b.kind));
   return cards.map((c, i) => ({ id: `E${i + 1}`, measuredBy: "Presage SmartSpectra", ...c }));
 }

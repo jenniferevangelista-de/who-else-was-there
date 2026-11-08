@@ -65,3 +65,39 @@ export function reading(ev) {
   if (jump) lines.push({ who: "bigotes", text: `Then her pulse rose ${jump.value} bpm. A startle, most likely.`, cites: [jump.id] });
   return lines.filter((l) => !citeOrVanish(l, ev));
 }
+
+/** Who answers: a fictional spirit chosen from the evidence, like a case file card. */
+export function spiritFor(ev) {
+  const still = find(ev, "no_pulse"), held = find(ev, "held_breath"), face2 = find(ev, "second_face");
+  if (still && held) return { archetype: "The Guardian", name: "Odette", story: "The woman in the oval portrait. She has watched this hallway for a long time.", goal: "to keep whoever lives here inside tonight", cites: [still.id, held.id] };
+  if (still) return { archetype: "The Watcher", name: "Odette", story: "A face on the wall that never blinks.", goal: "to be noticed", cites: [still.id] };
+  if (face2) return { archetype: "The Visitor", name: "Nobody", story: "A second face the scope could not place.", goal: "unknown", cites: [face2.id] };
+  return null;
+}
+
+/** Free text from the investigator, matched to a question the spirit can answer. */
+export function matchQuestion(text) {
+  const t = String(text).toLowerCase();
+  const rules = [
+    ["bye", /\b(bye|goodbye|leave|adeus|tchau)\b/],
+    ["alive", /\b(alive|dead|breath|breathe|heart|pulse|vivo|viva|morto|morta|coração|respira)/],
+    ["where", /\b(where|now|still|coat|onde|agora|casaco)\b/],
+    ["why", /\b(why|stop|stopped|door|stay|warn|por ?que|porta|ficar|parou)\b/],
+    ["who", /\b(who|name|you|quem|nome)\b/],
+  ];
+  for (const [id, re] of rules) if (re.test(t)) return id;
+  return null;
+}
+
+/** The Room: the investigator's own live readings become evidence too. */
+export function roomEvidence({ pulse = [], trace = [] }, heldBreaths, pulseJumps) {
+  const ev = [];
+  const good = pulse.filter((p) => p.conf >= 50);
+  if (good.length) {
+    const s = [...good.map((p) => p.v)].sort((a, b) => a - b);
+    ev.push({ kind: "you_alive", t0: good[0].t, t1: good.at(-1).t, value: Math.round(s[s.length >> 1] * 10) / 10, unit: "bpm" });
+  }
+  for (const h of heldBreaths(trace)) ev.push({ kind: "you_held_breath", t0: h.t0, t1: h.t1, value: Math.round((h.t1 - h.t0) * 10) / 10, unit: "s" });
+  for (const j of pulseJumps(pulse)) ev.push({ kind: "you_jumped", t0: j.t, t1: j.t, value: Math.round((j.to - j.from) * 10) / 10, unit: "bpm" });
+  return ev.sort((a, b) => a.t0 - b.t0).map((e, i) => ({ id: `R${i + 1}`, measuredBy: "Presage SmartSpectra", ...e }));
+}

@@ -1,12 +1,13 @@
 // Ghost Hunt: Who Else Was There? The story, one screen at a time.
-import { buildEvidence, validationRuns } from "../../src/evidence.js";
-import { answer, reading, QUESTIONS } from "../../src/spirit.js";
+import { buildEvidence, validationRuns, heldBreaths, pulseJumps } from "../../src/evidence.js";
+import { answer, reading, QUESTIONS, spiritFor, matchQuestion, roomEvidence } from "../../src/spirit.js";
 import { sampleScans, SAMPLE_CASE } from "../../src/sample.js";
 import { sampleMonth, monthTotals, NIGHT_LABEL } from "../../src/nights.js";
 import { createScope, scopeHTML } from "./scope.js";
 import { drawScene, marinaFace, portraitFace } from "./scene.js";
 import { boardHTML, spell } from "./board.js";
 import * as presage from "./presage.js";
+import MEASURED from "../../demo/measured.json";
 
 const $ = (s, r = document) => r.querySelector(s);
 const ORN = `<svg class="ornament" viewBox="0 0 220 18" aria-hidden="true"><path d="M0 9h86M134 9h86" stroke="currentColor" stroke-width="1"/><path d="M110 2c-6 0-9 4-9 7s3 7 9 7 9-4 9-7-3-7-9-7zM96 9c-4-4-8-4-10 0 2 4 6 4 10 0zM124 9c4-4 8-4 10 0-2 4-6 4-10 0z" fill="none" stroke="currentColor" stroke-width="1.2"/><circle cx="110" cy="9" r="2" fill="currentColor"/></svg>`;
@@ -17,6 +18,7 @@ const KIND = {
   second_face: { name: "A second face", icon: "img/wisp.svg" },
   no_pulse: { name: "A face with no pulse", icon: "img/heart-still.svg" },
   only_shadow: { name: "A shape with no face", icon: "img/wisp.svg" },
+  unreadable: { name: "Too dark to read", icon: "img/wisp.svg" },
   region_alive: { name: "Someone alive in the corner", icon: "img/heart.svg" },
   held_breath: { name: "She held her breath", icon: "img/wisp.svg" },
   pulse_jump: { name: "Her pulse jumped", icon: "img/heart.svg" },
@@ -373,41 +375,122 @@ const SCREENS = [
       $("#noCam", el).addEventListener("click", () => { cameraOff(); state.noCam = true; toast("No camera: the glass will drift on its own."); });
     } },
 
-  { id: "board", chapter: "The séance", next: "Read the dossier →", html: () => `
-    <div class="grid2">
-      <div>${boardHTML()}<div class="spell" id="spell"></div></div>
+  { id: "board", chapter: "The séance", next: "Read the dossier →", html: () => {
+    const sp = spiritFor(state.evidence);
+    return `
+    ${sp ? `<div class="card spirit-card"><div class="kicker">${sp.archetype} · cites ${sp.cites.join(", ")}</div>
+      <h2 style="margin:2px 0">${sp.name}</h2><p style="margin:0">${sp.story} <i class="muted">Its goal: ${sp.goal}.</i></p></div>` : ""}
+    <div class="grid2" style="margin-top:18px;grid-template-columns:1.45fr 1fr">
+      <div class="seance-stage">
+        <div class="crew-top"><img src="img/luna.svg" alt="Luna"><span>Luna reads the glass</span></div>
+        <div class="crew-left"><img src="img/bigotes.svg" alt="Dr. Bigotes"><i class="candle"></i><span>Dr. Bigotes checks the evidence</span></div>
+        ${boardHTML()}
+        <div class="crew-right"><img src="img/xochi.svg" alt="Xochi"><i class="candle"></i><span>Xochi keeps watch</span></div>
+        <div class="spell" id="spell"></div>
+      </div>
       <div class="card dark">
-        <div class="kicker">Ask it something</div>
-        <div class="questions" id="qs">${QUESTIONS.map((q) => `<button class="q" data-q="${q.id}">${q.text}</button>`).join("")}</div>
+        <div class="kicker">Ask the spirit</div>
+        <p class="muted" style="margin-top:0">It speaks only through the glass, three words at most. Every answer must point at a measured moment, or the glass stays still.</p>
+        <form id="askForm" class="row" style="gap:10px;flex-wrap:nowrap"><input id="askText" class="ask" placeholder="Type a question, in your words…" autocomplete="off"><button class="btn-main" style="padding:10px 20px">Ask</button></form>
+        <div class="questions" id="qs" style="margin-top:12px">${QUESTIONS.map((q) => `<button class="q" data-q="${q.id}">${q.text}</button>`).join("")}</div>
         <p class="hush" id="hush"></p>
         <div id="answers"></div>
       </div>
-    </div>`,
+    </div>`; },
     enter(el) {
-      el.querySelectorAll(".q").forEach((b) => b.addEventListener("click", async () => {
-        el.querySelectorAll(".q").forEach((x) => (x.disabled = true));
-        const a = answer(b.dataset.q, state.evidence);
+      const ask = async (qid, label) => {
+        el.querySelectorAll(".q, #askForm button").forEach((x) => (x.disabled = true));
+        const a = qid ? answer(qid, state.evidence) : { board: "NO", cites: [], luna: "The glass will not move for that.", bigotes: "Nothing measured answers it. Try asking who, why, where, or if it is alive." };
         $("#spell", el).textContent = "";
         $("#hush", el).textContent = state.live ? "Breathe out slowly. Stay silent." : "The glass is moving.";
-        await spell($(".board", el), a.board, {
-          nextExhale: () => waitExhale(), isSilent: () => !state.talking,
-          onChar: (s) => ($("#spell", el).textContent = s),
-        });
+        await spell($(".board", el), a.board, { nextExhale: () => waitExhale(), isSilent: () => !state.talking, onChar: (t) => ($("#spell", el).textContent = t) });
         $("#hush", el).textContent = "";
-        $("#answers", el).innerHTML = say("luna", a.luna, a.cites) + say("bigotes", a.bigotes, a.cites);
-        el.querySelectorAll(".q").forEach((x) => (x.disabled = false));
-        b.disabled = true;
-        if (b.dataset.q === "where") toast("Under the coat. It is still there.", 4000);
-      }));
+        $("#answers", el).innerHTML = `<p class="muted" style="margin:6px 0">“${label}”</p>` + say("luna", a.luna, a.cites) + say("bigotes", a.bigotes, a.cites);
+        el.querySelectorAll(".q, #askForm button").forEach((x) => (x.disabled = false));
+        if (qid === "where") toast("Under the coat. It is still there.", 4000);
+      };
+      el.querySelectorAll(".q").forEach((b) => b.addEventListener("click", () => ask(b.dataset.q, b.textContent)));
+      $("#askForm", el).addEventListener("submit", (e) => { e.preventDefault(); const t = $("#askText", el).value.trim(); if (t) ask(matchQuestion(t), t); });
     } },
 
-  { id: "dossier", chapter: "Xochi's dossier", next: "One more thing →", html: () => `
+  { id: "dossier", chapter: "Xochi's dossier", next: "Enter the Room →",
+    enter(el) { $("#dl", el)?.addEventListener("click", downloadDossier); }, html: () => `
     <div class="card">
       <div class="kicker">Xochi's dossier · Case 01 · The Coat</div><h2>What we know, and what we don't</h2>
       ${reading(state.evidence).map((l) => say(l.who, l.text, l.cites)).join("")}
       ${say("xochi", "The measurements are real. The spirit is fiction. Marina stayed home, and that is the part that matters.")}
-      <p class="muted">${state.mode === "replay" ? "These are sample numbers. " : ""}Nothing from this session was saved. Close the app and it is gone.</p>
+      <div class="row" style="margin-top:10px"><button class="btn-main" id="dl">Download Xochi's dossier</button>
+      <span class="muted">${state.mode === "replay" ? "These are sample numbers. " : ""}Nothing from this session was saved unless you download it.</span></div>
     </div>` },
+
+  { id: "room", chapter: "The Room", next: "How it was tested →", html: () => `
+    <div class="grid2">
+      <div class="card dark">
+        <div class="kicker">Case 03 · The Room · your camera, live</div><h2>Now the scope reads you</h2>
+        <p>Turn your camera on and sit still. The Pulse-o-Scope finds your pulse and your breath, the same way it read Marina. Then ask the room's spirit a question and <b>stay still while the glass stops</b>.</p>
+        <p class="muted">If your pulse jumps right after the glass stops, the game will notice. That is the only trick: it is your own heartbeat.</p>
+        <div class="row"><button class="btn-main mint" id="roomOn">Turn my camera on</button><button class="btn-soft" id="roomAsk" disabled>Is someone here?</button></div>
+        <div id="roomNotes" style="margin-top:12px">${say("xochi", "I will write down what the scope sees. Nothing else.")}</div>
+      </div>
+      <div>${scopeHTML("scopeRoom", "PULSE-O-SCOPE · YOU, LIVE")}
+        <div class="locker" id="roomEv" style="margin-top:16px"></div></div>
+    </div>`,
+    enter(el) {
+      const scope = createScope($("#scopeRoom canvas", el));
+      $("#roomOn", el).addEventListener("click", async () => {
+        await startLive(el, scope, "#scopeRoom");
+        $("#roomAsk", el).disabled = false;
+        state.roomTimer = setInterval(() => {
+          if (!document.body.contains(el)) return clearInterval(state.roomTimer);
+          const src = state.live?.scan ?? state.fakeScan; if (!src) return;
+          const ev = roomEvidence(src, heldBreaths, pulseJumps);
+          $("#roomEv", el).innerHTML = ev.map((e) => `<div class="ev"><span class="id">${e.id}</span><div class="kind">${{ you_alive: "You, alive", you_held_breath: "You held your breath", you_jumped: "Your pulse jumped" }[e.kind]}</div><div class="val">${e.value}<small style="font-size:20px"> ${e.unit}</small></div><div class="src">${state.liveSdk ? "" : "SIMULATED · "}${e.measuredBy}</div></div>`).join("");
+          const jump = ev.filter((e) => e.kind === "you_jumped").at(-1);
+          if (jump && state.glassStoppedAt && jump.t0 >= state.glassStoppedAt && jump.t0 - state.glassStoppedAt < 8 && !state.roomScared) {
+            state.roomScared = true; document.body.classList.add("lightsout");
+            $("#roomNotes", el).innerHTML = `<div class="cliff" style="padding:6px 0"><div class="line" style="font-size:44px"><em>That wasn't part of the game.</em></div></div>` + say("bigotes", `Your pulse rose ${jump.value} bpm, ${Math.round(jump.t0 - state.glassStoppedAt)} seconds after the glass stopped. That was you.`, [jump.id]);
+            setTimeout(() => document.body.classList.remove("lightsout"), 2500);
+          }
+        }, 1000);
+      });
+      $("#roomAsk", el).addEventListener("click", async () => {
+        $("#roomNotes", el).innerHTML = say("luna", "Spirit of this room… is someone here with us?");
+        await sleep(2500);
+        const now = (state.live?.scan ?? state.fakeScan)?.t1 ?? 0;
+        state.glassStoppedAt = now; state.roomScared = false;
+        $("#roomNotes", el).innerHTML = say("luna", "The glass went to <b>YES</b>, and stopped. Stay very still…");
+      });
+    } },
+
+  { id: "tested", chapter: "How it was tested", next: "One more thing →", html: () => {
+    const P = MEASURED.planted, R = MEASURED.receipts;
+    const pct = (a, b) => Math.round((100 * a) / b) + "%";
+    const faceRows = [["living", "A living face, good light"], ["still", "A still face (photo, mask)"], ["shadow", "No face at all"], ["dim_living", "A living face, too dark"], ["dim_still", "A still face, too dark"]];
+    return `
+    <div class="card dark">
+      <div class="kicker">How it was tested · Dr. Bigotes insisted</div><h2>Planted ghosts</h2>
+      <p class="muted" style="margin-top:0">${P.what}</p>
+      <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0">
+        <div class="stat"><b>${R.unit_tests}</b><span>unit tests</span></div>
+        <div class="stat"><b>${P.faces.living.called_a_ghost + P.faces.dim_living.called_a_ghost}</b><span>living faces called a ghost, of ${2 * P.runs_per_case}</span></div>
+        <div class="stat"><b>${R.frames_saved}</b><span>frames saved</span></div>
+        <div class="stat"><b>${R.language_model_calls}</b><span>language model calls</span></div>
+      </div>
+      <div class="grid2" style="grid-template-columns:1.2fr 1fr">
+        <table class="tbl"><thead><tr><th>Planted scan</th><th>Should read</th><th>Read right</th></tr></thead><tbody>
+          ${faceRows.map(([k, label]) => `<tr><td>${label}</td><td>${P.faces[k].expected.replace("_", " ")}</td><td><b>${P.faces[k].correct} / ${P.faces[k].runs}</b></td></tr>`).join("")}
+        </tbody></table>
+        <div>
+          <table class="tbl"><thead><tr><th>Breath held for</th><th>Noticed</th></tr></thead><tbody>
+            ${Object.entries(P.held_breath).map(([k, v]) => `<tr><td>${k}</td><td>${pct(v.detected, v.runs)}${v.should_detect ? "" : " <span class='muted'>(should stay quiet)</span>"}</td></tr>`).join("")}
+          </tbody></table>
+          <table class="tbl" style="margin-top:12px"><thead><tr><th>Pulse rise in 6 s</th><th>Noticed</th></tr></thead><tbody>
+            ${Object.entries(P.pulse_jump).map(([k, v]) => `<tr><td>${k}</td><td>${pct(v.detected, v.runs)}${v.should_detect ? "" : " <span class='muted'>(should stay quiet)</span>"}</td></tr>`).join("")}
+          </tbody></table>
+        </div>
+      </div>
+      ${say("bigotes", "A held breath right at the 3-second line is noticed only some of the time. Below it, never. I would rather miss a gasp than invent one.")}
+    </div>`; } },
 
   { id: "end", chapter: "Case open", next: "Start again ↺", html: () => `
     <div class="cliff">
@@ -420,13 +503,27 @@ const SCREENS = [
 ];
 
 // ------------------------------------------------------------------ live camera (the investigator)
-async function startLive(el, scope) {
-  if (!state.liveSdk) {   // no key: a gentle simulated breath, clearly labelled
+async function startLive(el, scope, sel = "#scopeMe") {
+  if (state.live || state.fakeLive) return;              // already on
+  if (!state.liveSdk) {   // no key: a gentle simulated breath and pulse, clearly labelled
     camUI(false);
-    toast("Replay mode: no Presage key on this computer, so your camera stays off and the breath is simulated.", 5000);
-    let ph = 0;
-    state.fakeLive = setInterval(() => { ph += 0.05; const v = (Math.sin(ph) + 1) / 2; const f = document.getElementById("breathFill"); if (f) f.style.width = v * 100 + "%"; if (v < 0.05) state.lastExhale = performance.now(); }, 50);
-    scope.set(70); $("#scopeMe [data-state]").textContent = "SIMULATED";
+    toast("Replay mode: no Presage key on this computer, so your camera stays off and the readings are simulated.", 5000);
+    const t0 = performance.now(), fake = { t0: 0, t1: 0, pulse: [], trace: [] };
+    state.fakeScan = fake;
+    let lastP = -1;
+    state.fakeLive = setInterval(() => {
+      const t = (performance.now() - t0) / 1000, v = (Math.sin(t * 2 * Math.PI / 4.5) + 1) / 2;
+      fake.t1 = t; fake.trace.push({ t, v });
+      if (Math.floor(t) !== lastP && t > 4) {      // one pulse reading per second; a startle 3 s after the glass stops
+        lastP = Math.floor(t);
+        const scare = state.glassStoppedAt != null && t > state.glassStoppedAt + 3 ? 12 : 0;
+        fake.pulse.push({ t, v: 70 + scare + Math.sin(t) * 0.8, conf: 85 });
+        scope.set(fake.pulse.at(-1).v); const bpm = document.querySelector(`${sel} [data-bpm]`); if (bpm) bpm.textContent = Math.round(fake.pulse.at(-1).v);
+      }
+      const f = document.getElementById("breathFill"); if (f) f.style.width = v * 100 + "%";
+      if (v < 0.05) state.lastExhale = performance.now();
+    }, 50);
+    const st = document.querySelector(`${sel} [data-state]`); if (st) st.textContent = "SIMULATED";
     return;
   }
   try {
@@ -435,8 +532,8 @@ async function startLive(el, scope) {
       onStream: (s) => { const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); } },
       onSample: ({ pulse, talking }) => {
         state.talking = talking; $("#talkFlag") && ($("#talkFlag").textContent = talking ? "you're talking · the glass waits" : "");
-        if (pulse) { scope.set(pulse); const b = $("#scopeMe [data-bpm]"); if (b) b.textContent = Math.round(pulse); }
-        const st = $("#scopeMe [data-state]"); if (st) st.textContent = pulse ? "LIVE" : "WARMING UP";
+        if (pulse) { scope.set(pulse); const b = document.querySelector(`${sel} [data-bpm]`); if (b) b.textContent = Math.round(pulse); }
+        const st = document.querySelector(`${sel} [data-state]`); if (st) st.textContent = pulse ? "LIVE" : "WARMING UP";
       },
       onTrace: (trace) => {
         const recent = trace.slice(-60); if (recent.length < 5) return;
@@ -455,19 +552,51 @@ async function waitExhale() {
   while (state.lastExhale < asked) { await sleep(80); if (performance.now() - asked > 6000) break; }
 }
 
+// ------------------------------------------------------------------ the dossier file (numbers and words only, never images)
+function downloadDossier() {
+  const ev = state.evidence, sp = spiritFor(ev);
+  const lines = [
+    "XOCHI'S DOSSIER · Ghost Hunt: Who Else Was There? · Case 01 · The Coat",
+    state.mode === "replay" ? "SAMPLE NUMBERS (the staged tape has not been measured yet)" : "Measured by Presage SmartSpectra on this computer",
+    "", "EVIDENCE",
+    ...ev.map((e) => `${e.id}  ${KIND[e.kind].name}: ${e.value} ${e.unit}, ${fmt(e.t0)}${e.t1 !== e.t0 ? " to " + fmt(e.t1) : ""}`),
+    "", "THE CREW", ...reading(ev).map((l) => `${l.who.toUpperCase()}: ${l.text} [${l.cites.join(", ")}]`),
+    "", sp ? `THE SPIRIT (fiction): ${sp.name}, ${sp.archetype}. ${sp.story}` : "",
+    "", "The measurements are real. The spirit is fiction. No frames, images or faces are in this file.",
+  ];
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([lines.join("\n")], { type: "text/plain" }));
+  a.download = "xochi-dossier-the-coat.txt"; a.click();
+  toast("Dossier saved. It holds numbers and words only.");
+}
+
 // ------------------------------------------------------------------ navigation
+const SECTIONS = [
+  { name: "Welcome", ids: ["cold", "title", "consent"] },
+  { name: "The Map", ids: ["case", "calendar"] },
+  { name: "The Tape", ids: ["tape", "point", "locker"] },
+  { name: "The Séance", ids: ["prep", "board", "dossier"] },
+  { name: "The Room", ids: ["room"] },
+  { name: "How it was tested", ids: ["tested"] },
+  { name: "The end", ids: ["end"] },
+];
 function updateNav() {
   const s = SCREENS[state.i];
   $("#next").textContent = s.next ?? "Next →";
   $("#next").disabled = s.canNext ? !s.canNext() : false;
   $("#back").style.visibility = state.i ? "visible" : "hidden";
   $("#where").textContent = `${s.chapter} · ${state.i + 1} of ${SCREENS.length}`;
-  $("#chapters").innerHTML = SCREENS.map((x, i) => `<button class="chap ${i === state.i ? "on" : state.seen.has(i) ? "seen" : ""}" aria-label="${x.chapter}" data-i="${i}" ${state.seen.has(i) || i === state.i ? "" : "disabled"}></button>`).join("");
-  $("#chapters").querySelectorAll(".chap").forEach((b) => b.addEventListener("click", () => go(+b.dataset.i)));
+  const cur = SECTIONS.find((g) => g.ids.includes(s.id));
+  $("#chapters").innerHTML = SECTIONS.map((g) => {
+    const first = SCREENS.findIndex((x) => x.id === g.ids[0]);
+    const reached = g.ids.some((id) => state.seen.has(SCREENS.findIndex((x) => x.id === id)));
+    return `<button class="chip ${g === cur ? "on" : reached ? "seen" : ""}" data-i="${first}" ${reached || g === cur ? "" : "disabled"}>${g.name}</button>`;
+  }).join("");
+  $("#chapters").querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => go(+b.dataset.i)));
 }
 function go(i) {
   if (i < 0 || i >= SCREENS.length) i = 0;
-  if (SCREENS[i].id === "locker" && !state.evidence.length) state.evidence = buildEvidence(sampleScans());
+  if (i >= SCREENS.findIndex((x) => x.id === "locker") && !state.evidence.length) state.evidence = buildEvidence(sampleScans());
   state.seen.add(state.i); state.i = i;
   const stage = $("#stage"); stage.innerHTML = "";
   const sec = document.createElement("section"); sec.className = "screen on"; sec.innerHTML = SCREENS[i].html();

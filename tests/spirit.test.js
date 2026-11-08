@@ -29,3 +29,27 @@ test("the reading keeps only lines that pass cite or vanish", () => {
   assert.ok(r.length >= 4);
   for (const l of r) assert.ok(l.cites.length);
 });
+
+import { spiritFor, matchQuestion, roomEvidence } from "../src/spirit.js";
+import { heldBreaths, pulseJumps } from "../src/evidence.js";
+
+test("the spirit card comes from the evidence", () => {
+  const s = spiritFor(ev);
+  assert.equal(s.archetype, "The Guardian");
+  assert.ok(s.cites.length === 2);
+  assert.equal(spiritFor([]), null);
+});
+test("free text finds the right question, in English or Portuguese", () => {
+  assert.equal(matchQuestion("Who are you?"), "who");
+  assert.equal(matchQuestion("você está viva?"), "alive");
+  assert.equal(matchQuestion("why did she stop at the door"), "why");
+  assert.equal(matchQuestion("onde você está agora"), "where");
+  assert.equal(matchQuestion("tchau"), "bye");
+  assert.equal(matchQuestion("banana"), null);
+});
+test("room evidence: your pulse, your held breath, your jump", () => {
+  const scan = sampleScans().full;
+  const r = roomEvidence(scan, heldBreaths, pulseJumps);
+  assert.deepEqual(r.map((e) => e.kind), ["you_alive", "you_held_breath", "you_jumped"]);
+  assert.ok(r.every((e) => e.id.startsWith("R")));
+});

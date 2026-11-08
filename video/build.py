@@ -71,7 +71,7 @@ for n in narr:
         if n["kind"] == "live" and HAS_LIVE:
             v0, v1 = 0.0, _dur(LIVE)
         else:
-            s = scenes["prep" if n["kind"] == "live" else n["id"]]
+            s = scenes["room" if n["kind"] == "live" else n["id"]]
             v0, v1 = s["start"], s["end"]
         tail = 2.2 if n["id"] == "point" else 1.8 if n["id"] == "end" else 0.9
         speed = min(3.0, max(1.0, (v1 - v0) / (d + tail)))

@@ -177,6 +177,7 @@ function drawMarina(ctx, w, h, t) {
   const stride = moving ? Math.sin(t * 9) : 0, bob = moving ? Math.abs(stride) * h * 0.006 : 0;
   const my = m.y * h - bob, coatOn = t < HUNG_AT, atDoor = t >= 19 && t < 26.5, U = h, feet = 0.812 * h;
   const sway = Math.sin(t * 2) * U * 0.005 + stride * U * 0.008;
+  const toe = dx < -1e-4 || (t >= 36 && t < 40) ? -1 : 1;      // her boots point the way she is walking
   const body = coatOn ? "#d0475a" : "#a98be0", trim = coatOn ? "#9c2f42" : "#7d60bd", skin = "#f2cfb6", hairC = "#8a4230";
 
   ctx.save(); ctx.globalAlpha = 0.32; ctx.fillStyle = "#000"; ctx.beginPath(); ctx.ellipse(mx, feet + U * 0.006, U * 0.09, U * 0.018, 0, 0, 7); ctx.fill(); ctx.restore();
@@ -195,8 +196,8 @@ function drawMarina(ctx, w, h, t) {
   for (const side of [-1, 1]) {
     const lx = mx + side * U * 0.026 + side * stride * U * 0.018, kick = side * stride * U * 0.006;
     limb(ctx, h, [[lx, my + U * 0.29], [lx + kick, feet - U * 0.05]], "#4a3560", 0.021);
-    ctx.beginPath(); ctx.moveTo(lx - U * 0.016 + kick, feet - U * 0.07); ctx.lineTo(lx + U * 0.016 + kick, feet - U * 0.07); ctx.lineTo(lx + U * 0.018 + kick, feet - U * 0.02);
-    ctx.lineTo(lx + U * 0.036 + kick, feet - U * 0.008); ctx.lineTo(lx + U * 0.036 + kick, feet); ctx.lineTo(lx - U * 0.018 + kick, feet); ctx.closePath(); ctx.fillStyle = "#7c4a3a"; ctx.fill(); inked(ctx, h, 0.004);
+    ctx.beginPath(); ctx.moveTo(lx - toe * U * 0.016 + kick, feet - U * 0.07); ctx.lineTo(lx + toe * U * 0.016 + kick, feet - U * 0.07); ctx.lineTo(lx + toe * U * 0.018 + kick, feet - U * 0.02);
+    ctx.lineTo(lx + toe * U * 0.036 + kick, feet - U * 0.008); ctx.lineTo(lx + toe * U * 0.036 + kick, feet); ctx.lineTo(lx - toe * U * 0.018 + kick, feet); ctx.closePath(); ctx.fillStyle = "#7c4a3a"; ctx.fill(); inked(ctx, h, 0.004);
   }
 
   // the far arm, with the bag

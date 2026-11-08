@@ -3,7 +3,7 @@
 import { getLang } from "../../src/i18n.js";
 
 const T = (en, pt) => ({ en, pt });
-const LIVE = T("live", "ao vivo"), SAMPLE = T("sample here, real with a tape", "exemplo aqui, real com uma fita"), LOGIC = T("our logic", "nossa lógica");
+const LIVE = T("live", "ao vivo"), SAMPLE = T("sample here, real with a tape", "exemplo aqui, real com um vídeo"), LOGIC = T("our logic", "nossa lógica");
 
 const SCREEN = {
   cold: [[LOGIC, T("The whole idea in two lines: a living face has a heartbeat. The Pulse-o-Scope is built on Presage SmartSpectra's camera pulse reading.", "A ideia em duas frases: rosto vivo tem batimento. O Pulse-o-Scope é feito com a leitura de pulso por câmera do Presage SmartSpectra.")]],
@@ -22,12 +22,12 @@ const SCREEN = {
     [LOGIC, T("Verdict: a face present with no valid pulse is \"no pulse\"; no face is \"a shape\"; too dark is \"unreadable\", never a ghost.", "Veredito: rosto presente sem pulso válido é \"sem pulso\"; sem rosto é \"uma forma\"; escuro demais é \"ilegível\", nunca fantasma.")],
   ],
   locker: [[LOGIC, T("Each card is a number from the scan with its time range. Everything the crew says must cite a card (\"cite or vanish\").", "Cada cartão é um número da leitura com seu intervalo de tempo. Tudo o que a equipe diz precisa citar um cartão (\"cite ou suma\").")]],
-  prep: [
+  roomLive: [
     [LIVE, T("Your webcam goes through the SDK in this app's main process. Pulse rate, breathing rate, chest trace, talking, blinking and facial expression, all in real time.", "Sua webcam passa pelo SDK no processo principal do app. Pulso, ritmo respiratório, traço do tórax, fala, piscadas e expressão facial, tudo em tempo real.")],
     [LIVE, T("The image is blurred on screen and never stored. SDK validation hints (light, distance, motion) appear as short messages.", "A imagem fica borrada na tela e nunca é guardada. As dicas de validação do SDK (luz, distância, movimento) aparecem como mensagens curtas.")],
   ],
   board: [
-    [LIVE, T("The glass moves on your exhale, read from the live chest trace. One breath out carries it three letters.", "O copo anda quando você solta o ar, lido do traço do tórax ao vivo. Uma expirada leva o copo por três letras.")],
+    [LIVE, T("Optional camera: the glass moves on your exhale, read from the live chest trace. One breath out carries it three letters.", "O copo anda quando você solta o ar, lido do traço do tórax ao vivo. Uma expirada leva o copo por três letras.")],
     [LIVE, T("The SDK's talking signal pauses the glass while you speak.", "O sinal de fala do SDK pausa o copo enquanto você fala.")],
     [LOGIC, T("No language model. Answers are templates that must cite measured evidence, and numbers must match it.", "Sem modelo de linguagem. As respostas são modelos que precisam citar provas medidas, e os números precisam bater.")],
   ],
@@ -47,7 +47,7 @@ const CRITERIA = [
   [T("Use of the technology", "Uso da tecnologia"), T("SmartSpectra Node SDK in Electron: pulse rate with confidence, breathing rate, chest trace, talking, blinking, expressions and validation codes, on a live camera and on recordings, including cropped regions.", "SDK Node do SmartSpectra no Electron: pulso com confiança, ritmo respiratório, traço do tórax, fala, piscadas, expressões e códigos de validação, em câmera ao vivo e em gravações, inclusive em regiões recortadas.")],
   [T("Usability", "Usabilidade"), T("One guided story, automatic analysis with visible progress, a timeline you can drag, English and Portuguese, voices, and a way to play without a camera.", "Uma história guiada, análise automática com progresso visível, linha do tempo que dá para arrastar, inglês e português, vozes e opção de jogar sem câmera.")],
   [T("Originality", "Originalidade"), T("The absence of a signal is the discovery: a face with no pulse. Your own breath moves the board, and your blink moves the ghost.", "A ausência do sinal é a descoberta: um rosto sem pulso. Sua própria respiração move o tabuleiro, e sua piscada move o fantasma.")],
-  [T("Consent and data", "Consentimento e dados"), T("Camera only on a button press, no microphone, no frames or video saved, readings in memory only, SDK telemetry off, a consent check for tapes. No language model or other AI service.", "Câmera só ao apertar um botão, sem microfone, sem salvar quadros ou vídeo, leituras só na memória, telemetria do SDK desligada, confirmação de consentimento para fitas. Sem modelo de linguagem ou outro serviço de IA.")],
+  [T("Consent and data", "Consentimento e dados"), T("Camera only on a button press, no microphone, no frames or video saved, readings in memory only, SDK telemetry off, a consent check for tapes. No language model or other AI service.", "Câmera só ao apertar um botão, sem microfone, sem salvar quadros ou vídeo, leituras só na memória, telemetria do SDK desligada, confirmação de consentimento para vídeos. Sem modelo de linguagem ou outro serviço de IA.")],
   [T("Left out on purpose", "Deixado de fora de propósito"), T("HRV stress index, arterial pressure trace and apnea are available in the SDK but unused: this is a game, never a health tool.", "Índice de estresse da VFC, traço de pressão arterial e apneia existem no SDK, mas não são usados: isto é um jogo, nunca uma ferramenta de saúde.")],
 ];
 

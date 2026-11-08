@@ -77,11 +77,18 @@ export function reading(ev) {
   return lines.filter((l) => !citeOrVanish(l, ev));
 }
 
+export const SPIRIT_KINDS = ["The Guardian", "The Haunter", "The Watcher", "The Intruder", "The Shade", "The Veiled", "The Visitor"];
+
 /** Who answers: a fictional spirit chosen from the evidence, like a case file card. */
 export function spiritFor(ev) {
   const still = find(ev, "no_pulse"), held = find(ev, "held_breath"), face2 = find(ev, "second_face");
+  const jump = find(ev, "pulse_jump"), shade = find(ev, "only_shadow"), veiled = find(ev, "unreadable"), alive = find(ev, "region_alive");
   if (still && held) return { archetype: "The Guardian", name: "Odette", story: "The shape at the foot of the stairs. She has stood in this hallway for a long time.", goal: "to keep whoever lives here inside tonight", cites: [still.id, held.id] };
+  if (still && jump) return { archetype: "The Haunter", name: "Silas", story: "A still face, and a living pulse that jumped beside it.", goal: "to be felt", cites: [still.id, jump.id] };
   if (still) return { archetype: "The Watcher", name: "Odette", story: "A face on the wall that never blinks.", goal: "to be noticed", cites: [still.id] };
+  if (alive) return { archetype: "The Intruder", name: "Someone", story: "Not a spirit at all. Someone alive, in the corner of the frame.", goal: "unknown", cites: [alive.id] };
+  if (shade) return { archetype: "The Shade", name: "Ash", story: "A shape in the frame, with no face to read.", goal: "to stay unseen", cites: [shade.id] };
+  if (veiled) return { archetype: "The Veiled", name: "Vesper", story: "Something too dark for the scope to read.", goal: "to stay unread", cites: [veiled.id] };
   if (face2) return { archetype: "The Visitor", name: "Nobody", story: "A second face the scope could not place.", goal: "unknown", cites: [face2.id] };
   return null;
 }

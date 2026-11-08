@@ -84,12 +84,27 @@ export async function scanVideo(video, { from = 0, to = video.duration, region =
   return scan;
 }
 
+/** Open a real camera, skipping virtual ones (a linked phone, OBS), and let its exposure settle before fixing it. */
+async function openCamera() {
+  const all = (await navigator.mediaDevices.enumerateDevices()).filter((d) => d.kind === "videoinput");
+  const pick = all.find((d) => d.label && !/virtual|obs|droidcam|manycam|snap camera|xsplit/i.test(d.label)) ?? all[0];
+  const stream = await navigator.mediaDevices.getUserMedia({ audio: false, video: { ...(pick?.deviceId ? { deviceId: { exact: pick.deviceId } } : {}), width: { ideal: 1280 }, height: { ideal: 720 }, frameRate: { ideal: 30 } } });
+  await new Promise((r) => setTimeout(r, 1800));
+  const track = stream.getVideoTracks()[0], caps = track.getCapabilities?.() ?? {}, advanced = [];
+  for (const k of ["exposureMode", "whiteBalanceMode", "focusMode"]) if (caps[k]?.includes?.("manual")) advanced.push({ [k]: "manual" });
+  if (advanced.length) await track.applyConstraints({ advanced }).catch(() => {});
+  return { stream, label: track.label };
+}
+
 /** The investigator's own camera, live. Returns a handle; `stop()` releases the camera. */
 export async function live({ onStream, onSample, onTrace, onValidation, onStatus, onError } = {}) {
   const sdk = await makeSdk();
   const t0 = performance.now();
   const scan = collector(sdk, () => (performance.now() - t0) / 1000);
-  sdk.on("streamAvailable", (s) => onStream?.(s));
+  const { stream, label } = await openCamera();
+  const release = () => stream.getTracks().forEach((t) => t.stop());
+  sdk.useMediaStream(stream);
+  onStream?.(stream, label);
   sdk.on("validationStatus", (code, ts, hint) => onValidation?.(code, hint));
   sdk.on("processingStatus", (s) => onStatus?.(s));
   // Without this, a bad key (kAuthenticationFailed) or a camera failure after start() would leave the scope on WARMING UP forever.
@@ -99,6 +114,6 @@ export async function live({ onStream, onSample, onTrace, onValidation, onStatus
     onSample?.({ pulse: p?.conf >= 50 ? p.v : null, breathing: b?.conf >= 50 ? b.v : null, talking: !!k?.on, blinks: scan.blinks, expression: scan.expression });
     onTrace?.(scan.trace);
   });
-  await sdk.start();
-  return { scan, async stop() { await sdk.stop().catch(() => {}); sdk.destroy(); } };
+  try { await sdk.start(); } catch (e) { release(); throw e; }
+  return { scan, async stop() { await sdk.stop().catch(() => {}); sdk.destroy(); release(); } };
 }

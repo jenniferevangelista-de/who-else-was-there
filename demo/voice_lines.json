@@ -22,12 +22,12 @@
  {
   "who": "bigotes",
   "lang": "en",
-  "text": "Hmph. I'll watch her pulse. Ghosts don't have one, people do."
+  "text": "I'll watch her pulse. Ghosts don't have one, people do."
  },
  {
   "who": "bigotes",
   "lang": "pt",
-  "text": "Hmpf. Vou observar o pulso dela. Fantasma não tem, gente tem."
+  "text": "Vou observar o pulso dela. Fantasma não tem, gente tem."
  },
  {
   "who": "luna",
@@ -57,7 +57,7 @@
  {
   "who": "xochi",
   "lang": "pt",
-  "text": "Clique em um cartão. Eu mostro aquele momento da fita, e a equipe vai discutir."
+  "text": "Clique em um cartão. Eu mostro aquele momento do vídeo, e a equipe vai discutir."
  },
  {
   "who": "xochi",
@@ -122,12 +122,12 @@
  {
   "who": "luna",
   "lang": "en",
-  "text": "Shhh… I'm Luna. I open the board, and I believe in everything. Almost."
+  "text": "Quiet… I'm Luna. I open the board, and I believe in everything. Almost."
  },
  {
   "who": "luna",
   "lang": "pt",
-  "text": "Shhh… Eu sou a Luna. Eu abro o tabuleiro e acredito em tudo. Quase."
+  "text": "Silêncio… Eu sou a Luna. Eu abro o tabuleiro e acredito em tudo. Quase."
  },
  {
   "who": "bigotes",

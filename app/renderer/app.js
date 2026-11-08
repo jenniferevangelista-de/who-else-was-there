@@ -1,6 +1,6 @@
 // Ghost Hunt: Who Else Was There? The story, one screen at a time.
 import { buildEvidence, validationRuns, heldBreaths, pulseJumps } from "../../src/evidence.js";
-import { answer, reading, QUESTIONS, spiritFor, matchQuestion, roomEvidence } from "../../src/spirit.js";
+import { answer, reading, QUESTIONS, spiritFor, SPIRIT_KINDS, roomEvidence } from "../../src/spirit.js";
 import { sampleScans, SAMPLE_CASE } from "../../src/sample.js";
 import { sampleMonth, monthTotals, NIGHT_LABEL } from "../../src/nights.js";
 import { createScope, scopeHTML } from "./scope.js";
@@ -78,7 +78,7 @@ function clearNext() { const b = $("#whatNow"); b.hidden = true; b.innerHTML = "
 const targetOf = (s) => (typeof s.to === "function" ? s.to() : s.to);
 const forward = () => { const s = SCREENS[state.i]; if (s.id === "consent") state.consent = true; const t = targetOf(s); if (t) goTo(t); else go(state.i + 1); };
 function goTo(id) {
-  if ((id === "prep" || id === "room") && !state.consent) { state.afterConsent = id; id = "consent"; }   // the rules come before any camera
+  if (id === "room" && !state.consent) { state.afterConsent = id; id = "consent"; }   // the rules come before any camera
   go(SCREENS.findIndex((s) => s.id === id));
 }
 
@@ -233,8 +233,8 @@ async function autoScope(el, scope, R, box, ov) {
   box.querySelector(".tag").textContent = "a face · 0 bpm";
   heartBadge(ov, { x: f.x, y: R.y + R.h + 0.2, dead: true });
   bpm.textContent = "0"; st.textContent = "NO PULSE";
-  $("#pointNotes", el).innerHTML = `<div class="cliff" style="padding:0"><div class="line" style="font-size:40px">A face.<br><em>0 beats per minute.</em></div>
-    <p class="sub">The scope watched it for ${Math.round(verdict.t1 - verdict.t0)} seconds. It never breathed. <b>And it was standing right behind her.</b></p></div>`;
+  $("#pointNotes", el).innerHTML = L(`<div class="cliff" style="padding:0"><div class="line" style="font-size:40px">A face.<br><em>0 beats per minute.</em></div>
+    <p class="sub">The scope watched it for ${Math.round(verdict.t1 - verdict.t0)} seconds. It never breathed. <b>And it was standing right behind her.</b></p></div>`);
   state.flat = true; updateNav();
   nextUp([{ label: "See all the evidence →", main: true, do: forward }, { label: "↺ Read it again", do: () => go(state.i) }]);
 }
@@ -279,7 +279,7 @@ const SCREENS = [
       <p class="lead center">Three tiny ghost hunters. One new instrument, built on Presage SmartSpectra: it reads a heartbeat from any face in a video.<br>
       Living faces beat. <b style="color:var(--danger)">The ones that don't are the case.</b></p>
       <div class="crew" style="margin-top:22px">
-        <div class="member" data-intro="luna" data-line="Shhh… I'm Luna. I open the board, and I believe in everything. Almost." role="button" tabindex="0"><div class="halo"><img src="img/luna.svg" alt="Luna"></div><b>Luna</b><span>the medium · opens the board</span></div>
+        <div class="member" data-intro="luna" data-line="Quiet… I'm Luna. I open the board, and I believe in everything. Almost." role="button" tabindex="0"><div class="halo"><img src="img/luna.svg" alt="Luna"></div><b>Luna</b><span>the medium · opens the board</span></div>
         <div class="member" data-intro="bigotes" data-line="Dr. Bigotes. I believe in data. Show me a pulse and I'll show you a person." role="button" tabindex="0"><div class="halo"><img src="img/bigotes.svg" alt="Dr. Bigotes"></div><b>Dr. Bigotes</b><span>the skeptic · checks the scope</span></div>
         <div class="member" data-intro="xochi" data-line="I'm Xochi. I keep watch all night and write down only what the scope saw." role="button" tabindex="0"><div class="halo"><img src="img/xochi.svg" alt="Xochi"></div><b>Xochi</b><span>the night watch · writes it down</span></div>
       </div>
@@ -295,7 +295,7 @@ const SCREENS = [
           <li><b>Nothing is recorded.</b> No frames are saved. Readings live in memory and vanish when you close the app.</li>
           <li><b>Faces of the living are blurred</b> on every screen, including yours.</li>
           <li><b>Only bring tapes where everyone agreed to be in them.</b> The scope reads the people in a video, so they get a say.</li>
-          <li><b>This is a game, not a medical device.</b> A pulse here is a story clue. It says nothing about anyone's body.</li>
+          <li><b>This is a game, not a medical device.</b> A pulse here is a story clue.</li>
           <li>Presage's SDK runs on this computer; it contacts Presage only to check the app's key. Its usage telemetry is switched off.</li>
         </ul>
       </div>
@@ -450,7 +450,7 @@ const SCREENS = [
     <div class="grid2">
       <div><div class="an-head"><span class="kicker">Marina's video · November 2 · hallway camera</span><b id="anStatus">Analyzing the video Marina sent…</b></div>${tapeHTML(true)}</div>
       <div>${scopeHTML("scopeTape", "PULSE-O-SCOPE · WHOLE FRAME")}
-        <div class="card" style="margin-top:16px" id="tapeNotes">${say("bigotes", "Hmph. I'll watch her pulse. Ghosts don't have one, people do.")}</div></div>
+        <div class="card" style="margin-top:16px" id="tapeNotes">${say("bigotes", "I'll watch her pulse. Ghosts don't have one, people do.")}</div></div>
     </div>`,
     async enter(el) {
       state.tapeDone = false; state.tapeT = 0; updateNav(); wireTape(el);
@@ -468,7 +468,7 @@ const SCREENS = [
       const sample = sampleScans().full;
       let warned = false;
       await playTape({
-        until: state.mode === "replay" ? SAMPLE_CASE.shadowInAt + 4 : state.duration,
+        until: state.duration, rate: state.mode === "replay" ? 1.5 : 1,
         onTime: (t) => {
           const src = full ?? sample;
           state.tapeSrc = src; beatAt(el, t, true);
@@ -496,7 +496,7 @@ const SCREENS = [
       $("#watchAgain", el).addEventListener("click", replay);
       nextUp([{ label: "↺ Watch the tape again", do: replay }, { label: "Read the second face →", main: true, do: forward }]);
       toast("Tip: drag the marker to look at any second. 🔦 turns on the flashlight.", 4500);
-      $("#tapeNotes", el).insertAdjacentHTML("beforeend", `<p class="cliff" style="padding:10px 0"><span class="line" style="font-size:34px">Who is the <em>second face</em>?</span></p>`);
+      $("#tapeNotes", el).insertAdjacentHTML("beforeend", L(`<p class="cliff" style="padding:10px 0"><span class="line" style="font-size:34px">Who is the <em>second face</em>?</span></p>`));
     } },
 
   { id: "point", chapter: "Point the scope", next: "Open the evidence →", canNext: () => state.flat, html: () => `
@@ -557,7 +557,7 @@ const SCREENS = [
       });
     } },
 
-  { id: "locker", chapter: "The evidence", next: "Summon it →", to: "prep", html: () => `
+  { id: "locker", chapter: "The evidence", next: "Open the board →", to: "board", html: () => `
     <div class="card dark">
       <div class="kicker">Evidence locker · ${state.mode === "replay" ? "sample numbers, in the shape Presage SmartSpectra reports them" : "every card measured by Presage SmartSpectra"}</div>
       <h2>What the tape says</h2>
@@ -593,37 +593,15 @@ const SCREENS = [
       };
       el.querySelectorAll("[data-ev]").forEach((c) => { c.addEventListener("click", () => show(c.dataset.ev)); c.addEventListener("keydown", (k) => k.key === "Enter" && show(c.dataset.ev)); });
       show(state.evidence.find((e) => e.kind === "no_pulse")?.id ?? state.evidence[0]?.id);
-      nextUp([{ label: "Summon it with my breath (camera) →", main: true, do: () => goTo("prep") }, { label: "Summon it without a camera →", do: () => { cameraOff(); state.noCam = true; goTo("board"); } }], "Click a card, or");
-    } },
-
-  { id: "prep", chapter: "Your turn", next: "Open the board →", to: "board", html: () => `
-    <div class="grid2">
-      <div class="card">
-        <div class="kicker">The séance needs a living hand</div><h2>Yours.</h2>
-        <p class="lead">The glass moves only when <b>you breathe out</b>. It stops while you talk. The scope reads you, live, the same way it read the tape.</p>
-        <p class="muted">You will see yourself here, blurred, and nothing is saved. You can turn it off at the top right at any moment; the board then moves on a slow timer instead.</p>
-        <div class="row"><button class="btn-main mint" id="camOn">Turn my camera on</button><button class="btn-soft" id="noCam">Play without a camera</button></div>
-        <div class="scanstat" id="liveStat" style="margin-top:14px" hidden><div class="msg" id="liveMsg"></div><div class="bar"><div class="fill"></div></div></div>
-      </div>
-      <div>${scopeHTML("scopeMe", "PULSE-O-SCOPE · YOU, LIVE")}
-        <div class="tape" style="margin-top:16px;aspect-ratio:16/10"><video id="me" playsinline muted style="filter:blur(18px) saturate(.8)"></video>
-          <img id="mePh" src="img/wisp.svg" alt="" style="position:absolute;left:50%;top:50%;width:110px;transform:translate(-50%,-50%);opacity:.5">
-          <div class="overlay" id="meOv"><div class="rec"><i></i>YOU · LIVE</div><div class="privacy">your face is blurred</div></div></div>
-        <div class="breath-meter" style="margin-top:12px">breath <div class="bar"><div class="fill" id="breathFill"></div></div><span id="talkFlag"></span></div>
-        ${liveChips()}
-      </div>
-    </div>`,
-    enter(el) {
-      const scope = createScope($("#scopeMe canvas", el));
-      $("#camOn", el).addEventListener("click", () => startLive(el, scope));
-      $("#noCam", el).addEventListener("click", () => { cameraOff(); state.noCam = true; toast("No camera: the glass will drift on its own."); goTo("board"); });
+      nextUp([{ label: "Open the board →", main: true, do: () => goTo("board") }], "Click a card, or");
     } },
 
   { id: "board", chapter: "The séance", next: "Read the dossier →", to: "dossier", html: () => {
     const sp = spiritFor(state.evidence);
     return `
     ${sp ? `<div class="card spirit-card"><div class="kicker">${sp.archetype} · cites ${sp.cites.join(", ")}</div>
-      <h2 style="margin:2px 0">${sp.name}</h2><p style="margin:0">${sp.story} <i class="muted">Its goal: ${sp.goal}.</i></p></div>` : ""}
+      <h2 style="margin:2px 0">${sp.name}</h2><p style="margin:0">${sp.story} <i class="muted">Its goal: ${sp.goal}.</i></p>
+      <div class="kinds"><span>Kinds of spirit:</span>${SPIRIT_KINDS.map((k) => `<i class="${k === sp.archetype ? "on" : ""}">${k}</i>`).join("")}</div></div>` : ""}
     <div class="grid2" style="margin-top:18px;grid-template-columns:2fr 1fr">
       <div class="seance-stage">
         <div class="crew-top">${seat("luna", "Luna")}<span>Luna reads the glass</span></div>
@@ -635,6 +613,9 @@ const SCREENS = [
       <div class="card dark">
         <div class="kicker">Ask the spirit</div>
         <p class="muted" style="margin-top:0">It speaks only through the glass, three words at most. Every answer must point at a measured moment, or the glass stays still.</p>
+        ${state.live ? "" : `<button class="btn-soft" id="useBreath" style="color:var(--cream);margin-bottom:10px">Move it with my breath (camera)</button>`}
+        <div class="scanstat" id="liveStat" style="margin-bottom:10px" hidden><div class="msg" id="liveMsg"></div><div class="bar"><div class="fill"></div></div></div>
+        <div class="breath-meter" style="margin-bottom:10px">breath <div class="bar"><div class="fill" id="breathFill"></div></div><span id="talkFlag"></span></div>
         <div class="questions" id="qs" style="margin-top:12px">${QUESTIONS.map((q) => `<button class="q" data-q="${q.id}">${q.text}</button>`).join("")}</div>
         <p class="hush" id="hush"></p>
         <div id="answers"></div>
@@ -642,6 +623,10 @@ const SCREENS = [
     </div>`; },
     enter(el) {
       music.start();
+      $("#useBreath", el)?.addEventListener("click", (e) => {
+        if (!state.consent) { state.afterConsent = "board"; return goTo("consent"); }
+        e.currentTarget.remove(); startLive(el, createScope(document.createElement("canvas")), "#board-has-no-scope");
+      });
       const ask = async (qid, label) => {
         el.querySelectorAll(".q").forEach((x) => (x.disabled = true)); clearNext();
         const a = answer(qid, state.evidence);
@@ -649,7 +634,7 @@ const SCREENS = [
         $("#hush", el).textContent = state.live ? "Breathe out slowly. Stay silent." : "The glass is moving.";
         await spell($(".board", el), L(a.board), { nextExhale: () => waitExhale(), isSilent: () => !state.talking, onChar: (t) => { $("#spell", el).textContent = t; sound.beep(520 + t.length * 20, 110, 0.03); } });
         $("#hush", el).textContent = "";
-        $("#answers", el).innerHTML = `<p class="muted" style="margin:6px 0">“${label}”</p>` + say("luna", a.luna, a.cites) + say("bigotes", a.bigotes, a.cites);
+        $("#answers", el).innerHTML = `<p class="muted" style="margin:6px 0">“${label}”</p><div class="glass-said">The glass said: <b>${L(a.board)}</b></div>` + say("luna", a.luna, a.cites) + say("bigotes", a.bigotes, a.cites);
         el.querySelectorAll(".q").forEach((x) => (x.disabled = false));
         if (qid === "bye") return finale(el);
         nextUp([{ label: "Say goodbye to the spirit", do: () => ask("bye", L("Goodbye.")) }, { label: "Read the dossier →", main: true, do: forward }], "Ask another question, or");
@@ -681,6 +666,9 @@ const SCREENS = [
         <div id="roomNotes" style="margin-top:12px">${say("xochi", "I will write down what the scope sees. Nothing else.")}</div>
       </div>
       <div>${scopeHTML("scopeRoom", "PULSE-O-SCOPE · YOU, LIVE")}
+        <div class="tape" style="margin-top:12px;aspect-ratio:16/9"><video id="me" playsinline muted style="width:100%;height:100%;object-fit:contain;filter:blur(11px) brightness(1.35) saturate(.85)"></video>
+          <img id="mePh" src="img/wisp.svg" alt="" style="position:absolute;left:50%;top:50%;width:90px;transform:translate(-50%,-50%);opacity:.5">
+          <div class="overlay" id="meOv"><div class="rec"><i></i>YOU · LIVE</div><div class="privacy">your face is blurred</div></div></div>
         ${liveChips()}
         <div class="blinker" id="blinker" hidden><img src="img/stalker.svg" alt=""><span>It only moves when you blink.</span></div>
         <div class="locker" id="roomEv" style="margin-top:16px"></div></div>
@@ -700,7 +688,7 @@ const SCREENS = [
           const jump = ev.filter((e) => e.kind === "you_jumped").at(-1);
           if (jump && state.glassStoppedAt && jump.t0 >= state.glassStoppedAt && jump.t0 - state.glassStoppedAt < 8 && !state.roomScared) {
             state.roomScared = true; document.body.classList.add("lightsout");
-            $("#roomNotes", el).innerHTML = `<div class="cliff" style="padding:6px 0"><div class="line" style="font-size:44px"><em>That wasn't part of the game.</em></div></div>` + say("bigotes", `Your pulse rose ${jump.value} bpm, ${Math.round(jump.t0 - state.glassStoppedAt)} seconds after the glass stopped. That was you.`, [jump.id]);
+            $("#roomNotes", el).innerHTML = `<div class="cliff" style="padding:6px 0"><div class="line" style="font-size:44px"><em>That wasn't part of the game.</em></div></div>`.replace("That wasn't part of the game.", L("That wasn't part of the game.")) + say("bigotes", `Your pulse rose ${jump.value} bpm, ${Math.round(jump.t0 - state.glassStoppedAt)} seconds after the glass stopped. That was you.`, [jump.id]);
             setTimeout(() => document.body.classList.remove("lightsout"), 2500);
           }
         }, 1000);
@@ -761,7 +749,7 @@ const SCREENS = [
       <div class="your-turn">Now it is your turn</div>
     </div>` },
 ];
-const ORDER = ["cold", "title", "menu", "calendar", "case", "tape", "point", "locker", "prep", "board", "dossier", "end", "dare", "consent", "room", "tested"];
+const ORDER = ["cold", "title", "menu", "calendar", "case", "tape", "point", "locker", "board", "dossier", "end", "dare", "consent", "room", "tested"];
 SCREENS.push({ id: "menu", chapter: "Main menu", next: "Start with the 30 nights →", to: "calendar", enter() { document.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => goTo(b.dataset.go))); }, html: () => `
     <div class="menu-wrap">
       <div class="kicker" style="text-align:center;color:var(--gold);letter-spacing:5px">MAIN MENU</div>
@@ -870,17 +858,17 @@ async function startLive(el, scope, sel = "#scopeMe") {
     say_("Starting your camera…", true);
     let found = false;
     const retry = async () => { await cameraOff(); clearNext(); startLive(el, scope, sel); };
-    const skip = async () => { await cameraOff(); state.noCam = true; goTo(SCREENS[state.i].id === "prep" ? "board" : "menu"); };
+    const skip = async () => { await cameraOff(); state.noCam = true; goTo(SCREENS[state.i].id === "board" ? "board" : "menu"); };
     const slow = setTimeout(() => { if (found || !document.body.contains(el)) return; say_("More light on your face helps a lot. You can keep waiting or go on without the camera.", true); nextUp([{ label: "↻ Try again", do: retry }, { label: "Continue without a camera →", do: skip }], "Taking longer than usual."); }, 40000);
     state.live = await presage.live({
-      onStream: (s) => { const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); } say_("Camera on. Sit still and look at the screen: the scope is finding your pulse, usually 15 to 20 seconds.", true); },
+      onStream: (s, name) => { const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); } if (name) toast(`Using camera: ${name}`, 3500); say_("Camera on. Sit still and look at the screen: the scope is finding your pulse, usually 15 to 20 seconds.", true); },
       onSample: ({ pulse, talking, breathing, blinks, expression }) => {
         chips({ breathing, blinks, expression });
         state.talking = talking; $("#talkFlag") && ($("#talkFlag").textContent = talking ? "you're talking · the glass waits" : "");
         const { scope: sc, sel: at } = state.view;
         if (pulse && !found) {
           found = true; clearTimeout(slow); sound.chime(); say_("Got you. That heartbeat is yours.");
-          if (SCREENS[state.i].id === "prep") nextUp([{ label: "Open the board →", main: true, do: forward }], "It has your heartbeat. Next:");
+          if (SCREENS[state.i].id === "room") nextUp([{ label: "Is someone here?", main: true, do: () => $("#roomAsk")?.click() }, { label: "Main menu", do: () => goTo("menu") }], "It has your heartbeat. Next:");
         }
         if (pulse) { sc.set(pulse); const b = document.querySelector(`${at} [data-bpm]`); if (b) b.textContent = Math.round(pulse); }
         const st = document.querySelector(`${at} [data-state]`); if (st) st.textContent = pulse ? "LIVE" : "WARMING UP";
@@ -933,7 +921,7 @@ const SECTIONS = [
   { name: "Main menu", ids: ["menu", "cold", "title"] },
   { name: "The 30 nights", ids: ["calendar"] },
   { name: "Marina's video", ids: ["case", "tape", "point", "locker"] },
-  { name: "The Séance", ids: ["prep", "board", "dossier", "end"] },
+  { name: "The Séance", ids: ["board", "dossier", "end"] },
   { name: "Your turn", ids: ["dare", "consent", "room"] },
   { name: "How it was tested", ids: ["tested"] },
 ];
@@ -942,7 +930,7 @@ function updateNav() {
   $("#next").textContent = s.next ?? "Next →";
   $("#next").disabled = s.canNext ? !s.canNext() : false;
   $("#back").style.visibility = state.hist.length ? "visible" : "hidden";
-  $("#where").textContent = `${s.chapter} · ${state.i + 1} of ${SCREENS.length}`;
+  $("#where").textContent = `${Lx(s.chapter)} · ${state.i + 1} ${getLang() === "pt" ? "de" : "of"} ${SCREENS.length}`;
   const cur = SECTIONS.find((g) => g.ids.includes(s.id));
   $("#chapters").innerHTML = SECTIONS.map((g) => {
     const first = SCREENS.findIndex((x) => x.id === g.ids[0]);

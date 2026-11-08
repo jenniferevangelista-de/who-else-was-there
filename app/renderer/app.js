@@ -843,7 +843,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
   state.view = { scope, sel };
   const st0 = document.querySelector(`${sel} [data-state]`);
   if (state.live || state.fakeLive) { if (st0) st0.textContent = state.live ? "WARMING UP" : "SIMULATED"; return; }
-  const stat = $("#liveStat"), say_ = (m, wait) => { if (!stat) return; stat.hidden = false; stat.classList.toggle("waiting", !!wait); $("#liveMsg").textContent = m; if (!wait) stat.querySelector(".fill").style.width = "100%"; };
+  const say_ = (m, wait) => { const stat = $("#liveStat"), msg = $("#liveMsg"); if (!stat || !msg) return; stat.hidden = false; stat.classList.toggle("waiting", !!wait); msg.textContent = m; if (!wait) stat.querySelector(".fill").style.width = "100%"; };   // looked up each time: the person may have moved to another screen
   if (!state.liveSdk) {   // no key: a gentle simulated breath and pulse, clearly labelled
     camUI(false);
     say_("This copy has no Presage key, so your camera stays off and these readings are simulated.");

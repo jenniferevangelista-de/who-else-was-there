@@ -17,7 +17,7 @@ const EXACT = {
   "← Back": "← Voltar", Ask: "Perguntar", "Next →": "Próximo →", breath: "respiração", s: "s", "second face": "segundo rosto", "scope target": "alvo do scope", "a face · 0 bpm": "um rosto · 0 bpm",
   "🔒 Nothing recorded": "🔒 Nada é gravado", "🔊 Sound on": "🔊 Som ligado", "🔇 Sound off": "🔇 Som desligado", "Camera off": "Câmera desligada", "Camera on · turn off": "Câmera ligada · desligar",
   "SAMPLE DATA": "DADOS DE EXEMPLO", "SAMPLE TAPE · LIVE CAMERA": "FITA DE EXEMPLO · CÂMERA AO VIVO",
-  "Under the hood": "Por dentro", "Not opened yet.": "Ainda não aberta.", blinks: "piscadas", "Your face said": "Seu rosto disse",
+  "Increase light on face.": "Coloque mais luz no rosto.", "Under the hood": "Por dentro", "Not opened yet.": "Ainda não aberta.", blinks: "piscadas", "Your face said": "Seu rosto disse",
   fear: "medo", surprise: "surpresa", happiness: "alegria", sadness: "tristeza", anger: "raiva", disgust: "nojo", contempt: "desprezo",
   "Breaths / min": "Respirações / min", Blinks: "Piscadas", Expression: "Expressão", "You blinked": "Você piscou",
 };

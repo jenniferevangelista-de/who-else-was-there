@@ -1,0 +1,27 @@
+{
+  "name": "pulse-of-the-dead",
+  "version": "0.1.0",
+  "private": true,
+  "description": "A cute, spooky ghost hunt where the evidence is a heartbeat. Presage SmartSpectra reads every face in a recording; the one with no pulse is the case.",
+  "license": "MIT",
+  "author": "Jennifer Evangelista",
+  "type": "module",
+  "main": "app/main.cjs",
+  "engines": { "node": ">=22.12" },
+  "scripts": {
+    "build": "node scripts/build.js",
+    "start": "npm run build && electron .",
+    "replay": "npm run build && electron . --replay",
+    "test": "node --test tests/*.test.js"
+  },
+  "dependencies": {
+    "@smartspectra/node-sdk": "3.4.0"
+  },
+  "devDependencies": {
+    "@fontsource/creepster": "5.3.0",
+    "@fontsource/fredoka": "5.3.0",
+    "@fontsource/vt323": "5.3.0",
+    "electron": "43.2.0",
+    "esbuild": "0.25.12"
+  }
+}

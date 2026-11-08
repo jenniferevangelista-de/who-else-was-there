@@ -1,0 +1,6 @@
+node_modules/
+dist/
+case/*.mp4
+case/*.mov
+*.log
+.env

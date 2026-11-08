@@ -258,3 +258,18 @@ body.lightsout #toast { display: none; }
 .tbl th { text-align: left; font-size: 12px; letter-spacing: 1.5px; text-transform: uppercase; color: var(--gold); font-weight: 600; padding: 6px 8px; border-bottom: 1px solid #e8c27a55; }
 .tbl td { padding: 7px 8px; border-bottom: 1px solid #ffffff12; }
 .tbl b { color: var(--mint); font-weight: 600; }
+
+/* ---------- interactive bits ---------- */
+.member { cursor: pointer; }
+.member.talking .halo { border-color: var(--blush); box-shadow: 0 0 30px #ff86b866; }
+.member.talking img { animation: bob .5s ease-in-out infinite; }
+@keyframes bob { 50% { transform: translateY(-5px) rotate(-2deg); } }
+.flashlight { position: absolute; inset: 0; pointer-events: none; background: radial-gradient(circle 110px at var(--x, 50%) var(--y, 50%), transparent 0 55%, #000000f2 100%); }
+.torch { position: absolute; top: 10px; right: 12px; z-index: 3; border: 1px solid #e8c27a88; background: #000a; color: #fff; border-radius: 999px; padding: 5px 10px; font-size: 16px; }
+.torch.on { background: var(--gold); }
+.timeline { cursor: pointer; }
+.ev { cursor: pointer; transition: transform .15s; }
+.ev:hover { transform: translateY(-3px); }
+.peek { display: grid; grid-template-columns: 300px 1fr; gap: 18px; align-items: center; margin-top: 18px; }
+.peek canvas { width: 300px; aspect-ratio: 16/9; border-radius: 14px; box-shadow: var(--soft); }
+.ev.sel { outline: 2px solid var(--gold); outline-offset: 3px; }

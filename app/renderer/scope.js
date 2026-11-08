@@ -1,7 +1,9 @@
 // The Pulse-o-Scope: a phosphor line that beats with a live pulse, or lies flat.
 // It draws what it is given (a bpm, a breathing trace, or nothing); it never invents a reading.
 
-export function createScope(canvas) {
+import { sound } from "./sound.js";
+
+export function createScope(canvas, { beeps = true } = {}) {
   const ctx = canvas.getContext("2d");
   let bpm = null, flat = false, phase = 0, last = performance.now(), raf = 0;
   const pts = [];
@@ -26,7 +28,10 @@ export function createScope(canvas) {
     const n = Math.max(1, Math.round(speed * dt));
     for (let i = 0; i < n; i++) {
       let y = 0;
-      if (!flat && bpm) { phase += (bpm / 60) / speed; y = beatShape(phase % 1); }
+      if (!flat && bpm) {
+        const before = Math.floor(phase + 0.79); phase += (bpm / 60) / speed; y = beatShape(phase % 1);
+        if (beeps && Math.floor(phase + 0.79) !== before && canvas.isConnected) sound.beep();
+      }
       pts.push(y);
     }
     while (pts.length > w) pts.shift();
@@ -49,7 +54,7 @@ export function createScope(canvas) {
 
   return {
     set(v) { bpm = Number.isFinite(v) && v > 0 ? v : null; flat = false; },
-    flatline() { flat = true; bpm = null; },
+    flatline() { if (!flat && beeps && canvas.isConnected) sound.flat(); flat = true; bpm = null; },
     idle() { flat = false; bpm = null; },
     stop() { cancelAnimationFrame(raf); },
   };

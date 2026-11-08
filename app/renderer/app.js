@@ -7,6 +7,7 @@ import { createScope, scopeHTML } from "./scope.js";
 import { drawScene, marinaFace, portraitFace } from "./scene.js";
 import { boardHTML, spell } from "./board.js";
 import * as presage from "./presage.js";
+import { sound } from "./sound.js";
 import MEASURED from "../../demo/measured.json";
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -82,7 +83,8 @@ function tapeHTML() {
   return `<div class="tape" id="tape">
     ${state.mode === "replay" ? `<canvas class="scene" width="1280" height="720"></canvas>` : `<video playsinline muted></video>`}
     <div class="overlay"><div class="rec"><i></i>REC · HALLWAY</div><div class="stamp" id="stamp">NOV 02 · 21:43:00</div>
-    <div class="privacy">faces of the living are blurred</div></div></div>
+    <div class="privacy">faces of the living are blurred</div><div class="flashlight" hidden></div></div>
+    <button class="torch" title="Flashlight">🔦</button></div>
     <div class="timeline" id="timeline"><div class="head" id="head"></div></div>`;
 }
 function playTape({ until, onTime }) {
@@ -97,13 +99,43 @@ function playTape({ until, onTime }) {
       $("#head").style.left = (t / state.duration) * 100 + "%";
       onTime?.(t);
       state.tapeT = t;
-      if (t >= until || !document.body.contains($("#tape"))) return resolve(t);
+      if (t >= until || !document.body.contains($("#tape"))) { state.playing = false; return resolve(t); }
       requestAnimationFrame(step);
     };
     if (state.mode !== "replay") { state.video.currentTime = from; state.video.play(); }
+    state.playing = true;
     step();
   }).then((t) => { if (state.video) state.video.pause(); return t; });
 }
+// the hunter's flashlight: the hallway goes dark and the mouse becomes the beam
+function wireTape(el) {
+  const tape = $("#tape", el); if (!tape) return;
+  const beam = tape.querySelector(".flashlight"), btn = tape.querySelector(".torch");
+  btn.addEventListener("click", (e) => { e.stopPropagation(); beam.hidden = !beam.hidden; btn.classList.toggle("on", !beam.hidden); sound.beep(300, 40); });
+  tape.addEventListener("mousemove", (e) => {
+    const b = tape.getBoundingClientRect();
+    beam.style.setProperty("--x", e.clientX - b.left + "px"); beam.style.setProperty("--y", e.clientY - b.top + "px");
+  });
+  // scrub: when the tape is not playing, click the timeline to look at any second
+  $("#timeline", el)?.addEventListener("click", (e) => {
+    if (state.playing) return;
+    const b = e.currentTarget.getBoundingClientRect();
+    const t = ((e.clientX - b.left) / b.width) * state.duration;
+    showFrame(el, t);
+  });
+}
+function showFrame(el, t) {
+  state.tapeT = t;
+  const cvs = $("#tape canvas", el);
+  if (cvs) drawScene(cvs.getContext("2d"), cvs.width, cvs.height, t);
+  if (state.video) state.video.currentTime = t;
+  $("#stamp", el).textContent = `NOV 02 · 21:43:${String(Math.floor(t)).padStart(2, "0")}`;
+  $("#head", el).style.left = (t / state.duration) * 100 + "%";
+  const src = state.scans?.full ?? sampleScans().full;
+  const p = [...src.pulse].reverse().find((q) => q.t <= t && q.conf >= 50);
+  heartBadge($("#tape .overlay", el), { ...marinaFace(t), bpm: p?.v });
+}
+
 function markTimeline(evidence) {
   const tl = $("#timeline"); if (!tl) return;
   for (const e of evidence) {
@@ -138,7 +170,15 @@ const SCREENS = [
       setTimeout(() => { ecg.flatline(); $("#c2", el).style.cssText = "opacity:1;transition:opacity 1.2s"; }, 3200);
     } },
 
-  { id: "title", chapter: "The crew", html: () => `
+  { id: "title", chapter: "The crew",
+    enter(el) {
+      const box = $("#introSay", el);
+      el.querySelectorAll("[data-intro]").forEach((m) => {
+        const talk = () => { box.innerHTML = say(m.dataset.intro, m.dataset.line); sound.chime(); el.querySelectorAll("[data-intro]").forEach((x) => x.classList.toggle("talking", x === m)); };
+        m.addEventListener("click", talk); m.addEventListener("keydown", (e) => e.key === "Enter" && talk());
+      });
+    },
+    html: () => `
     <div style="text-align:center">
             <div class="kicker" style="color:var(--gold);letter-spacing:6px;font-size:16px">GHOST HUNT</div>
       <h1>Who Else <span class="accent">Was There?</span></h1>
@@ -146,10 +186,11 @@ const SCREENS = [
       <p class="lead center">Three tiny ghost hunters. One new instrument, built on Presage SmartSpectra: it reads a heartbeat from any face in a video.<br>
       Living faces beat. <b style="color:var(--danger)">The ones that don't are the case.</b></p>
       <div class="crew" style="margin-top:22px">
-        <div class="member"><div class="halo"><img src="img/luna.svg" alt="Luna"></div><b>Luna</b><span>the medium · opens the board</span></div>
-        <div class="member"><div class="halo"><img src="img/bigotes.svg" alt="Dr. Bigotes"></div><b>Dr. Bigotes</b><span>the skeptic · checks the scope</span></div>
-        <div class="member"><div class="halo"><img src="img/xochi.svg" alt="Xochi"></div><b>Xochi</b><span>the night watch · writes it down</span></div>
+        <div class="member" data-intro="luna" data-line="Shhh… I'm Luna. I open the board, and I believe in everything. Almost." role="button" tabindex="0"><div class="halo"><img src="img/luna.svg" alt="Luna"></div><b>Luna</b><span>the medium · opens the board</span></div>
+        <div class="member" data-intro="bigotes" data-line="Dr. Bigotes. I believe in data. Show me a pulse and I'll show you a person." role="button" tabindex="0"><div class="halo"><img src="img/bigotes.svg" alt="Dr. Bigotes"></div><b>Dr. Bigotes</b><span>the skeptic · checks the scope</span></div>
+        <div class="member" data-intro="xochi" data-line="I'm Xochi. I keep watch all night and write down only what the scope saw." role="button" tabindex="0"><div class="halo"><img src="img/xochi.svg" alt="Xochi"></div><b>Xochi</b><span>the night watch · writes it down</span></div>
       </div>
+      <div id="introSay" style="max-width:640px;margin:14px auto 0;text-align:left"><p class="muted" style="text-align:center">Tap a hunter to say hello.</p></div>
     </div>` },
 
   { id: "consent", chapter: "Before we hunt", next: "I understand →", html: () => `
@@ -250,7 +291,7 @@ const SCREENS = [
         <div class="card" style="margin-top:16px" id="tapeNotes">${say("bigotes", "Hmph. I'll watch her pulse. Ghosts don't have one, people do.")}</div></div>
     </div>`,
     async enter(el) {
-      state.tapeDone = false; state.tapeT = 0; updateNav();
+      state.tapeDone = false; state.tapeT = 0; updateNav(); wireTape(el);
       const scope = createScope($("#scopeTape canvas", el));
       if (state.mode !== "replay") {
         state.video = $("#tape video", el); state.video.src = state.ownTape || state.info.caseVideo;
@@ -281,6 +322,8 @@ const SCREENS = [
       await scanning;
       state.scans = { full: full ?? sample, regions: [] };
       state.tapeDone = true; updateNav();
+      markTimeline(buildEvidence(state.scans));
+      toast("Tip: click the timeline to look at any second. 🔦 turns on the flashlight.", 4500);
       $("#tapeNotes", el).insertAdjacentHTML("beforeend", `<p class="cliff" style="padding:10px 0"><span class="line" style="font-size:34px">Who is the <em>second face</em>?</span></p>`);
     } },
 
@@ -292,7 +335,7 @@ const SCREENS = [
           <button class="btn-main mint" id="scanBtn">Read the wall behind the coat</button></div></div>
     </div>`,
     enter(el) {
-      state.flat = false; updateNav();
+      state.flat = false; updateNav(); wireTape(el);
       state.duration ??= SAMPLE_CASE.durationSec;
       state.scans ??= { full: sampleScans().full, regions: [] };
       const scope = createScope($("#scopePoint canvas", el));
@@ -346,13 +389,38 @@ const SCREENS = [
       <div class="kicker">Evidence locker · every card measured by Presage SmartSpectra</div>
       <h2>What the tape says</h2>
       <div class="locker" style="margin-top:18px">${state.evidence.map((e) => `
-        <div class="ev ${e.kind}"><span class="id">${e.id}</span>
+        <div class="ev ${e.kind}" data-ev="${e.id}" role="button" tabindex="0" title="Show this moment"><span class="id">${e.id}</span>
           <div class="row" style="gap:10px"><img src="${KIND[e.kind].icon}" alt="" style="width:34px"><span class="kind">${KIND[e.kind].name}</span></div>
           <div class="val">${e.value}<small style="font-size:20px"> ${e.unit}</small></div>
           <div class="when">${fmt(e.t0)}${e.t1 !== e.t0 ? " to " + fmt(e.t1) : ""}</div>
           <div class="src">${state.mode === "replay" ? "SAMPLE · " : ""}${e.measuredBy}</div></div>`).join("")}</div>
-      <div style="margin-top:18px">${reading(state.evidence).slice(1, 4).map((l) => say(l.who, l.text, l.cites)).join("")}</div>
-    </div>` },
+      <div class="peek" id="peek"><canvas width="640" height="360"></canvas><div id="peekSay">${say("xochi", "Click a card. I will show you that moment of the tape, and the crew will argue about it.")}</div></div>
+    </div>`,
+    enter(el) {
+      const cvs = $("#peek canvas", el), ctx = cvs.getContext("2d");
+      const NOTES = {
+        living: ["xochi", "Marina, alive the whole time. This is the line every other card is compared to."],
+        second_face: ["luna", "Here. The SDK counted two faces, and Marina was the only one breathing."],
+        no_pulse: ["bigotes", "The spot behind the coat. A face, and no pulse at all. A portrait does that. So does a ghost, says Luna."],
+        only_shadow: ["bigotes", "No face in that spot at all. A coat, a shadow."],
+        unreadable: ["bigotes", "Too dark to read. I will not call it a ghost."],
+        held_breath: ["luna", "She stopped at the door and held her breath. Listening to something."],
+        pulse_jump: ["bigotes", "Her pulse climbs. The lamp flickered a moment before. A startle, most likely."],
+      };
+      const show = (id) => {
+        const e = state.evidence.find((x) => x.id === id); if (!e) return;
+        const t = e.kind === "living" ? 3 : (e.t0 + e.t1) / 2;
+        if (state.mode === "replay" || !state.video) drawScene(ctx, cvs.width, cvs.height, t);
+        else { state.video.currentTime = t; state.video.addEventListener("seeked", () => ctx.drawImage(state.video, 0, 0, cvs.width, cvs.height), { once: true }); }
+        if (e.region) { ctx.strokeStyle = "#ff6680"; ctx.lineWidth = 4; ctx.setLineDash([10, 8]); ctx.strokeRect(e.region.x * cvs.width, e.region.y * cvs.height, e.region.w * cvs.width, e.region.h * cvs.height); }
+        const [who, text] = NOTES[e.kind];
+        $("#peekSay", el).innerHTML = `<div class="kicker" style="color:var(--gold)">${e.id} · ${fmt(e.t0)}</div>` + say(who, text, [e.id]);
+        el.querySelectorAll(".ev").forEach((x) => x.classList.toggle("sel", x.dataset.ev === id));
+        sound.beep(440, 60);
+      };
+      el.querySelectorAll("[data-ev]").forEach((c) => { c.addEventListener("click", () => show(c.dataset.ev)); c.addEventListener("keydown", (k) => k.key === "Enter" && show(c.dataset.ev)); });
+      show(state.evidence.find((e) => e.kind === "no_pulse")?.id ?? state.evidence[0]?.id);
+    } },
 
   { id: "prep", chapter: "Your turn", next: "Open the board →", html: () => `
     <div class="grid2">
@@ -403,7 +471,7 @@ const SCREENS = [
         const a = qid ? answer(qid, state.evidence) : { board: "NO", cites: [], luna: "The glass will not move for that.", bigotes: "Nothing measured answers it. Try asking who, why, where, or if it is alive." };
         $("#spell", el).textContent = "";
         $("#hush", el).textContent = state.live ? "Breathe out slowly. Stay silent." : "The glass is moving.";
-        await spell($(".board", el), a.board, { nextExhale: () => waitExhale(), isSilent: () => !state.talking, onChar: (t) => ($("#spell", el).textContent = t) });
+        await spell($(".board", el), a.board, { nextExhale: () => waitExhale(), isSilent: () => !state.talking, onChar: (t) => { $("#spell", el).textContent = t; sound.beep(520 + t.length * 20, 110, 0.03); } });
         $("#hush", el).textContent = "";
         $("#answers", el).innerHTML = `<p class="muted" style="margin:6px 0">“${label}”</p>` + say("luna", a.luna, a.cites) + say("bigotes", a.bigotes, a.cites);
         el.querySelectorAll(".q, #askForm button").forEach((x) => (x.disabled = false));
@@ -613,6 +681,7 @@ async function boot() {
   $("#mode").hidden = state.mode !== "replay";
   $("#mode").textContent = state.liveSdk ? "SAMPLE TAPE · LIVE CAMERA" : "SAMPLE DATA";
   $("#camPill").addEventListener("click", cameraOff);
+  $("#soundPill").addEventListener("click", () => { const on = sound.toggle(); $("#soundPill").textContent = on ? "🔊 Sound on" : "🔇 Sound off"; $("#soundPill").setAttribute("aria-pressed", on); if (on) sound.chime(); });
   $("#next").addEventListener("click", () => go(state.i + 1));
   $("#back").addEventListener("click", () => go(state.i - 1));
   document.addEventListener("keydown", (e) => { if (e.key === "ArrowRight" && !$("#next").disabled) go(state.i + 1); if (e.key === "ArrowLeft") go(state.i - 1); });

@@ -1,5 +1,5 @@
 // Ghost Hunt: Who Else Was There? The story, one screen at a time.
-import { buildEvidence } from "../../src/evidence.js";
+import { buildEvidence, validationRuns } from "../../src/evidence.js";
 import { answer, reading, QUESTIONS } from "../../src/spirit.js";
 import { sampleScans, SAMPLE_CASE } from "../../src/sample.js";
 import { createScope, scopeHTML } from "./scope.js";
@@ -191,8 +191,8 @@ const SCREENS = [
     enter(el) {
       $("#ownTape", el).addEventListener("change", (e) => {
         const f = e.target.files[0]; if (!f) return;
-        if (state.mode === "replay") return toast("Bringing a tape needs the Presage key on this computer. Replay mode uses Marina's sample.");
-        state.ownTape = URL.createObjectURL(f); toast(`Loaded ${f.name}. Press Play the tape.`);
+        if (!state.liveSdk) return toast("Bringing a tape needs the Presage key on this computer. Replay mode uses Marina's sample.");
+        state.ownTape = URL.createObjectURL(f); state.mode = "live"; toast(`Loaded ${f.name}. Press Play the tape.`);
       });
     } },
 
@@ -264,7 +264,10 @@ const SCREENS = [
       $("#scanBtn", el).addEventListener("click", async (ev) => {
         ev.target.disabled = true;
         $("#scopePoint [data-state]", el).textContent = "LISTENING";
-        const from = SAMPLE_CASE.coatOffAt, to = SAMPLE_CASE.coatBackAt;
+        // read the spot while the second face was in frame (or the whole tape if the SDK never saw two faces)
+        const two = state.mode === "replay" ? null : validationRuns(state.scans.full.validation, 2, 1)[0];
+        const from = state.mode === "replay" ? SAMPLE_CASE.coatOffAt : two?.t0 ?? 0;
+        const to = state.mode === "replay" ? SAMPLE_CASE.coatBackAt : two?.t1 ?? state.duration;
         state.tapeT = from;
         let reg;
         const scanning = regionScan({ ...R }, from, to).then((s) => (reg = s)).catch((e) => toast(e.message, 6000));
@@ -373,7 +376,7 @@ const SCREENS = [
 
 // ------------------------------------------------------------------ live camera (the investigator)
 async function startLive(el, scope) {
-  if (state.mode === "replay") {   // no key: a gentle simulated breath, clearly labelled
+  if (!state.liveSdk) {   // no key: a gentle simulated breath, clearly labelled
     camUI(false);
     toast("Replay mode: no Presage key on this computer, so your camera stays off and the breath is simulated.", 5000);
     let ph = 0;
@@ -431,8 +434,10 @@ function go(i) {
 async function boot() {
   sky();
   state.info = (await window.pod?.info?.()) ?? { replay: true };
-  state.mode = state.info.replay || !state.info.hasKey || !state.info.caseVideo ? "replay" : "live";
+  state.liveSdk = !state.info.replay && !!state.info.hasKey;          // the Presage key is on this computer
+  state.mode = state.liveSdk && state.info.caseVideo ? "live" : "replay"; // the tape: the real case file, or the drawn sample
   $("#mode").hidden = state.mode !== "replay";
+  $("#mode").textContent = state.liveSdk ? "SAMPLE TAPE · LIVE CAMERA" : "SAMPLE DATA";
   $("#camPill").addEventListener("click", cameraOff);
   $("#next").addEventListener("click", () => go(state.i + 1));
   $("#back").addEventListener("click", () => go(state.i - 1));

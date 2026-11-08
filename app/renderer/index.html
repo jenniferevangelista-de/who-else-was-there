@@ -14,6 +14,7 @@
     <div class="brand"><img class="beat" src="img/heart.svg" alt=""><b>Ghost Hunt · <span>Who Else Was There?</span></b></div>
     <span class="mode" id="mode" hidden>SAMPLE DATA</span>
     <div class="spacer"></div>
+    <div class="lang" role="group" aria-label="Language"><button id="langEn" class="on">EN</button><button id="langPt">PT</button></div>
     <button class="pill btn" id="soundPill" aria-pressed="true">🔊 Sound on</button>
     <span class="pill" id="privacy" title="Nothing is recorded. Faces are blurred.">🔒 Nothing recorded</span>
     <button class="pill btn" id="camPill" aria-live="polite"><span class="dot"></span><span id="camText">Camera off</span></button>
@@ -27,6 +28,9 @@
     <button class="btn-main" id="next">Next →</button>
   </nav>
 
+  <button id="hoodPill" aria-expanded="false">✦ <span id="hoodLabel">Under the hood</span></button>
+  <aside id="hood" hidden></aside>
+  <div id="whatNow" hidden></div>
   <div id="toast" role="status"></div>
   <script src="../../dist/app.js"></script>
 </body>

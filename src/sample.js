@@ -3,10 +3,10 @@
 export function rng(seed = 3) { let s = seed >>> 0; return () => ((s = (s * 1664525 + 1013904223) >>> 0) / 4294967296); }
 
 /** A living person: pulse ~72, a jump at `jumpAt`, held breath at `holdAt`, a second face from `ghostFrom`. */
-export function livingScan({ dur = 45, jumpAt = 22, holdAt = 20, ghostFrom = 18, ghostTo = 40, seed = 3 } = {}) {
+export function livingScan({ dur = 45, jumpAt = 22, holdAt = 20, ghostFrom = 18, ghostTo = 40, seed = 3, pulseFrom = 12, calmFrom = Infinity } = {}) {
   const r = rng(seed);
   const pulse = [], breathing = [], trace = [], validation = [], talking = [];
-  for (let t = 12; t <= dur; t++) pulse.push({ t, v: 72 + (t >= jumpAt ? Math.min(12, (t - jumpAt) * 2) : 0) + (r() - 0.5) * 2, conf: 85 });
+  for (let t = pulseFrom; t <= dur; t++) pulse.push({ t, v: 72 + (t >= jumpAt ? Math.min(12, (t - jumpAt) * 2) : 0) - (t >= calmFrom ? Math.min(10, (t - calmFrom) * 1.2) : 0) + (r() - 0.5) * 2, conf: 85 });
   for (let t = 30; t <= dur; t++) breathing.push({ t, v: 14 + (r() - 0.5), conf: 80 });
   for (let t = 0; t <= dur; t += 0.1) {
     const held = t >= holdAt && t < holdAt + 4;
@@ -40,7 +40,7 @@ export const SAMPLE_CASE = {
 export function sampleScans() {
   const c = SAMPLE_CASE;
   return {
-    full: livingScan({ dur: c.durationSec, jumpAt: 22, holdAt: c.stopAt, ghostFrom: c.shadowInAt, ghostTo: c.shadowOutAt }),
+    full: livingScan({ dur: c.durationSec, jumpAt: 22, holdAt: c.stopAt, ghostFrom: c.shadowInAt, ghostTo: c.shadowOutAt, pulseFrom: 3, calmFrom: 34 }),
     regions: [{ ...stillFaceScan({ t0: c.shadowInAt, t1: c.shadowOutAt }), region: c.region }],
   };
 }

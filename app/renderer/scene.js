@@ -117,75 +117,134 @@ function backdrop(w, h) {
   return out;
 }
 
+// ------------------------------------------------------------------ the cast is drawn like the crew: soft shapes, one dark ink line
+const INK = "#2a1840";
+const inked = (ctx, h, k = 0.0055) => { ctx.strokeStyle = INK; ctx.lineWidth = Math.max(1.5, h * k); ctx.lineJoin = "round"; ctx.lineCap = "round"; ctx.stroke(); };
+function limb(ctx, h, pts, color, k = 0.03) {
+  const path = () => { ctx.beginPath(); pts.forEach(([x, y], i) => (i ? ctx.lineTo(x, y) : ctx.moveTo(x, y))); };
+  ctx.lineCap = "round"; ctx.lineJoin = "round";
+  path(); ctx.strokeStyle = INK; ctx.lineWidth = h * (k + 0.011); ctx.stroke();
+  path(); ctx.strokeStyle = color; ctx.lineWidth = h * k; ctx.stroke();
+}
+
 // ------------------------------------------------------------------ the shadow
 function faceOf(ctx, w, h, x, sway, alpha, eyes) {
   const fy = (C.region.y + C.region.h * 0.45) * h + sway * 0.5, fx = x * w;
   ctx.save(); ctx.globalAlpha = alpha;
-  ctx.fillStyle = "#cfc7d8"; ctx.beginPath(); ctx.ellipse(fx, fy, h * 0.04, h * 0.058, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = "#ddd6e8"; ctx.beginPath(); ctx.moveTo(fx, fy + h * 0.06);
+  ctx.bezierCurveTo(fx - h * 0.05, fy + h * 0.03, fx - h * 0.046, fy - h * 0.058, fx, fy - h * 0.06);
+  ctx.bezierCurveTo(fx + h * 0.046, fy - h * 0.058, fx + h * 0.05, fy + h * 0.03, fx, fy + h * 0.06); ctx.closePath(); ctx.fill();
   ctx.fillStyle = eyes ? "#ff6680" : "#16101f";
   if (eyes) { ctx.shadowColor = "#ff6680"; ctx.shadowBlur = h * 0.03; }
-  ctx.beginPath(); ctx.ellipse(fx - h * 0.016, fy - h * 0.008, h * 0.0075, h * 0.011, 0, 0, 7); ctx.ellipse(fx + h * 0.016, fy - h * 0.008, h * 0.0075, h * 0.011, 0, 0, 7); ctx.fill();
+  for (const s of [-1, 1]) { ctx.beginPath(); ctx.ellipse(fx + s * h * 0.018, fy - h * 0.006, h * 0.012, h * 0.0065, s * 0.28, 0, 7); ctx.fill(); }
   ctx.shadowBlur = 0;
-  ctx.fillStyle = "#16101f"; ctx.fillRect(fx - h * 0.012, fy + h * 0.026, h * 0.024, Math.max(1, h * 0.003));
+  ctx.strokeStyle = "#16101f"; ctx.lineWidth = Math.max(1, h * 0.003); ctx.lineCap = "round";
+  ctx.beginPath(); ctx.moveTo(fx - h * 0.011, fy + h * 0.032); ctx.quadraticCurveTo(fx, fy + h * 0.027, fx + h * 0.011, fy + h * 0.032); ctx.stroke();
   ctx.restore();
 }
 
 function drawShadow(ctx, w, h, t, s) {
   if (s.alpha <= 0.01) return;
   const x = s.x * w, sway = Math.sin(t * 0.9) * h * 0.006, top = (C.region.y - 0.05) * h + sway, foot = h * 0.8;
+  const shape = new Path2D();
+  shape.moveTo(x, top);
+  shape.bezierCurveTo(x + h * 0.085, top, x + h * 0.09, top + h * 0.11, x + h * 0.082, top + h * 0.17);
+  shape.bezierCurveTo(x + h * 0.15, top + h * 0.24, x + h * 0.15, foot - h * 0.2, x + h * 0.125, foot);
+  for (let i = 0; i < 6; i++) shape.quadraticCurveTo(x + h * (0.125 - (i + 0.5) * 0.0417), foot + (i % 2 ? -h * 0.045 : h * 0.03) + Math.sin(t * 2 + i) * h * 0.008, x + h * (0.125 - (i + 1) * 0.0417), foot - h * 0.008);
+  shape.bezierCurveTo(x - h * 0.15, foot - h * 0.2, x - h * 0.15, top + h * 0.24, x - h * 0.082, top + h * 0.17);
+  shape.bezierCurveTo(x - h * 0.09, top + h * 0.11, x - h * 0.085, top, x, top);
+  shape.closePath();
   ctx.save();
-  ctx.globalAlpha = s.alpha * 0.95; ctx.filter = `blur(${Math.max(1, h * 0.005)}px)`;
-  ctx.fillStyle = "#08050e";
-  ctx.beginPath();
-  ctx.moveTo(x, top);
-  ctx.bezierCurveTo(x + h * 0.075, top, x + h * 0.08, top + h * 0.12, x + h * 0.075, top + h * 0.16);
-  ctx.bezierCurveTo(x + h * 0.14, top + h * 0.2, x + h * 0.13, foot - h * 0.2, x + h * 0.11, foot);
-  for (let i = 0; i < 5; i++) ctx.lineTo(x + h * (0.11 - (i + 0.5) * 0.044), foot - (i % 2 ? h * 0.05 : h * 0.015) + Math.sin(t * 2 + i) * h * 0.006);
-  ctx.lineTo(x - h * 0.11, foot);
-  ctx.bezierCurveTo(x - h * 0.13, foot - h * 0.2, x - h * 0.14, top + h * 0.2, x - h * 0.075, top + h * 0.16);
-  ctx.bezierCurveTo(x - h * 0.08, top + h * 0.12, x - h * 0.075, top, x, top);
-  ctx.closePath(); ctx.fill();
+  ctx.globalAlpha = s.alpha * 0.96; ctx.filter = `blur(${Math.max(1, h * 0.004)}px)`;
+  const g = ctx.createLinearGradient(0, top, 0, foot); g.addColorStop(0, "#07040d"); g.addColorStop(0.65, "#0d0817"); g.addColorStop(1, "#1a1230");
+  ctx.fillStyle = g; ctx.fill(shape);
+  ctx.filter = "none"; ctx.globalAlpha = s.alpha * 0.34; ctx.strokeStyle = "#b39aea"; ctx.lineWidth = Math.max(1, h * 0.004); ctx.stroke(shape);
+  // when it stands behind her, one long arm comes up towards her shoulder and stops short
+  const reach = smooth((t - 22.3) / 1.8) * (1 - smooth((t - 25.6) / 1));
+  if (reach > 0.01) {
+    const sx = x + h * 0.075, sy = top + h * 0.24, tx = lerp(sx, marinaFace(t).x * w - h * 0.065, reach), ty = lerp(sy + h * 0.1, (marinaFace(t).y + 0.1) * h, reach);
+    ctx.globalAlpha = s.alpha * 0.92; ctx.strokeStyle = "#0a0612"; ctx.lineCap = "round"; ctx.lineWidth = h * 0.024;
+    ctx.beginPath(); ctx.moveTo(sx, sy); ctx.quadraticCurveTo((sx + tx) / 2, sy + h * 0.1, tx, ty); ctx.stroke();
+    ctx.lineWidth = h * 0.006; for (const a of [-0.55, -0.15, 0.25, 0.65]) { ctx.beginPath(); ctx.moveTo(tx, ty); ctx.lineTo(tx + Math.cos(a) * h * 0.034, ty + Math.sin(a) * h * 0.034); ctx.stroke(); }
+  }
   ctx.restore();
-  faceOf(ctx, w, h, s.x, sway, s.alpha * 0.82, false);
+  faceOf(ctx, w, h, s.x, sway, s.alpha * 0.86, false);
 }
 
 // ------------------------------------------------------------------ Marina (face always blurred)
 function drawMarina(ctx, w, h, t) {
-  const m = marinaFace(t), mx = m.x * w, moving = Math.abs(path(t + 0.05) - path(t)) > 1e-4;
+  const m = marinaFace(t), mx = m.x * w, dx = path(t + 0.05) - path(t), moving = Math.abs(dx) > 1e-4;
   const stride = moving ? Math.sin(t * 9) : 0, bob = moving ? Math.abs(stride) * h * 0.006 : 0;
-  const my = m.y * h - bob, coatOn = t < HUNG_AT, atDoor = t >= 19 && t < 26.5;
-  const body = coatOn ? "#c2414f" : "#5a6fb0";
+  const my = m.y * h - bob, coatOn = t < HUNG_AT, atDoor = t >= 19 && t < 26.5, U = h, feet = 0.812 * h;
+  const sway = Math.sin(t * 2) * U * 0.005 + stride * U * 0.008;
+  const body = coatOn ? "#d0475a" : "#a98be0", trim = coatOn ? "#9c2f42" : "#7d60bd", skin = "#f2cfb6", hairC = "#8a4230";
 
-  ctx.save(); ctx.globalAlpha = 0.35; ctx.fillStyle = "#000"; ctx.beginPath(); ctx.ellipse(mx, h * 0.815, w * 0.05, h * 0.018, 0, 0, 7); ctx.fill(); ctx.restore();
+  ctx.save(); ctx.globalAlpha = 0.32; ctx.fillStyle = "#000"; ctx.beginPath(); ctx.ellipse(mx, feet + U * 0.006, U * 0.09, U * 0.018, 0, 0, 7); ctx.fill(); ctx.restore();
 
-  // legs
-  ctx.fillStyle = "#1f2438";
-  rr(ctx, mx - w * 0.024 + stride * w * 0.012, h * 0.62, w * 0.02, h * 0.19, 8); ctx.fill();
-  rr(ctx, mx + w * 0.004 - stride * w * 0.012, h * 0.62, w * 0.02, h * 0.19, 8); ctx.fill();
+  // long hair, behind everything
+  ctx.beginPath(); ctx.moveTo(mx - U * 0.078, my - U * 0.02);
+  ctx.bezierCurveTo(mx - U * 0.108, my + U * 0.09, mx - U * 0.07 + sway, my + U * 0.15, mx - U * 0.098 + sway, my + U * 0.235);
+  ctx.quadraticCurveTo(mx - U * 0.05 + sway, my + U * 0.25, mx - U * 0.018, my + U * 0.215);
+  ctx.lineTo(mx + U * 0.018, my + U * 0.215);
+  ctx.quadraticCurveTo(mx + U * 0.05 + sway, my + U * 0.25, mx + U * 0.098 + sway, my + U * 0.235);
+  ctx.bezierCurveTo(mx + U * 0.07 + sway, my + U * 0.15, mx + U * 0.108, my + U * 0.09, mx + U * 0.078, my - U * 0.02);
+  ctx.bezierCurveTo(mx + U * 0.08, my - U * 0.11, mx - U * 0.08, my - U * 0.11, mx - U * 0.078, my - U * 0.02);
+  ctx.closePath(); ctx.fillStyle = hairC; ctx.fill(); inked(ctx, h);
 
-  // hair behind the head
-  ctx.save(); ctx.filter = `blur(${Math.max(2, h * 0.008)}px)`; ctx.fillStyle = "#3a2433"; ctx.beginPath(); ctx.arc(mx, my - h * 0.012, h * 0.083, 0, 7); ctx.fill(); ctx.restore();
-
-  // body
-  ctx.fillStyle = body; rr(ctx, mx - w * 0.042, my + h * 0.07, w * 0.084, h * (coatOn ? 0.29 : 0.22), 22); ctx.fill();
-  if (coatOn) {
-    ctx.strokeStyle = "#8c2c38"; ctx.lineWidth = Math.max(1, h * 0.004); ctx.beginPath(); ctx.moveTo(mx, my + h * 0.08); ctx.lineTo(mx, my + h * 0.36); ctx.stroke();
-    ctx.fillStyle = "#e8c27a"; for (let i = 0; i < 3; i++) { ctx.beginPath(); ctx.arc(mx + w * 0.009, my + h * (0.13 + i * 0.07), h * 0.006, 0, 7); ctx.fill(); }
-    ctx.fillStyle = "#e8c27a"; rr(ctx, mx - w * 0.034, my + h * 0.062, w * 0.068, h * 0.032, 10); ctx.fill();   // scarf
+  // slim legs and little heeled boots
+  for (const side of [-1, 1]) {
+    const lx = mx + side * U * 0.026 + side * stride * U * 0.018, kick = side * stride * U * 0.006;
+    limb(ctx, h, [[lx, my + U * 0.29], [lx + kick, feet - U * 0.05]], "#4a3560", 0.021);
+    ctx.beginPath(); ctx.moveTo(lx - U * 0.016 + kick, feet - U * 0.07); ctx.lineTo(lx + U * 0.016 + kick, feet - U * 0.07); ctx.lineTo(lx + U * 0.018 + kick, feet - U * 0.02);
+    ctx.lineTo(lx + U * 0.036 + kick, feet - U * 0.008); ctx.lineTo(lx + U * 0.036 + kick, feet); ctx.lineTo(lx - U * 0.018 + kick, feet); ctx.closePath(); ctx.fillStyle = "#7c4a3a"; ctx.fill(); inked(ctx, h, 0.004);
   }
 
-  // arms: one carries the bag, the other reaches for the door and does not get there
-  ctx.strokeStyle = body; ctx.lineCap = "round"; ctx.lineWidth = w * 0.017;
-  ctx.beginPath(); ctx.moveTo(mx - w * 0.04, my + h * 0.1); ctx.lineTo(mx - w * 0.052, my + h * 0.28); ctx.stroke();
-  if (t < HUNG_AT) { ctx.fillStyle = "#6b4e2e"; rr(ctx, mx - w * 0.078, my + h * 0.28, w * 0.05, h * 0.09, 6); ctx.fill(); ctx.strokeStyle = "#6b4e2e"; ctx.lineWidth = Math.max(1, h * 0.005); ctx.beginPath(); ctx.arc(mx - w * 0.053, my + h * 0.28, w * 0.012, Math.PI, 0); ctx.stroke(); }
-  ctx.strokeStyle = body; ctx.lineWidth = w * 0.017;
-  const hand = atDoor ? [mx + w * 0.058, my + h * 0.155] : [mx + w * 0.05, my + h * 0.28];
-  ctx.beginPath(); ctx.moveTo(mx + w * 0.04, my + h * 0.1); ctx.lineTo(hand[0], hand[1]); ctx.stroke();
-  ctx.fillStyle = "#e7c3a8"; ctx.beginPath(); ctx.arc(hand[0], hand[1], h * 0.014, 0, 7); ctx.fill();
-  if (atDoor || t < 19) { ctx.fillStyle = "#e0b04a"; ctx.fillRect(hand[0] - h * 0.004, hand[1] + h * 0.01, h * 0.008, h * 0.024); }   // the keys
+  // the far arm, with the bag
+  limb(ctx, h, [[mx - U * 0.052, my + U * 0.105], [mx - U * 0.07, my + U * 0.19], [mx - U * 0.078, my + U * 0.26]], body, 0.026);
+  ctx.beginPath(); ctx.arc(mx - U * 0.078, my + U * 0.272, U * 0.013, 0, 7); ctx.fillStyle = skin; ctx.fill(); inked(ctx, h, 0.004);
+  if (coatOn) {
+    ctx.beginPath(); ctx.arc(mx - U * 0.082, my + U * 0.3, U * 0.026, Math.PI, 0); ctx.strokeStyle = INK; ctx.lineWidth = U * 0.005; ctx.stroke();
+    rr(ctx, mx - U * 0.122, my + U * 0.3, U * 0.08, U * 0.075, U * 0.016); ctx.fillStyle = "#c79a4e"; ctx.fill(); inked(ctx, h, 0.005);
+    ctx.beginPath(); ctx.arc(mx - U * 0.082, my + U * 0.325, U * 0.007, 0, 7); ctx.fillStyle = "#fff2cc"; ctx.fill();
+  }
 
-  // the face, always blurred
-  ctx.save(); ctx.filter = `blur(${Math.max(3, h * 0.014)}px)`; ctx.fillStyle = "#e7c3a8"; ctx.beginPath(); ctx.arc(mx, my, h * 0.066, 0, 7); ctx.fill(); ctx.restore();
+  // a fitted coat that flares, or a soft dress once the coat is hung
+  const hem = coatOn ? 0.335 : 0.3;
+  ctx.beginPath(); ctx.moveTo(mx - U * 0.022, my + U * 0.075);
+  ctx.quadraticCurveTo(mx - U * 0.056, my + U * 0.08, mx - U * 0.056, my + U * 0.115);
+  ctx.quadraticCurveTo(mx - U * 0.052, my + U * 0.16, mx - U * 0.036, my + U * 0.195);
+  ctx.quadraticCurveTo(mx - U * 0.066, my + U * 0.26, mx - U * 0.09 - stride * U * 0.008, my + U * hem);
+  ctx.quadraticCurveTo(mx, my + U * (hem + 0.03), mx + U * 0.09 + stride * U * 0.008, my + U * hem);
+  ctx.quadraticCurveTo(mx + U * 0.066, my + U * 0.26, mx + U * 0.036, my + U * 0.195);
+  ctx.quadraticCurveTo(mx + U * 0.052, my + U * 0.16, mx + U * 0.056, my + U * 0.115);
+  ctx.quadraticCurveTo(mx + U * 0.056, my + U * 0.08, mx + U * 0.022, my + U * 0.075);
+  ctx.closePath(); ctx.fillStyle = body; ctx.fill(); inked(ctx, h);
+  rr(ctx, mx - U * 0.039, my + U * 0.187, U * 0.078, U * 0.018, U * 0.008); ctx.fillStyle = trim; ctx.fill(); inked(ctx, h, 0.004);
+  if (coatOn) {
+    ctx.strokeStyle = trim; ctx.lineWidth = U * 0.004; ctx.beginPath(); ctx.moveTo(mx, my + U * 0.09); ctx.lineTo(mx, my + U * (hem + 0.012)); ctx.stroke();
+    ctx.fillStyle = "#f5d98a"; for (const y of [0.125, 0.16, 0.24, 0.28]) { ctx.beginPath(); ctx.arc(mx + U * 0.014, my + U * y, U * 0.0055, 0, 7); ctx.fill(); }
+  }
+
+  // the near arm: at the door it reaches for the handle and does not get there
+  const hand = atDoor ? [mx + U * 0.112, my + U * 0.155] : [mx + U * 0.078, my + U * 0.262];
+  const elbow = atDoor ? [mx + U * 0.082, my + U * 0.14] : [mx + U * 0.072, my + U * 0.19];
+  limb(ctx, h, [[mx + U * 0.052, my + U * 0.105], elbow, hand], body, 0.026);
+  ctx.beginPath(); ctx.arc(hand[0], hand[1], U * 0.013, 0, 7); ctx.fillStyle = skin; ctx.fill(); inked(ctx, h, 0.004);
+  if (coatOn && t < 26.5) { ctx.strokeStyle = "#e6b84e"; ctx.lineWidth = U * 0.005; ctx.beginPath(); ctx.moveTo(hand[0], hand[1] + U * 0.01); ctx.lineTo(hand[0] + U * 0.004, hand[1] + U * 0.04); ctx.stroke(); }
+
+  // neck, scarf, the face (always blurred), then her fringe over it
+  ctx.fillStyle = skin; ctx.fillRect(mx - U * 0.016, my + U * 0.05, U * 0.032, U * 0.03);
+  if (coatOn) { rr(ctx, mx - U * 0.04, my + U * 0.062, U * 0.08, U * 0.032, U * 0.014); ctx.fillStyle = "#f0c878"; ctx.fill(); inked(ctx, h, 0.004); }
+  ctx.save(); ctx.filter = `blur(${Math.max(2, h * 0.011)}px)`;
+  ctx.fillStyle = skin; ctx.beginPath(); ctx.ellipse(mx, my, U * 0.06, U * 0.068, 0, 0, 7); ctx.fill();
+  ctx.fillStyle = "#f19bb0aa"; ctx.beginPath(); ctx.ellipse(mx, my + U * 0.018, U * 0.04, U * 0.016, 0, 0, 7); ctx.fill();
+  ctx.restore();
+  ctx.beginPath(); ctx.moveTo(mx - U * 0.069, my + U * 0.02);
+  ctx.bezierCurveTo(mx - U * 0.08, my - U * 0.09, mx + U * 0.08, my - U * 0.1, mx + U * 0.069, my + U * 0.02);
+  ctx.quadraticCurveTo(mx + U * 0.05, my - U * 0.045, mx + U * 0.008, my - U * 0.052);
+  ctx.quadraticCurveTo(mx - U * 0.04, my - U * 0.03, mx - U * 0.069, my + U * 0.02);
+  ctx.closePath(); ctx.fillStyle = hairC; ctx.fill(); inked(ctx, h);
+  ctx.fillStyle = "#f5d98a"; for (const s of [-1, 1]) { ctx.beginPath(); ctx.arc(mx + s * U * 0.068, my + U * 0.04, U * 0.0065, 0, 7); ctx.fill(); }
 }
 
 // ------------------------------------------------------------------ one frame of the tape

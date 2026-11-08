@@ -3,176 +3,352 @@
 "id": "0bd4bbe894",
 "who": "luna"
 },
-"I kept watch every night. It only moves when the lights go out. Pick a square before it stops.": {
-"id": "881832341e",
+"Uma mulher sozinha, uma porta que ela não conseguiu abrir. Vamos ver quem mais estava naquele corredor.": {
+"id": "d9f27d3bd2",
+"who": "luna"
+},
+"I kept watch every night. Click any night and the scope will analyze it.": {
+"id": "0ca158b8d1",
+"who": "xochi"
+},
+"Fiquei de vigia todas as noites. Clique em uma noite e o scope vai analisar.": {
+"id": "557aaad7f2",
 "who": "xochi"
 },
 "Hmph. I'll watch her pulse. Ghosts don't have one, people do.": {
 "id": "5b16101d81",
 "who": "bigotes"
 },
+"Hmpf. Vou observar o pulso dela. Fantasma não tem, gente tem.": {
+"id": "03f72bd824",
+"who": "bigotes"
+},
 "Marina said she lives alone.": {
 "id": "478c051740",
+"who": "luna"
+},
+"A Marina disse que mora sozinha.": {
+"id": "583965a563",
 "who": "luna"
 },
 "The scope needs a face to find a heartbeat. Let it work.": {
 "id": "39fb90db12",
 "who": "xochi"
 },
+"O scope precisa de um rosto para achar um batimento. Deixe ele trabalhar.": {
+"id": "007ac4a4f7",
+"who": "xochi"
+},
 "Click a card. I will show you that moment of the tape, and the crew will argue about it.": {
 "id": "4707a195a3",
+"who": "xochi"
+},
+"Clique em um cartão. Eu mostro aquele momento da fita, e a equipe vai discutir.": {
+"id": "dd1065946d",
 "who": "xochi"
 },
 "I will write down what the scope sees. Nothing else.": {
 "id": "08da2eae21",
 "who": "xochi"
 },
+"Vou anotar o que o scope vê. Mais nada.": {
+"id": "4031d3cc81",
+"who": "xochi"
+},
 "Spirit of this room… is someone here with us?": {
 "id": "7e321ed4f3",
+"who": "luna"
+},
+"Espírito desta sala… tem alguém aqui com a gente?": {
+"id": "8b8254a083",
 "who": "luna"
 },
 "The glass went to YES, and stopped. Stay very still…": {
 "id": "5b0b7363dd",
 "who": "luna"
 },
+"O copo foi até o SIM e parou. Fique bem parada…": {
+"id": "1d8b0eacc5",
+"who": "luna"
+},
 "A held breath right at the 3-second line is noticed only some of the time. Below it, never. I would rather miss a gasp than invent one.": {
 "id": "9be3171da7",
+"who": "bigotes"
+},
+"Uma respiração presa bem na linha dos 3 segundos só é percebida às vezes. Abaixo disso, nunca. Prefiro perder um suspiro a inventar um.": {
+"id": "d2a161bbfd",
 "who": "bigotes"
 },
 "Wait… before you go. Will you come back?": {
 "id": "8ad1078edc",
 "who": "luna"
 },
+"Espera… antes de ir. Você vai voltar?": {
+"id": "ff37c37c96",
+"who": "luna"
+},
 "EVERYBODY OUT! Out, out, out!": {
 "id": "cb56a726bc",
+"who": "luna"
+},
+"TODO MUNDO PRA FORA! Fora, fora, fora!": {
+"id": "032a0f9190",
 "who": "luna"
 },
 "Shhh… I'm Luna. I open the board, and I believe in everything. Almost.": {
 "id": "20ce550d7b",
 "who": "luna"
 },
+"Shhh… Eu sou a Luna. Eu abro o tabuleiro e acredito em tudo. Quase.": {
+"id": "9357deacdd",
+"who": "luna"
+},
 "Dr. Bigotes. I believe in data. Show me a pulse and I'll show you a person.": {
 "id": "bf409f2f80",
+"who": "bigotes"
+},
+"Dr. Bigotes. Eu acredito em dados. Me mostre um pulso e eu mostro uma pessoa.": {
+"id": "c8cf77aeec",
 "who": "bigotes"
 },
 "I'm Xochi. I keep watch all night and write down only what the scope saw.": {
 "id": "05acc60134",
 "who": "xochi"
 },
+"Eu sou a Xochi. Fico de vigia a noite toda e anoto só o que o scope viu.": {
+"id": "bfd56c7af9",
+"who": "xochi"
+},
 "Marina, alive the whole time. This is the line every other card is compared to.": {
 "id": "22fe9b7f43",
+"who": "xochi"
+},
+"A Marina, viva o tempo todo. Esta é a linha com que todos os outros cartões são comparados.": {
+"id": "468e5984e8",
 "who": "xochi"
 },
 "Here. The SDK counted two faces, and Marina was the only one breathing.": {
 "id": "16913718f8",
 "who": "luna"
 },
+"Aqui. O SDK contou dois rostos, e só a Marina respirava.": {
+"id": "d6901a7e1d",
+"who": "luna"
+},
 "Right behind her. A face, and no pulse at all. A mask does that. So does a ghost, says Luna.": {
 "id": "d258b0de41",
+"who": "bigotes"
+},
+"Bem atrás dela. Um rosto, e nenhum pulso. Uma máscara faz isso. Um fantasma também, diz a Luna.": {
+"id": "3900b0ea19",
 "who": "bigotes"
 },
 "No face in that spot at all. A coat, a shadow.": {
 "id": "335ecf7ac1",
 "who": "bigotes"
 },
+"Nenhum rosto naquele ponto. Um casaco, uma sombra.": {
+"id": "f6b5ccc961",
+"who": "bigotes"
+},
 "Too dark to read. I will not call it a ghost.": {
 "id": "315a1addbb",
+"who": "bigotes"
+},
+"Escuro demais para ler. Não vou chamar de fantasma.": {
+"id": "827b82ab8b",
 "who": "bigotes"
 },
 "She stopped at the door and held her breath. Listening to something.": {
 "id": "a31ef5b470",
 "who": "luna"
 },
+"Ela parou na porta e prendeu a respiração. Ouvindo alguma coisa.": {
+"id": "d9a29a8f58",
+"who": "luna"
+},
 "Her pulse climbs. The lamp flickered a moment before. A startle, most likely.": {
 "id": "53cbdec20a",
+"who": "bigotes"
+},
+"O pulso dela sobe. A lâmpada piscou um instante antes. Um susto, provavelmente.": {
+"id": "aa68a570b1",
 "who": "bigotes"
 },
 "It says it stood behind her. Presage counted a second face from second 8, and she never turned around.": {
 "id": "eeeeaadae4",
 "who": "luna"
 },
+"Diz que ficou atrás dela. O Presage contou um segundo rosto a partir do segundo 8, e ela nunca se virou.": {
+"id": "f623e221a3",
+"who": "luna"
+},
 "Two faces in the frame is what the SDK reported. It does not say whose. A reflection counts too.": {
 "id": "b1c2805e60",
+"who": "bigotes"
+},
+"Dois rostos no quadro é o que o SDK relatou. Não diz de quem. Reflexo também conta.": {
+"id": "707020ec8d",
 "who": "bigotes"
 },
 "No. That face gave 0 beats while the scope watched it. Nothing alive holds that still.": {
 "id": "3efac3ffca",
 "who": "luna"
 },
+"Não. Esse rosto deu 0 batimentos enquanto o scope observava. Nada vivo fica tão parado.": {
+"id": "b8ba9d55c4",
+"who": "luna"
+},
 "A face with no pulse is a photo, a mask or a screen. Ordinary. I just cannot tell you who put it there.": {
 "id": "83219292ff",
+"who": "bigotes"
+},
+"Rosto sem pulso é foto, máscara ou tela. Comum. Só não sei dizer quem colocou ali.": {
+"id": "4ca1e9a8ed",
 "who": "bigotes"
 },
 "She held her breath at second 21. She felt it, she never saw it. It was telling her: don't go.": {
 "id": "0de63d975c",
 "who": "luna"
 },
+"Ela prendeu a respiração no segundo 21. Ela sentiu, nunca viu. Estava dizendo a ela: não vá.": {
+"id": "14c55bd3cf",
+"who": "luna"
+},
 "Her pulse rose 9 bpm in a few seconds. A startle does that. So does a flickering lamp. A bad feeling is not a ghost.": {
 "id": "d88e1417a4",
+"who": "bigotes"
+},
+"O pulso dela subiu 9 bpm em poucos segundos. Um susto faz isso. Uma lâmpada piscando também. Mau pressentimento não é fantasma.": {
+"id": "a5f39744cf",
 "who": "bigotes"
 },
 "The second face left the frame at second 38. The glass says it did not leave the house.": {
 "id": "c97111b3df",
 "who": "luna"
 },
+"O segundo rosto saiu do quadro no segundo 38. O copo diz que não saiu da casa.": {
+"id": "fedef886ff",
+"who": "luna"
+},
 "The SDK stopped counting a second face at second 38. People walk out of frame. That is all I can sign.": {
 "id": "47cab6e3af",
+"who": "bigotes"
+},
+"O SDK parou de contar um segundo rosto no segundo 38. Pessoas saem do quadro. É só isso que eu assino.": {
+"id": "d1188bfcf4",
 "who": "bigotes"
 },
 "It said goodbye.": {
 "id": "b445baab93",
 "who": "luna"
 },
+"Disse adeus.": {
+"id": "7ac7cbb108",
+"who": "luna"
+},
 "Session closed.": {
 "id": "4b78c4a455",
+"who": "bigotes"
+},
+"Sessão encerrada.": {
+"id": "d5053ae8cc",
 "who": "bigotes"
 },
 "It never left. It is still in the hallway, right where she cannot see it.": {
 "id": "99f28d2003",
 "who": "luna"
 },
+"Nunca foi embora. Ainda está no corredor, bem onde ela não consegue ver.": {
+"id": "bac27564cf",
+"who": "luna"
+},
 "Okay. I have no explanation for that. Yet.": {
 "id": "890fc1971c",
 "who": "bigotes"
 },
-"One living face from start to end, with a pulse around 83 bpm.": {
-"id": "c7312d7cb4",
+"Tudo bem. Não tenho explicação para isso. Ainda.": {
+"id": "36a47fef2a",
+"who": "bigotes"
+},
+"One living face from start to end, with a pulse around 74 bpm.": {
+"id": "4e1ee9d34f",
+"who": "xochi"
+},
+"Um rosto vivo do começo ao fim, com pulso por volta de 74 bpm.": {
+"id": "28c421f19c",
 "who": "xochi"
 },
 "At second 8 something else had a face in that hallway, for 30 seconds.": {
 "id": "28f33a8134",
 "who": "luna"
 },
+"No segundo 8, mais alguma coisa tinha rosto naquele corredor, por 30 segundos.": {
+"id": "b370e0c379",
+"who": "luna"
+},
 "She stopped at the door and held her breath for 3.9 seconds.": {
 "id": "c57fe1be15",
 "who": "luna"
 },
-"Then her pulse rose 9.3 bpm. A startle, most likely.": {
-"id": "bd2adcf2df",
+"Ela parou na porta e prendeu a respiração por 3.9 segundos.": {
+"id": "df4b4af153",
+"who": "luna"
+},
+"Then her pulse rose 8.6 bpm. A startle, most likely.": {
+"id": "79ed9d4b31",
+"who": "bigotes"
+},
+"Depois o pulso dela subiu 8.6 bpm. Um susto, provavelmente.": {
+"id": "59b097f5bf",
 "who": "bigotes"
 },
 "Here is what I think it meant. It stood behind her and she stayed home. It was not hunting her. It was keeping her in.": {
 "id": "4164fb172f",
 "who": "luna"
 },
+"Eu acho que quis dizer o seguinte. Ficou atrás dela e ela ficou em casa. Não estava caçando. Estava mantendo ela lá dentro.": {
+"id": "9eb339276b",
+"who": "luna"
+},
 "Or a dark hallway and a bad feeling. I measured a face with no pulse. I did not measure a ghost.": {
 "id": "5afd230393",
+"who": "bigotes"
+},
+"Ou um corredor escuro e um mau pressentimento. Medi um rosto sem pulso. Não medi um fantasma.": {
+"id": "32812bb66f",
 "who": "bigotes"
 },
 "Just Marina, coming home. One face, one pulse.": {
 "id": "15d1b495c9",
 "who": "xochi"
 },
+"Só a Marina, voltando para casa. Um rosto, um pulso.": {
+"id": "15b235b24f",
+"who": "xochi"
+},
 "She was out. The hallway stayed dark.": {
 "id": "3b43713299",
+"who": "xochi"
+},
+"Ela saiu. O corredor ficou escuro.": {
+"id": "5aa195337b",
 "who": "xochi"
 },
 "Her sister visited. Two faces, two pulses.": {
 "id": "35ed1402b1",
 "who": "bigotes"
 },
+"A irmã dela veio visitar. Dois rostos, dois pulsos.": {
+"id": "ea1c46a09f",
+"who": "bigotes"
+},
 "Halloween. Three trick-or-treaters at the door, all alive.": {
 "id": "11842ae80c",
+"who": "bigotes"
+},
+"Halloween. Três crianças pedindo doce na porta, todas vivas.": {
+"id": "90831ca12e",
 "who": "bigotes"
 },
 "The night she did not go out. Two faces. One heartbeat. Who else was there?": {
@@ -183,44 +359,88 @@
 "id": "41b187f33b",
 "who": "xochi"
 },
+"Caso 02. Está do lado de fora do quarto dela.": {
+"id": "64567c1176",
+"who": "xochi"
+},
 "Not sent yet.": {
 "id": "a7d7b4c8e8",
+"who": "xochi"
+},
+"Ainda não enviada.": {
+"id": "e66a309814",
 "who": "xochi"
 },
 "Wait. Presage just reported two faces in the frame. At 0:08.": {
 "id": "7a31019c82",
 "who": "bigotes"
 },
+"Espera. O Presage acabou de relatar dois rostos no quadro. Em 0:08.": {
+"id": "2e83cf2fed",
+"who": "bigotes"
+},
 "These numbers are samples. The spirit is fiction. Marina stayed home, and that is the part that matters.": {
 "id": "13d756d8c0",
+"who": "xochi"
+},
+"Estes números são de exemplo. O espírito é ficção. A Marina ficou em casa, e é isso que importa.": {
+"id": "012e1012f2",
 "who": "xochi"
 },
 "The measurements are real. The spirit is fiction. Marina stayed home, and that is the part that matters.": {
 "id": "94436243e9",
 "who": "xochi"
 },
+"As medições são reais. O espírito é ficção. A Marina ficou em casa, e é isso que importa.": {
+"id": "5340a6c366",
+"who": "xochi"
+},
 "These numbers are samples. The spirit is fiction. What you felt is yours.": {
 "id": "94259fad35",
+"who": "xochi"
+},
+"Estes números são de exemplo. O espírito é ficção. O que você sentiu é seu.": {
+"id": "05bc613c2a",
 "who": "xochi"
 },
 "The measurements are real. The spirit is fiction. What you felt is yours.": {
 "id": "f7c5576a24",
 "who": "xochi"
 },
+"As medições são reais. O espírito é ficção. O que você sentiu é seu.": {
+"id": "9fd8ced6b5",
+"who": "xochi"
+},
 "Every face in this video has a heartbeat.": {
 "id": "01c64d5a91",
+"who": "luna"
+},
+"Todo rosto neste vídeo tem batimento.": {
+"id": "53b9897592",
 "who": "luna"
 },
 "Except one.": {
 "id": "45dffd19f2",
 "who": "luna"
 },
+"Menos um.": {
+"id": "a24d266440",
+"who": "luna"
+},
 "It was the night of November 2nd. Bag ready, keys in my hand, coat on. Everything was fine. Then I got to the door and this feeling hit me, so strong I couldn't breathe. Stay home. I took my coat off and I stayed. I live alone, and I saw nothing. But the hallway camera was on. Can you look?": {
 "id": "603372ff38",
 "who": "marina"
 },
+"Foi na noite de 2 de novembro. Bolsa pronta, chaves na mão, casaco vestido. Estava tudo bem. Aí cheguei na porta e veio essa sensação, tão forte que eu não conseguia respirar. Fique em casa. Tirei o casaco e fiquei. Moro sozinha e não vi nada. Mas a câmera do corredor estava ligada. Vocês podem olhar?": {
+"id": "a844d40d10",
+"who": "marina"
+},
 "Do you dare?": {
 "id": "10a3666319",
+"who": "luna"
+},
+"Você tem coragem?": {
+"id": "f190da0f97",
 "who": "luna"
 }
 }

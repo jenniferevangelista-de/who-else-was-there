@@ -1,226 +1,557 @@
 [
  {
   "who": "luna",
+  "lang": "en",
   "text": "A woman alone, a door she couldn't open. Let's see who else was in that hallway."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Uma mulher sozinha, uma porta que ela não conseguiu abrir. Vamos ver quem mais estava naquele corredor."
+ },
+ {
   "who": "xochi",
-  "text": "I kept watch every night. It only moves when the lights go out. Pick a square before it stops."
+  "lang": "en",
+  "text": "I kept watch every night. Click any night and the scope will analyze it."
+ },
+ {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "Fiquei de vigia todas as noites. Clique em uma noite e o scope vai analisar."
  },
  {
   "who": "bigotes",
+  "lang": "en",
   "text": "Hmph. I'll watch her pulse. Ghosts don't have one, people do."
  },
  {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Hmpf. Vou observar o pulso dela. Fantasma não tem, gente tem."
+ },
+ {
   "who": "luna",
+  "lang": "en",
   "text": "Marina said she lives alone."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "A Marina disse que mora sozinha."
+ },
+ {
   "who": "xochi",
+  "lang": "en",
   "text": "The scope needs a face to find a heartbeat. Let it work."
  },
  {
   "who": "xochi",
+  "lang": "pt",
+  "text": "O scope precisa de um rosto para achar um batimento. Deixe ele trabalhar."
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
   "text": "Click a card. I will show you that moment of the tape, and the crew will argue about it."
  },
  {
   "who": "xochi",
+  "lang": "pt",
+  "text": "Clique em um cartão. Eu mostro aquele momento da fita, e a equipe vai discutir."
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
   "text": "I will write down what the scope sees. Nothing else."
  },
  {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "Vou anotar o que o scope vê. Mais nada."
+ },
+ {
   "who": "luna",
+  "lang": "en",
   "text": "Spirit of this room… is someone here with us?"
  },
  {
   "who": "luna",
-  "text": "The glass went to YES, and stopped. Stay very still…"
- },
- {
-  "who": "bigotes",
-  "text": "A held breath right at the 3-second line is noticed only some of the time. Below it, never. I would rather miss a gasp than invent one."
+  "lang": "pt",
+  "text": "Espírito desta sala… tem alguém aqui com a gente?"
  },
  {
   "who": "luna",
+  "lang": "en",
+  "text": "The glass went to YES, and stopped. Stay very still…"
+ },
+ {
+  "who": "luna",
+  "lang": "pt",
+  "text": "O copo foi até o SIM e parou. Fique bem parada…"
+ },
+ {
+  "who": "bigotes",
+  "lang": "en",
+  "text": "A held breath right at the 3-second line is noticed only some of the time. Below it, never. I would rather miss a gasp than invent one."
+ },
+ {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Uma respiração presa bem na linha dos 3 segundos só é percebida às vezes. Abaixo disso, nunca. Prefiro perder um suspiro a inventar um."
+ },
+ {
+  "who": "luna",
+  "lang": "en",
   "text": "Wait… before you go. Will you come back?"
  },
  {
   "who": "luna",
+  "lang": "pt",
+  "text": "Espera… antes de ir. Você vai voltar?"
+ },
+ {
+  "who": "luna",
+  "lang": "en",
   "text": "EVERYBODY OUT! Out, out, out!"
  },
  {
   "who": "luna",
+  "lang": "pt",
+  "text": "TODO MUNDO PRA FORA! Fora, fora, fora!"
+ },
+ {
+  "who": "luna",
+  "lang": "en",
   "text": "Shhh… I'm Luna. I open the board, and I believe in everything. Almost."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Shhh… Eu sou a Luna. Eu abro o tabuleiro e acredito em tudo. Quase."
+ },
+ {
   "who": "bigotes",
+  "lang": "en",
   "text": "Dr. Bigotes. I believe in data. Show me a pulse and I'll show you a person."
  },
  {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Dr. Bigotes. Eu acredito em dados. Me mostre um pulso e eu mostro uma pessoa."
+ },
+ {
   "who": "xochi",
+  "lang": "en",
   "text": "I'm Xochi. I keep watch all night and write down only what the scope saw."
  },
  {
   "who": "xochi",
+  "lang": "pt",
+  "text": "Eu sou a Xochi. Fico de vigia a noite toda e anoto só o que o scope viu."
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
   "text": "Marina, alive the whole time. This is the line every other card is compared to."
  },
  {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "A Marina, viva o tempo todo. Esta é a linha com que todos os outros cartões são comparados."
+ },
+ {
   "who": "luna",
+  "lang": "en",
   "text": "Here. The SDK counted two faces, and Marina was the only one breathing."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Aqui. O SDK contou dois rostos, e só a Marina respirava."
+ },
+ {
   "who": "bigotes",
+  "lang": "en",
   "text": "Right behind her. A face, and no pulse at all. A mask does that. So does a ghost, says Luna."
  },
  {
   "who": "bigotes",
+  "lang": "pt",
+  "text": "Bem atrás dela. Um rosto, e nenhum pulso. Uma máscara faz isso. Um fantasma também, diz a Luna."
+ },
+ {
+  "who": "bigotes",
+  "lang": "en",
   "text": "No face in that spot at all. A coat, a shadow."
  },
  {
   "who": "bigotes",
+  "lang": "pt",
+  "text": "Nenhum rosto naquele ponto. Um casaco, uma sombra."
+ },
+ {
+  "who": "bigotes",
+  "lang": "en",
   "text": "Too dark to read. I will not call it a ghost."
  },
  {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Escuro demais para ler. Não vou chamar de fantasma."
+ },
+ {
   "who": "luna",
+  "lang": "en",
   "text": "She stopped at the door and held her breath. Listening to something."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Ela parou na porta e prendeu a respiração. Ouvindo alguma coisa."
+ },
+ {
   "who": "bigotes",
+  "lang": "en",
   "text": "Her pulse climbs. The lamp flickered a moment before. A startle, most likely."
  },
  {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "O pulso dela sobe. A lâmpada piscou um instante antes. Um susto, provavelmente."
+ },
+ {
   "who": "luna",
+  "lang": "en",
   "text": "It says it stood behind her. Presage counted a second face from second 8, and she never turned around."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Diz que ficou atrás dela. O Presage contou um segundo rosto a partir do segundo 8, e ela nunca se virou."
+ },
+ {
   "who": "bigotes",
+  "lang": "en",
   "text": "Two faces in the frame is what the SDK reported. It does not say whose. A reflection counts too."
  },
  {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Dois rostos no quadro é o que o SDK relatou. Não diz de quem. Reflexo também conta."
+ },
+ {
   "who": "luna",
+  "lang": "en",
   "text": "No. That face gave 0 beats while the scope watched it. Nothing alive holds that still."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Não. Esse rosto deu 0 batimentos enquanto o scope observava. Nada vivo fica tão parado."
+ },
+ {
   "who": "bigotes",
+  "lang": "en",
   "text": "A face with no pulse is a photo, a mask or a screen. Ordinary. I just cannot tell you who put it there."
  },
  {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Rosto sem pulso é foto, máscara ou tela. Comum. Só não sei dizer quem colocou ali."
+ },
+ {
   "who": "luna",
+  "lang": "en",
   "text": "She held her breath at second 21. She felt it, she never saw it. It was telling her: don't go."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Ela prendeu a respiração no segundo 21. Ela sentiu, nunca viu. Estava dizendo a ela: não vá."
+ },
+ {
   "who": "bigotes",
+  "lang": "en",
   "text": "Her pulse rose 9 bpm in a few seconds. A startle does that. So does a flickering lamp. A bad feeling is not a ghost."
  },
  {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "O pulso dela subiu 9 bpm em poucos segundos. Um susto faz isso. Uma lâmpada piscando também. Mau pressentimento não é fantasma."
+ },
+ {
   "who": "luna",
+  "lang": "en",
   "text": "The second face left the frame at second 38. The glass says it did not leave the house."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "O segundo rosto saiu do quadro no segundo 38. O copo diz que não saiu da casa."
+ },
+ {
   "who": "bigotes",
+  "lang": "en",
   "text": "The SDK stopped counting a second face at second 38. People walk out of frame. That is all I can sign."
  },
  {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "O SDK parou de contar um segundo rosto no segundo 38. Pessoas saem do quadro. É só isso que eu assino."
+ },
+ {
   "who": "luna",
+  "lang": "en",
   "text": "It said goodbye."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Disse adeus."
+ },
+ {
   "who": "bigotes",
+  "lang": "en",
   "text": "Session closed."
  },
  {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Sessão encerrada."
+ },
+ {
   "who": "luna",
+  "lang": "en",
   "text": "It never left. It is still in the hallway, right where she cannot see it."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Nunca foi embora. Ainda está no corredor, bem onde ela não consegue ver."
+ },
+ {
   "who": "bigotes",
+  "lang": "en",
   "text": "Okay. I have no explanation for that. Yet."
  },
  {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Tudo bem. Não tenho explicação para isso. Ainda."
+ },
+ {
   "who": "xochi",
-  "text": "One living face from start to end, with a pulse around 83 bpm."
+  "lang": "en",
+  "text": "One living face from start to end, with a pulse around 74 bpm."
+ },
+ {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "Um rosto vivo do começo ao fim, com pulso por volta de 74 bpm."
  },
  {
   "who": "luna",
+  "lang": "en",
   "text": "At second 8 something else had a face in that hallway, for 30 seconds."
  },
  {
   "who": "luna",
-  "text": "She stopped at the door and held her breath for 3.9 seconds."
- },
- {
-  "who": "bigotes",
-  "text": "Then her pulse rose 9.3 bpm. A startle, most likely."
+  "lang": "pt",
+  "text": "No segundo 8, mais alguma coisa tinha rosto naquele corredor, por 30 segundos."
  },
  {
   "who": "luna",
-  "text": "Here is what I think it meant. It stood behind her and she stayed home. It was not hunting her. It was keeping her in."
+  "lang": "en",
+  "text": "She stopped at the door and held her breath for 3.9 seconds."
+ },
+ {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Ela parou na porta e prendeu a respiração por 3.9 segundos."
  },
  {
   "who": "bigotes",
+  "lang": "en",
+  "text": "Then her pulse rose 8.6 bpm. A startle, most likely."
+ },
+ {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Depois o pulso dela subiu 8.6 bpm. Um susto, provavelmente."
+ },
+ {
+  "who": "luna",
+  "lang": "en",
+  "text": "Here is what I think it meant. It stood behind her and she stayed home. It was not hunting her. It was keeping her in."
+ },
+ {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Eu acho que quis dizer o seguinte. Ficou atrás dela e ela ficou em casa. Não estava caçando. Estava mantendo ela lá dentro."
+ },
+ {
+  "who": "bigotes",
+  "lang": "en",
   "text": "Or a dark hallway and a bad feeling. I measured a face with no pulse. I did not measure a ghost."
  },
  {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Ou um corredor escuro e um mau pressentimento. Medi um rosto sem pulso. Não medi um fantasma."
+ },
+ {
   "who": "xochi",
+  "lang": "en",
   "text": "Just Marina, coming home. One face, one pulse."
  },
  {
   "who": "xochi",
+  "lang": "pt",
+  "text": "Só a Marina, voltando para casa. Um rosto, um pulso."
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
   "text": "She was out. The hallway stayed dark."
  },
  {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "Ela saiu. O corredor ficou escuro."
+ },
+ {
   "who": "bigotes",
+  "lang": "en",
   "text": "Her sister visited. Two faces, two pulses."
  },
  {
   "who": "bigotes",
+  "lang": "pt",
+  "text": "A irmã dela veio visitar. Dois rostos, dois pulsos."
+ },
+ {
+  "who": "bigotes",
+  "lang": "en",
   "text": "Halloween. Three trick-or-treaters at the door, all alive."
  },
  {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Halloween. Três crianças pedindo doce na porta, todas vivas."
+ },
+ {
   "who": "luna",
+  "lang": "en",
   "text": "The night she did not go out. Two faces. One heartbeat. Who else was there?"
  },
  {
   "who": "xochi",
+  "lang": "en",
   "text": "Case 02. It is outside her bedroom."
  },
  {
   "who": "xochi",
-  "text": "Not sent yet."
- },
- {
-  "who": "bigotes",
-  "text": "Wait. Presage just reported two faces in the frame. At 0:08."
+  "lang": "pt",
+  "text": "Caso 02. Está do lado de fora do quarto dela."
  },
  {
   "who": "xochi",
+  "lang": "en",
+  "text": "Not sent yet."
+ },
+ {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "Ainda não enviada."
+ },
+ {
+  "who": "bigotes",
+  "lang": "en",
+  "text": "Wait. Presage just reported two faces in the frame. At 0:08."
+ },
+ {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Espera. O Presage acabou de relatar dois rostos no quadro. Em 0:08."
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
   "text": "These numbers are samples. The spirit is fiction. Marina stayed home, and that is the part that matters."
  },
  {
   "who": "xochi",
+  "lang": "pt",
+  "text": "Estes números são de exemplo. O espírito é ficção. A Marina ficou em casa, e é isso que importa."
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
   "text": "The measurements are real. The spirit is fiction. Marina stayed home, and that is the part that matters."
  },
  {
   "who": "xochi",
+  "lang": "pt",
+  "text": "As medições são reais. O espírito é ficção. A Marina ficou em casa, e é isso que importa."
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
   "text": "These numbers are samples. The spirit is fiction. What you felt is yours."
  },
  {
   "who": "xochi",
+  "lang": "pt",
+  "text": "Estes números são de exemplo. O espírito é ficção. O que você sentiu é seu."
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
   "text": "The measurements are real. The spirit is fiction. What you felt is yours."
  },
  {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "As medições são reais. O espírito é ficção. O que você sentiu é seu."
+ },
+ {
   "who": "luna",
+  "lang": "en",
   "text": "Every face in this video has a heartbeat."
  },
  {
   "who": "luna",
-  "text": "Except one."
- },
- {
-  "who": "marina",
-  "text": "It was the night of November 2nd. Bag ready, keys in my hand, coat on. Everything was fine. Then I got to the door and this feeling hit me, so strong I couldn't breathe. Stay home. I took my coat off and I stayed. I live alone, and I saw nothing. But the hallway camera was on. Can you look?"
+  "lang": "pt",
+  "text": "Todo rosto neste vídeo tem batimento."
  },
  {
   "who": "luna",
+  "lang": "en",
+  "text": "Except one."
+ },
+ {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Menos um."
+ },
+ {
+  "who": "marina",
+  "lang": "en",
+  "text": "It was the night of November 2nd. Bag ready, keys in my hand, coat on. Everything was fine. Then I got to the door and this feeling hit me, so strong I couldn't breathe. Stay home. I took my coat off and I stayed. I live alone, and I saw nothing. But the hallway camera was on. Can you look?"
+ },
+ {
+  "who": "marina",
+  "lang": "pt",
+  "text": "Foi na noite de 2 de novembro. Bolsa pronta, chaves na mão, casaco vestido. Estava tudo bem. Aí cheguei na porta e veio essa sensação, tão forte que eu não conseguia respirar. Fique em casa. Tirei o casaco e fiquei. Moro sozinha e não vi nada. Mas a câmera do corredor estava ligada. Vocês podem olhar?"
+ },
+ {
+  "who": "luna",
+  "lang": "en",
   "text": "Do you dare?"
+ },
+ {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Você tem coragem?"
  }
 ]

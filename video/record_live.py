@@ -21,7 +21,7 @@ WAIT_MAX, AFTER_LIVE, HARD_MAX = 1500, 24, 90
 STATE = "(() => { const c = document.querySelector('#camPill').classList.contains('cam-on');" \
         " const s = [...document.querySelectorAll('[data-state]')].map(e => e.textContent).join('|');" \
         " const r = document.querySelector('#me')?.getBoundingClientRect();" \
-        " return {cam: c, state: s, box: r ? [r.x, r.y, r.right, r.bottom] : null}; })()"
+        " return {cam: c, state: s, w: window.innerWidth, box: r ? [r.x, r.y, r.right, r.bottom] : null}; })()"
 
 
 def main():
@@ -44,8 +44,9 @@ def main():
                 live_at = time.monotonic(); print("LIVE reached after", round(live_at - start, 1), "s", flush=True)
             shot = Image.open(io.BytesIO(page.screenshot(type="jpeg", quality=85))).convert("RGB")
             if info["box"]:                     # cover the camera preview before anything is saved
-                d = ImageDraw.Draw(shot); x0, y0, x1, y1 = info["box"]
-                d.rounded_rectangle((x0 - 4, y0 - 4, x1 + 4, y1 + 4), 20, fill=(18, 10, 31))
+                k = shot.width / info["w"]      # the screenshot is in device pixels, the box in CSS pixels
+                d = ImageDraw.Draw(shot); x0, y0, x1, y1 = (v * k for v in info["box"])
+                d.rounded_rectangle((x0 - 6, y0 - 6, x1 + 6, y1 + 6), 20, fill=(18, 10, 31))
                 d.text(((x0 + x1) / 2, (y0 + y1) / 2), "camera image hidden in this video", fill=(216, 198, 234), anchor="mm")
             n += 1; shot.save(TMP / f"{n:06d}.jpg", quality=88)
             now = time.monotonic()
@@ -54,6 +55,8 @@ def main():
             time.sleep(0.03)
         fps = n / (time.monotonic() - start)
         b.close()
+    if live_at is None:                         # never store a take that does not show the live signal
+        shutil.rmtree(TMP, ignore_errors=True); print("LIVE never reached, nothing saved"); return 2
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", f"{fps:.3f}", "-i", str(TMP / "%06d.jpg"),
                     "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2,pad=ih*16/9:ih:(ow-iw)/2:0:color=0x120a1f,format=yuv420p",
                     "-c:v", "libx264", "-crf", "18", str(OUT)], check=True)

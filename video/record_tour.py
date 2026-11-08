@@ -38,9 +38,9 @@ def main():
 
         scene("cold", lambda: wait(6.5))
         nxt(); scene("crew", lambda: (wait(1.2), page.click('[data-intro="luna"]'), wait(1.6), page.click('[data-intro="bigotes"]'), wait(1.6), page.click('[data-intro="xochi"]'), wait(1.6)))
-        nxt(); scene("consent", lambda: wait(7))
-        nxt(); scene("case", lambda: wait(9))
-        nxt(); scene("map", lambda: (page.wait_for_selector(".night.arrived", timeout=60000), wait(1.5)))
+        nxt(); wait(1.5)                      # main menu
+        page.click('[data-go="calendar"]'); scene("map", lambda: (page.wait_for_selector(".night.arrived", timeout=60000), wait(0.8), page.click('[data-date="2026-11-02"]'), page.wait_for_selector(".night-res", timeout=9000), wait(2)))
+        page.click("#whatNow .wn.main"); scene("case", lambda: wait(9))
         nxt(); scene("tape", lambda: (ready(), wait(1.5)))
 
         def door():
@@ -52,14 +52,15 @@ def main():
         nxt(); wait(0.4)
         scene("point", lambda: (ready(), wait(3)))
         nxt(); scene("locker", lambda: (wait(1), page.click('[data-ev="E3"]'), wait(3)))
+        nxt(); scene("consent", lambda: wait(7))
         nxt(); scene("prep", lambda: (page.click("#camOn"), wait(9)))
         nxt(); wait(0.4)
-        scene("board", lambda: (page.click('.q[data-q="why"]'), page.wait_for_selector("#answers .say, #answers > *", timeout=90000), wait(3)))
+        scene("board", lambda: (page.click('.q[data-q="why"]'), page.wait_for_selector("#answers .say", timeout=90000), wait(3)))
         nxt(); scene("reading", lambda: (wait(2), page.mouse.move(800, 500), page.mouse.wheel(0, 600), wait(4)))
         nxt(); scene("end", lambda: wait(8))
-        nxt(); scene("dare", lambda: wait(6))
-        nxt(); scene("room", lambda: (page.click("#roomOn"), wait(9), page.click("#roomAsk"), wait(6)))
-        nxt(); scene("tested", lambda: wait(7))
+        page.click("#whatNow .wn.main"); scene("dare", lambda: wait(6))
+        page.click("#goRoom"); scene("room", lambda: (page.click("#roomOn"), wait(9), page.click("#roomAsk"), wait(6)))
+        page.click("#chapters [data-id='tested']"); scene("tested", lambda: wait(7))
 
         video = page.video.path()
         ctx.close(); b.close()

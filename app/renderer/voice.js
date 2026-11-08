@@ -2,6 +2,7 @@
 // (a number from a tape only you have) stays silent and is still written on screen.
 import VOICES from "./voices.json";
 import { sound } from "./sound.js";
+import { L } from "../../src/i18n.js";
 
 const norm = (s) => String(s).replace(/\s+/g, " ").trim();
 let queue = [], current = null;
@@ -19,7 +20,7 @@ function next() {
 
 export const voice = {
   /** Queue one line by its exact text. */
-  say(text) { const v = VOICES[norm(text)]; if (v) { queue.push(v); next(); } },
+  say(text) { const v = VOICES[norm(L(text))]; if (v) { queue.push(v); next(); } },
   /** Stop speaking and forget what was queued. */
   clear() { queue = []; if (current) { const a = current; current = null; a.pause(); } delete document.body.dataset.speaking; },
   /** Speak every speech bubble as it appears on screen, in order. */

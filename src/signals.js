@@ -12,6 +12,8 @@ export function tsToNumber(ts) {
   return Number.isFinite(n) ? n : null;
 }
 
+const EXPRESSIONS = [null, "anger", "contempt", "disgust", "fear", "happiness", null, "sadness", "surprise"];   // ExpressionType; neutral is not news
+
 const last = (arr) => (Array.isArray(arr) && arr.length ? arr[arr.length - 1] : null);
 
 /**
@@ -36,6 +38,12 @@ export function sampleFromMetrics(m, t0Us = 0) {
   }
   const talk = last(m.face?.talking);
   if (talk) { out.talking = !!talk.detected; times.push(sec(talk.timestamp)); }
+
+  const ex = last(m.face?.expression);
+  if (ex?.scores?.length) {
+    const top = ex.scores.reduce((a, b) => ((b.confidence ?? 0) > (a.confidence ?? 0) ? b : a));
+    out.expression = { name: EXPRESSIONS[top.type] ?? null, conf: top.confidence ?? 0, stable: !!ex.stable };
+  }
 
   for (const s of m.breathing?.upperTrace ?? []) {
     if (Number.isFinite(s.value)) out.trace.push({ t: sec(s.timestamp), v: s.value });

@@ -3,6 +3,8 @@
 let ctx = null, on = true, flat = null;
 const ensure = () => { if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === "suspended") ctx.resume(); return ctx; };
 
+export const audioCtx = () => { if (on) ensure(); return ctx; };
+
 export const sound = {
   get on() { return on; },
   toggle() {

@@ -5,7 +5,7 @@ import { sound } from "./sound.js";
 
 export function createScope(canvas, { beeps = true } = {}) {
   const ctx = canvas.getContext("2d");
-  let bpm = null, flat = false, phase = 0, last = performance.now(), raf = 0;
+  let bpm = null, flat = false, held = false, phase = 0, last = performance.now(), raf = 0;
   const pts = [];
 
   function beatShape(x) {            // one heartbeat-like blip, x in 0..1
@@ -25,7 +25,7 @@ export function createScope(canvas, { beeps = true } = {}) {
     const w = canvas.width = canvas.clientWidth * devicePixelRatio;
     const h = canvas.height = canvas.clientHeight * devicePixelRatio;
     const speed = w / 4;              // 4 s across the glass
-    const n = Math.max(1, Math.round(speed * dt));
+    const n = held ? 0 : Math.max(1, Math.round(speed * dt));
     for (let i = 0; i < n; i++) {
       let y = 0;
       if (!flat && bpm) {
@@ -56,6 +56,7 @@ export function createScope(canvas, { beeps = true } = {}) {
     set(v) { bpm = Number.isFinite(v) && v > 0 ? v : null; flat = false; },
     flatline() { if (!flat && beeps && canvas.isConnected) sound.flat(); flat = true; bpm = null; },
     idle() { flat = false; bpm = null; },
+    hold(on) { held = !!on; },          // freeze the line: nothing is playing, so nothing beats
     stop() { cancelAnimationFrame(raf); },
   };
 }

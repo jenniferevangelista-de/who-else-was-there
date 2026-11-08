@@ -101,7 +101,7 @@ export function matchQuestion(text) {
 }
 
 /** The Room: the investigator's own live readings become evidence too. */
-export function roomEvidence({ pulse = [], trace = [] }, heldBreaths, pulseJumps) {
+export function roomEvidence({ pulse = [], trace = [], blinks = 0, expression = null, t1 = 0 }, heldBreaths, pulseJumps) {
   const ev = [];
   const good = pulse.filter((p) => p.conf >= 50);
   if (good.length) {
@@ -110,5 +110,7 @@ export function roomEvidence({ pulse = [], trace = [] }, heldBreaths, pulseJumps
   }
   for (const h of heldBreaths(trace)) ev.push({ kind: "you_held_breath", t0: h.t0, t1: h.t1, value: Math.round((h.t1 - h.t0) * 10) / 10, unit: "s" });
   for (const j of pulseJumps(pulse)) ev.push({ kind: "you_jumped", t0: j.t, t1: j.t, value: Math.round((j.to - j.from) * 10) / 10, unit: "bpm" });
+  if (blinks) ev.push({ kind: "you_blinked", t0: 0, t1, value: blinks, unit: "blinks" });
+  if (expression) ev.push({ kind: "you_showed", t0: t1, t1, value: expression, unit: "" });
   return ev.sort((a, b) => a.t0 - b.t0).map((e, i) => ({ id: `R${i + 1}`, measuredBy: "Presage SmartSpectra", ...e }));
 }

@@ -7,17 +7,18 @@ import { SmartSpectraSDK, breathingMetrics, MetricType } from "@smartspectra/nod
 import { decodeMetrics } from "@smartspectra/node-sdk/messages";
 import { sampleFromMetrics, tsToNumber } from "../../src/signals.js";
 
-const METRICS = [...breathingMetrics, MetricType?.PULSE_RATE ?? 15, MetricType?.TALKING ?? 13];
+const METRICS = [...breathingMetrics, MetricType?.PULSE_RATE ?? 15, MetricType?.TALKING ?? 13, MetricType?.BLINKING ?? 12, MetricType?.EXPRESSIONS ?? 14];
 
 async function makeSdk() {
   const apiKey = await window.pod?.key();
   if (!apiKey) throw new Error("No PRESAGE_API_KEY in this computer's environment.");
-  return new SmartSpectraSDK({ apiKey, requestedMetrics: METRICS, enableTelemetry: false, enableAccumulatedOutput: false });
+  return new SmartSpectraSDK({ apiKey, requestedMetrics: METRICS, enableTelemetry: false, enableAccumulatedOutput: false, logLevel: 1 });
 }
 
 /** Collect samples from an SDK into a scan, timing every reading with `clock()` seconds. */
 function collector(sdk, clock) {
-  const scan = { t0: clock(), t1: clock(), pulse: [], breathing: [], trace: [], talking: [], validation: [] };
+  const scan = { t0: clock(), t1: clock(), pulse: [], breathing: [], trace: [], talking: [], validation: [], blinks: 0, expression: null };
+  let blinkOn = false;
   let originUs = null, originT = null;
   const at = (ts) => {
     const us = tsToNumber(ts);
@@ -33,6 +34,8 @@ function collector(sdk, clock) {
     if (s.pulse !== undefined) scan.pulse.push({ t: tNow, v: s.pulse, conf: s.pulseConf });
     if (s.breathing !== undefined) scan.breathing.push({ t: tNow, v: s.breathing, conf: s.breathingConf });
     if (s.talking !== undefined) scan.talking.push({ t: tNow, on: s.talking });
+    for (const b of m.face?.blinking ?? []) { if (b.detected && !blinkOn) scan.blinks++; blinkOn = !!b.detected; }
+    if (s.expression?.name && s.expression.stable && s.expression.conf >= 50) scan.expression = s.expression.name;
     for (const p of m.breathing?.upperTrace ?? []) {
       const t = at(p.timestamp);
       if (!scan.trace.length || t > scan.trace[scan.trace.length - 1].t) scan.trace.push({ t, v: p.value });
@@ -93,7 +96,7 @@ export async function live({ onStream, onSample, onTrace, onValidation, onStatus
   sdk.on("error", (code, message, retryable) => onError?.(code, message, retryable));
   sdk.on("metrics", () => {
     const p = scan.pulse.at(-1), b = scan.breathing.at(-1), k = scan.talking.at(-1);
-    onSample?.({ pulse: p?.conf >= 50 ? p.v : null, breathing: b?.conf >= 50 ? b.v : null, talking: !!k?.on });
+    onSample?.({ pulse: p?.conf >= 50 ? p.v : null, breathing: b?.conf >= 50 ? b.v : null, talking: !!k?.on, blinks: scan.blinks, expression: scan.expression });
     onTrace?.(scan.trace);
   });
   await sdk.start();

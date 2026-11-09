@@ -1,0 +1,21 @@
+<template>
+<style>@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-400.woff2") format("woff2");font-weight:400;font-style:normal;}@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-600.woff2") format("woff2");font-weight:600;font-style:normal;}@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-700.woff2") format("woff2");font-weight:700;font-style:normal;}@font-face{font-family:"Cormorant";src:url("assets/fonts/cormorant-600i.woff2") format("woff2");font-weight:600;font-style:italic;}@font-face{font-family:"Cormorant";src:url("assets/fonts/cormorant-700i.woff2") format("woff2");font-weight:700;font-style:italic;}@font-face{font-family:"VT323";src:url("assets/fonts/vt323.woff2") format("woff2");font-weight:400;font-style:normal;}*{box-sizing:border-box}#root{position:absolute;inset:0;overflow:hidden;background:#1a0f2b;color:#f6f0ff;font-family:Fredoka,sans-serif}.a{position:absolute}.d{font-family:Cormorant,serif;font-style:italic;font-weight:600;line-height:1.02}.s{font-family:VT323,monospace}.pill{background:#f6f0ff;color:#2a1838;padding:12px 26px;border-radius:14px;font-weight:600}.src{font-size:28px;color:#b7a6c9}.full{position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover}</style>
+<div id="root" data-composition-id="consent" data-start="0" data-duration="12.5" data-width="1920" data-height="1080">
+<img id="cn-i" class="a" src="assets/img/consent.jpg" style="left:70px;top:150px;width:980px;height:551px;object-fit:cover;object-position:left center;border-radius:16px">
+<div id="cn-t" class="a d" style="left:70px;top:44px;font-size:90px">The camera is yours</div><div id="cn-r0" class="a" style="left:1090px;top:130px;width:760px;height:118px;border-bottom:2px solid #3a2a50"><span class="s" style="display:inline-block;width:230px;font-size:120px;line-height:1;color:#9af5c8">0</span><span style="font-size:52px">frames saved</span></div><div id="cn-r1" class="a" style="left:1090px;top:262px;width:760px;height:118px;border-bottom:2px solid #3a2a50"><span class="s" style="display:inline-block;width:230px;font-size:120px;line-height:1;color:#9af5c8">0</span><span style="font-size:52px">videos recorded</span></div><div id="cn-r2" class="a" style="left:1090px;top:394px;width:760px;height:118px;border-bottom:2px solid #3a2a50"><span class="s" style="display:inline-block;width:230px;font-size:120px;line-height:1;color:#9af5c8">OFF</span><span style="font-size:52px">SDK telemetry</span></div><div id="cn-r3" class="a" style="left:1090px;top:526px;width:760px;height:118px;border-bottom:2px solid #3a2a50"><span class="s" style="display:inline-block;width:230px;font-size:120px;line-height:1;color:#9af5c8">0</span><span style="font-size:52px">language model calls</span></div><div id="cn-r4" class="a" style="left:1090px;top:658px;width:760px;height:118px;border-bottom:2px solid #3a2a50"><span class="s" style="display:inline-block;width:230px;font-size:120px;line-height:1;color:#9af5c8">36</span><span style="font-size:52px">unit tests</span></div>
+<div id="cn-g" class="a d" style="left:330px;top:860px;font-size:110px;color:#ff86b8">A game, never a medical device.</div>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#cn-t",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},0.30);
+tl.fromTo("#cn-i",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},0.45);
+tl.fromTo("#cn-r0",{opacity:0,x:40},{opacity:1,x:0,duration:0.3,ease:"power3.out"},3.81);
+tl.fromTo("#cn-r1",{opacity:0,x:40},{opacity:1,x:0,duration:0.3,ease:"power3.out"},4.41);
+tl.fromTo("#cn-r2",{opacity:0,x:40},{opacity:1,x:0,duration:0.3,ease:"power3.out"},5.01);
+tl.fromTo("#cn-r3",{opacity:0,x:40},{opacity:1,x:0,duration:0.3,ease:"power3.out"},5.61);
+tl.fromTo("#cn-r4",{opacity:0,x:40},{opacity:1,x:0,duration:0.3,ease:"power3.out"},6.21);
+tl.fromTo("#cn-g",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},9.38);
+tl.to({}, { duration: 12.45 }, 0);
+window.__timelines["consent"] = tl;
+</script>
+</template>

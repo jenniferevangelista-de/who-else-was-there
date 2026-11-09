@@ -1,0 +1,20 @@
+<template>
+<style>@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-400.woff2") format("woff2");font-weight:400;font-style:normal;}@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-600.woff2") format("woff2");font-weight:600;font-style:normal;}@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-700.woff2") format("woff2");font-weight:700;font-style:normal;}@font-face{font-family:"Cormorant";src:url("assets/fonts/cormorant-600i.woff2") format("woff2");font-weight:600;font-style:italic;}@font-face{font-family:"Cormorant";src:url("assets/fonts/cormorant-700i.woff2") format("woff2");font-weight:700;font-style:italic;}@font-face{font-family:"VT323";src:url("assets/fonts/vt323.woff2") format("woff2");font-weight:400;font-style:normal;}*{box-sizing:border-box}#root{position:absolute;inset:0;overflow:hidden;background:#1a0f2b;color:#f6f0ff;font-family:Fredoka,sans-serif}.a{position:absolute}.d{font-family:Cormorant,serif;font-style:italic;font-weight:600;line-height:1.02}.s{font-family:VT323,monospace}.pill{background:#f6f0ff;color:#2a1838;padding:12px 26px;border-radius:14px;font-weight:600}.src{font-size:28px;color:#b7a6c9}.full{position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover}</style>
+<div id="root" data-composition-id="idea" data-start="0" data-duration="9.66" data-width="1920" data-height="1080">
+<div id="id-name" class="a d" style="left:120px;top:90px;font-size:92px">Jennifer Evangelista</div>
+<div id="id-l" class="a" style="left:140px;top:290px;width:760px;text-align:center"><img id="id-h1" src="assets/img/heart.svg" style="width:360px;height:360px"><div style="font-size:60px;margin-top:20px">the pulse that is there</div></div>
+<div id="id-r" class="a" style="left:1020px;top:290px;width:800px;text-align:center"><img id="id-h2" src="assets/img/heart-still.svg" style="width:360px;height:360px"><div class="d" style="font-size:96px;margin-top:6px;color:#ff86b8">the pulse that is missing</div></div>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#id-name",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},0.30);
+tl.fromTo("#id-l",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},2.79);
+tl.to("#id-h1",{scale:1.12,duration:.16,ease:"power2.out",yoyo:true,repeat:1},3.29);
+tl.to("#id-h1",{scale:1.12,duration:.16,ease:"power2.out",yoyo:true,repeat:1},4.14);
+tl.to("#id-h1",{scale:1.12,duration:.16,ease:"power2.out",yoyo:true,repeat:1},4.99);
+tl.to("#id-l",{opacity:.28,duration:.35},6.09);
+tl.fromTo("#id-r",{opacity:0,scale:.82},{opacity:1,scale:1,duration:0.5,ease:"power3.out"},6.09);
+tl.to({}, { duration: 9.61 }, 0);
+window.__timelines["idea"] = tl;
+</script>
+</template>

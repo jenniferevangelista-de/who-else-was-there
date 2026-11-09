@@ -1,0 +1,32 @@
+<template>
+<style>@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-400.woff2") format("woff2");font-weight:400;font-style:normal;}@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-600.woff2") format("woff2");font-weight:600;font-style:normal;}@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-700.woff2") format("woff2");font-weight:700;font-style:normal;}@font-face{font-family:"Cormorant";src:url("assets/fonts/cormorant-600i.woff2") format("woff2");font-weight:600;font-style:italic;}@font-face{font-family:"Cormorant";src:url("assets/fonts/cormorant-700i.woff2") format("woff2");font-weight:700;font-style:italic;}@font-face{font-family:"VT323";src:url("assets/fonts/vt323.woff2") format("woff2");font-weight:400;font-style:normal;}*{box-sizing:border-box}#root{position:absolute;inset:0;overflow:hidden;background:#1a0f2b;color:#f6f0ff;font-family:Fredoka,sans-serif}.a{position:absolute}.d{font-family:Cormorant,serif;font-style:italic;font-weight:600;line-height:1.02}.s{font-family:VT323,monospace}.pill{background:#f6f0ff;color:#2a1838;padding:12px 26px;border-radius:14px;font-weight:600}.src{font-size:28px;color:#b7a6c9}.full{position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover}</style>
+<div id="root" data-composition-id="seven" data-start="0" data-duration="14.26" data-width="1920" data-height="1080">
+<div id="sv-n" class="a d" style="left:120px;top:60px;font-size:640px;line-height:1;color:#9af5c8;font-variant-numeric:tabular-nums">0</div>
+<div id="sv-l" class="a d" style="left:365px;top:880px;font-size:82px">signals</div>
+<div id="sv-q" class="a d" style="left:690px;top:400px;font-size:150px">We use everything.</div><div id="sv-r0" class="a" style="left:640px;top:62px;width:1200px;height:120px;border-bottom:2px solid #3a2a50"><div style="font-size:52px;font-weight:600;line-height:1.1">Pulse</div><div class="s" style="font-size:38px;color:#9af5c8">cardio.pulseRate</div><div class="a" style="right:0;top:26px;font-size:40px;color:#d8c6ea;width:640px;text-align:right">Drives the detector</div></div><div id="sv-r1" class="a" style="left:640px;top:198px;width:1200px;height:120px;border-bottom:2px solid #3a2a50"><div style="font-size:52px;font-weight:600;line-height:1.1">Breathing</div><div class="s" style="font-size:38px;color:#9af5c8">breathing.rate</div><div class="a" style="right:0;top:26px;font-size:40px;color:#d8c6ea;width:640px;text-align:right">Your breaths per minute</div></div><div id="sv-r2" class="a" style="left:640px;top:334px;width:1200px;height:120px;border-bottom:2px solid #3a2a50"><div style="font-size:52px;font-weight:600;line-height:1.1">Chest movement</div><div class="s" style="font-size:38px;color:#9af5c8">breathing.upperTrace</div><div class="a" style="right:0;top:26px;font-size:40px;color:#d8c6ea;width:640px;text-align:right">Your exhale moves the glass</div></div><div id="sv-r3" class="a" style="left:640px;top:470px;width:1200px;height:120px;border-bottom:2px solid #3a2a50"><div style="font-size:52px;font-weight:600;line-height:1.1">Talking</div><div class="s" style="font-size:38px;color:#9af5c8">face.talking</div><div class="a" style="right:0;top:26px;font-size:40px;color:#d8c6ea;width:640px;text-align:right">The glass waits while you speak</div></div><div id="sv-r4" class="a" style="left:640px;top:606px;width:1200px;height:120px;border-bottom:2px solid #3a2a50"><div style="font-size:52px;font-weight:600;line-height:1.1">Blinks</div><div class="s" style="font-size:38px;color:#9af5c8">face.blinking</div><div class="a" style="right:0;top:26px;font-size:40px;color:#d8c6ea;width:640px;text-align:right">The figure moves when you blink</div></div><div id="sv-r5" class="a" style="left:640px;top:742px;width:1200px;height:120px;border-bottom:2px solid #3a2a50"><div style="font-size:52px;font-weight:600;line-height:1.1">Expression</div><div class="s" style="font-size:38px;color:#9af5c8">face.expression</div><div class="a" style="right:0;top:26px;font-size:40px;color:#d8c6ea;width:640px;text-align:right">Becomes an evidence card</div></div><div id="sv-r6" class="a" style="left:640px;top:878px;width:1200px;height:120px;border-bottom:2px solid #3a2a50"><div style="font-size:52px;font-weight:600;line-height:1.1">Face checks</div><div class="s" style="font-size:38px;color:#9af5c8">validationStatus</div><div class="a" style="right:0;top:26px;font-size:40px;color:#d8c6ea;width:640px;text-align:right">Finds the second face</div></div>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#sv-n",{opacity:0},{opacity:1,duration:0.42,ease:"power3.out"},0.30);
+tl.fromTo("#sv-q",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},0.30);
+tl.to("#sv-q",{opacity:0,duration:0.25,ease:"power2.in"},3.18);
+tl.fromTo("#sv-l",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},10.77);
+tl.fromTo("#sv-r0",{opacity:0,x:50},{opacity:1,x:0,duration:0.3,ease:"power3.out"},3.33);
+tl.call(()=>{},null,3.33);tl.set("#sv-n",{textContent:"1"},3.33);
+tl.fromTo("#sv-r1",{opacity:0,x:50},{opacity:1,x:0,duration:0.3,ease:"power3.out"},4.23);
+tl.call(()=>{},null,4.23);tl.set("#sv-n",{textContent:"2"},4.23);
+tl.fromTo("#sv-r2",{opacity:0,x:50},{opacity:1,x:0,duration:0.3,ease:"power3.out"},5.23);
+tl.call(()=>{},null,5.23);tl.set("#sv-n",{textContent:"3"},5.23);
+tl.fromTo("#sv-r3",{opacity:0,x:50},{opacity:1,x:0,duration:0.3,ease:"power3.out"},6.45);
+tl.call(()=>{},null,6.45);tl.set("#sv-n",{textContent:"4"},6.45);
+tl.fromTo("#sv-r4",{opacity:0,x:50},{opacity:1,x:0,duration:0.3,ease:"power3.out"},7.41);
+tl.call(()=>{},null,7.41);tl.set("#sv-n",{textContent:"5"},7.41);
+tl.fromTo("#sv-r5",{opacity:0,x:50},{opacity:1,x:0,duration:0.3,ease:"power3.out"},8.33);
+tl.call(()=>{},null,8.33);tl.set("#sv-n",{textContent:"6"},8.33);
+tl.fromTo("#sv-r6",{opacity:0,x:50},{opacity:1,x:0,duration:0.3,ease:"power3.out"},9.51);
+tl.call(()=>{},null,9.51);tl.set("#sv-n",{textContent:"7"},9.51);
+tl.fromTo("#sv-n",{scale:1},{scale:1.08,duration:.22,yoyo:true,repeat:1,ease:"power2.out",color:"#ff86b8"},10.77);
+tl.to({}, { duration: 14.21 }, 0);
+window.__timelines["seven"] = tl;
+</script>
+</template>

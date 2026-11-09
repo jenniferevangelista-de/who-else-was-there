@@ -1,0 +1,24 @@
+<template>
+<style>@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-400.woff2") format("woff2");font-weight:400;font-style:normal;}@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-600.woff2") format("woff2");font-weight:600;font-style:normal;}@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-700.woff2") format("woff2");font-weight:700;font-style:normal;}@font-face{font-family:"Cormorant";src:url("assets/fonts/cormorant-600i.woff2") format("woff2");font-weight:600;font-style:italic;}@font-face{font-family:"Cormorant";src:url("assets/fonts/cormorant-700i.woff2") format("woff2");font-weight:700;font-style:italic;}@font-face{font-family:"VT323";src:url("assets/fonts/vt323.woff2") format("woff2");font-weight:400;font-style:normal;}*{box-sizing:border-box}#root{position:absolute;inset:0;overflow:hidden;background:#1a0f2b;color:#f6f0ff;font-family:Fredoka,sans-serif}.a{position:absolute}.d{font-family:Cormorant,serif;font-style:italic;font-weight:600;line-height:1.02}.s{font-family:VT323,monospace}.pill{background:#f6f0ff;color:#2a1838;padding:12px 26px;border-radius:14px;font-weight:600}.src{font-size:28px;color:#b7a6c9}.full{position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover}</style>
+<div id="root" data-composition-id="cite" data-start="0" data-duration="8.25" data-width="1920" data-height="1080">
+<div id="ct-h" class="a d" style="left:150px;top:70px;font-size:120px">No language model.</div>
+<div id="ct-a" style="position:absolute;left:150px;width:1380px;background:#fff8f0;color:#2a1838;border-radius:18px;padding:28px 42px;top:270px"><div class="d" style="font-size:80px">&ldquo;I stood at her door for 3.8 seconds.&rdquo;</div><div class="s" style="font-size:44px;color:#1f7a54;margin-top:8px">cites E3 &middot; held breath &middot; 3.8 s</div></div>
+<div id="ct-b" style="position:absolute;left:150px;width:1380px;background:#fff8f0;color:#2a1838;border-radius:18px;padding:28px 42px;top:560px"><div class="d" style="font-size:80px">&ldquo;I have been here since 1923.&rdquo;</div><div id="ct-e" class="s" style="font-size:44px;color:#c23a6d;margin-top:8px">number 1923 is not in the cited evidence</div></div>
+<div id="ct-say" class="a" style="left:1270px;top:296px;font-size:50px;font-weight:700;color:#fff;background:#1f7a54;border-radius:12px;padding:6px 24px">SAID</div>
+<div id="ct-van" class="a d" style="left:620px;top:600px;font-size:150px;color:#ff86b8">vanished</div>
+<div id="ct-src" class="a src" style="left:150px;top:960px">The rule is citeOrVanish() in src/evidence.js. Example lines.</div>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#ct-h",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},0.30);
+tl.fromTo("#ct-a",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},2.36);
+tl.fromTo("#ct-say",{opacity:0,scale:1.5},{opacity:1,scale:1,duration:0.25,ease:"power3.out"},3.16);
+tl.fromTo("#ct-b",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},3.56);
+tl.fromTo("#ct-e",{opacity:0},{opacity:1,duration:0.42,ease:"power3.out"},3.91);
+tl.fromTo("#ct-src",{opacity:0},{opacity:1,duration:0.42,ease:"power3.out"},2.76);
+tl.to("#ct-b",{opacity:0,scale:.92,y:40,duration:.6,ease:"power2.in"},6.31);
+tl.fromTo("#ct-van",{opacity:0,scale:.85},{opacity:1,scale:1,duration:0.42,ease:"power3.out"},6.71);
+tl.to({}, { duration: 8.20 }, 0);
+window.__timelines["cite"] = tl;
+</script>
+</template>

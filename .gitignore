@@ -14,3 +14,7 @@ video/recordings/*.webm
 video/recordings/scenes.json
 video/timeline.json
 video/SCRIPT.md
+video/pitch/.hyperframes/
+video/pitch/out/
+video/pitch/renders/
+video/pitch/_mix.wav

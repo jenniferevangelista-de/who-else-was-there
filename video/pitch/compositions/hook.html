@@ -1,0 +1,19 @@
+<template>
+<style>@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-400.woff2") format("woff2");font-weight:400;font-style:normal;}@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-600.woff2") format("woff2");font-weight:600;font-style:normal;}@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-700.woff2") format("woff2");font-weight:700;font-style:normal;}@font-face{font-family:"Cormorant";src:url("assets/fonts/cormorant-600i.woff2") format("woff2");font-weight:600;font-style:italic;}@font-face{font-family:"Cormorant";src:url("assets/fonts/cormorant-700i.woff2") format("woff2");font-weight:700;font-style:italic;}@font-face{font-family:"VT323";src:url("assets/fonts/vt323.woff2") format("woff2");font-weight:400;font-style:normal;}*{box-sizing:border-box}#root{position:absolute;inset:0;overflow:hidden;background:#1a0f2b;color:#f6f0ff;font-family:Fredoka,sans-serif}.a{position:absolute}.d{font-family:Cormorant,serif;font-style:italic;font-weight:600;line-height:1.02}.s{font-family:VT323,monospace}.pill{background:#f6f0ff;color:#2a1838;padding:12px 26px;border-radius:14px;font-weight:600}.src{font-size:28px;color:#b7a6c9}.full{position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover}</style>
+<div id="root" data-composition-id="hook" data-start="0" data-duration="4.65" data-width="1920" data-height="1080">
+<svg class="a" style="left:0;top:0" width="1920" height="1080" viewBox="0 0 1920 1080"><path id="hk-live" d="M0 540 L60 540 L78 526 L90 540 L104 556 L120 325 L136 602 L152 540 L182 508 L212 540 L250 540 L268 526 L280 540 L294 556 L310 325 L326 602 L342 540 L372 508 L402 540 L440 540 L458 526 L470 540 L484 556 L500 325 L516 602 L532 540 L562 508 L592 540 L630 540 L648 526 L660 540 L674 556 L690 325 L706 602 L722 540 L752 508 L782 540 L820 540 L838 526 L850 540 L864 556 L880 325 L896 602 L912 540 L942 508 L972 540 L1010 540 L1028 526 L1040 540 L1054 556 L1070 325 L1086 602 L1102 540 L1132 508 L1162 540 L1200 540" pathLength="1" stroke-dasharray="1" fill="none" stroke="#9af5c8" stroke-width="7" stroke-linejoin="round"/><path id="hk-flat" d="M1200 540 L1920 540" pathLength="1" stroke-dasharray="1" fill="none" stroke="#ff86b8" stroke-width="7"/></svg>
+<div id="hk-a" class="a d" style="left:120px;top:90px;width:1680px;font-size:112px">Every face in this video has a heartbeat.</div>
+<div id="hk-b" class="a d" style="left:1120px;top:640px;font-size:150px;color:#ff86b8">Except one.</div>
+<div id="hk-z" class="a s" style="left:1200px;top:800px;font-size:210px;line-height:1;color:#ff86b8">0 BPM</div>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#hk-a",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},0.30);
+tl.fromTo("#hk-live",{strokeDashoffset:1},{strokeDashoffset:0,duration:2.77,ease:"none"},0.30);
+tl.fromTo("#hk-flat",{strokeDashoffset:1},{strokeDashoffset:0,duration:.9,ease:"none"},3.07);
+tl.fromTo("#hk-b",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},3.07);
+tl.fromTo("#hk-z",{opacity:0,scale:.8},{opacity:1,scale:1,duration:0.42,ease:"power3.out",transformOrigin:"left center"},3.57);
+tl.to({}, { duration: 4.60 }, 0);
+window.__timelines["hook"] = tl;
+</script>
+</template>

@@ -1,0 +1,25 @@
+name: pitch
+on: workflow_dispatch
+jobs:
+  render:
+    runs-on: ubuntu-latest
+    timeout-minutes: 120
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - name: Tools
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg
+      - name: Render
+        working-directory: video/pitch
+        run: |
+          npx --yes hyperframes@0.9.26 browser ensure
+          npx --yes hyperframes@0.9.26 render -o out/ghost_hunt_pitch.mp4 -f 30 -q standard --skill=hyperframes
+      - uses: actions/upload-artifact@v4
+        with:
+          name: ghost-hunt-pitch
+          retention-days: 7
+          path: video/pitch/out/ghost_hunt_pitch.mp4

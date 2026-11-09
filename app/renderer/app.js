@@ -60,6 +60,7 @@ function camUI(on) {
 async function cameraOff() {
   if (state.live) { await state.live.stop(); state.live = null; }
   if (state.fakeLive) { clearInterval(state.fakeLive); state.fakeLive = null; }
+  if (state.webCam) { state.webCam.getTracks().forEach((t) => t.stop()); state.webCam = null; const v = $("#me"); if (v) v.srcObject = null; }
   camUI(false);
 }
 
@@ -360,7 +361,7 @@ const SCREENS = [
       $("#tapeAgree", el).addEventListener("change", (e) => { $("#ownTape", el).disabled = !e.target.checked; $("#ownTapeBtn", el).classList.toggle("locked-btn", !e.target.checked); });
       $("#ownTape", el).addEventListener("change", async (e) => {
         const f = e.target.files[0]; if (!f) return;
-        if (!state.liveSdk) return toast("Reading your own tape needs the Presage key on this computer. Add it and reopen the app.", 6000);
+        if (!state.liveSdk) return toast(state.web ? "In the browser a video can't be read: Presage runs only in the desktop app. See Run it yourself on GitHub." : "Reading your own tape needs the Presage key on this computer. Add it and reopen the app.", 7000);
         await cameraOff();                     // a camera left on from the Room would compete with the video for the SDK
         state.ownTape = URL.createObjectURL(f); state.mode = "live"; state.evidence = []; state.scans = null; $("#mode").hidden = true; toast(`Loaded ${f.name}. The detector is reading it.`);
         go(SCREENS.findIndex((s) => s.id === "tape"));
@@ -856,11 +857,20 @@ async function startLive(el, scope, sel = "#scopeMe") {
   // The camera may already be on from an earlier screen: point the readings at this screen's scope.
   state.view = { scope, sel };
   const st0 = document.querySelector(`${sel} [data-state]`);
-  if (state.live || state.fakeLive) { if (st0) st0.textContent = state.live ? "WARMING UP" : "SIMULATED"; const v = $("#me"); if (state.live && v && state.camStream) { v.srcObject = state.camStream; v.play(); $("#mePh")?.remove(); } return; }
+  if (state.live || state.fakeLive) { if (st0) st0.textContent = state.live ? "WARMING UP" : "SIMULATED"; const v = $("#me"); const s0 = state.live ? state.camStream : state.webCam; if (v && s0) { v.srcObject = s0; v.play(); $("#mePh")?.remove(); } return; }
   const say_ = (m, wait) => { const stat = $("#liveStat"), msg = $("#liveMsg"); if (!stat || !msg) return; stat.hidden = false; stat.classList.toggle("waiting", !!wait); msg.textContent = m; if (!wait) stat.querySelector(".fill").style.width = "100%"; };   // looked up each time: the person may have moved to another screen
   if (!state.liveSdk) {   // no key: a gentle simulated breath and pulse, clearly labelled
-    camUI(false);
-    say_("This copy has no Presage key, so your camera stays off and these readings are simulated.");
+    if (state.web && navigator.mediaDevices?.getUserMedia) {   // web demo: show the person, keep every number labelled simulated
+      try {
+        const s = await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+        state.webCam = s; const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); }
+        camUI(true);
+        say_("Web demo: you see yourself, but Presage runs only in the desktop app, so these readings are simulated. Your image stays in this browser.");
+      } catch { camUI(false); say_("Web demo: the camera was not allowed, so these readings are simulated."); }
+    } else {
+      camUI(false);
+      say_("This copy has no Presage key, so your camera stays off and these readings are simulated.");
+    }
     const t0 = performance.now(), fake = { t0: 0, t1: 0, pulse: [], trace: [] };
     state.fakeScan = fake;
     let lastP = -1;
@@ -1111,6 +1121,7 @@ function go(i, isBack) {
 
 async function boot() {
   sky();
+  state.web = !window.pod;                                             // the GitHub Pages web demo, not the desktop app
   state.info = (await window.pod?.info?.()) ?? { replay: true };
   state.liveSdk = !state.info.replay && !!state.info.hasKey;          // the Presage key is on this computer
   state.mode = state.liveSdk && state.info.caseVideo ? "live" : "replay"; // the tape: the real case file, or the drawn sample

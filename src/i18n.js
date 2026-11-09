@@ -76,10 +76,10 @@ const PHRASES = Object.entries({
   "Open the case →": "Abrir o caso →", "<h1>Who Else <span class=\"accent\">Was There?</span></h1>": "<h1>Quem mais <span class=\"accent\">estava lá?</span></h1>",
   "Three tiny ghost hunters. One new instrument, built on Presage SmartSpectra: it reads a heartbeat from any face in a video.": "Três pequenos caça-fantasmas. Um instrumento novo, feito com o Presage SmartSpectra: ele lê o batimento de qualquer rosto em um vídeo.",
   "Living faces beat. ": "Rostos vivos batem. ", "The ones that don't are the case.": "Os que não batem são o caso.",
-  "Quiet… I'm Luna. I open the board, and I believe in everything. Almost.": "Silêncio… Eu sou a Luna. Eu abro o tabuleiro e acredito em tudo. Quase.",
+  "Hi, I'm Luna. I open the board and interpret what the spirits say.": "Oi, eu sou a Luna. Eu abro o tabuleiro e interpreto o que os espíritos dizem.",
   "Dr. Bigotes. I believe in data. Show me a pulse and I'll show you a person.": "Dr. Bigotes. Eu acredito em dados. Me mostre um pulso e eu mostro uma pessoa.",
   "I'm Xochi. I keep watch all night and write down only what the detector saw.": "Eu sou a Xochi. Fico de vigia a noite toda e anoto só o que o detector viu.",
-  "the medium · opens the board": "a médium · abre o tabuleiro", "the skeptic · checks the detector": "o cético · confere o detector", "the night watch · writes it down": "a vigia da noite · anota tudo",
+  "the medium · opens the board and interprets the spirits": "a médium · abre o tabuleiro e interpreta os espíritos", "the skeptic · checks the detector": "o cético · confere o detector", "the night watch · writes it down": "a vigia da noite · anota tudo",
   "Tap a hunter to say hello.": "Toque em um caçador para dizer oi.", "Luna · the medium": "Luna · a médium", "Dr. Bigotes · the skeptic": "Dr. Bigotes · o cético", "Xochi · the night watch": "Xochi · a vigia da noite",
   // consent
   "I understand →": "Entendi →", "The rules of the house": "As regras da casa",

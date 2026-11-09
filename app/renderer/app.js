@@ -283,7 +283,7 @@ const SCREENS = [
       <p class="lead center">Three tiny ghost hunters. One new instrument, built on Presage SmartSpectra: it reads a heartbeat from any face in a video.<br>
       Living faces beat. <b style="color:var(--danger)">The ones that don't are the case.</b></p>
       <div class="crew" style="margin-top:22px">
-        <div class="member" data-intro="luna" data-line="Quiet… I'm Luna. I open the board, and I believe in everything. Almost." role="button" tabindex="0"><div class="halo"><img src="img/luna.svg" alt="Luna"></div><b>Luna</b><span>the medium · opens the board</span></div>
+        <div class="member" data-intro="luna" data-line="Hi, I'm Luna. I open the board and interpret what the spirits say." role="button" tabindex="0"><div class="halo"><img src="img/luna.svg" alt="Luna"></div><b>Luna</b><span>the medium · opens the board and interprets the spirits</span></div>
         <div class="member" data-intro="bigotes" data-line="Dr. Bigotes. I believe in data. Show me a pulse and I'll show you a person." role="button" tabindex="0"><div class="halo"><img src="img/bigotes.svg" alt="Dr. Bigotes"></div><b>Dr. Bigotes</b><span>the skeptic · checks the detector</span></div>
         <div class="member" data-intro="xochi" data-line="I'm Xochi. I keep watch all night and write down only what the detector saw." role="button" tabindex="0"><div class="halo"><img src="img/xochi.svg" alt="Xochi"></div><b>Xochi</b><span>the night watch · writes it down</span></div>
       </div>

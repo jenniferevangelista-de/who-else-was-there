@@ -32,7 +32,7 @@ const SCREEN = {
     [LOGIC, T("No language model. Answers are templates that must cite measured evidence, and numbers must match it.", "Sem modelo de linguagem. As respostas são modelos que precisam citar provas medidas, e os números precisam bater.")],
   ],
   dossier: [[LOGIC, T("Luna interprets, Dr. Bigotes refuses to, and the file holds numbers and words only. It exists only if you press Download.", "A Luna interpreta, o Dr. Bigotes se recusa, e o arquivo só tem números e palavras. Ele só existe se você apertar Baixar.")]],
-  end: [[LOGIC, T("The cliffhanger. The second tape is the next case.", "O gancho final. A segunda fita é o próximo caso.")]],
+  end: [[LOGIC, T("The case closes here. Everything the crew concluded cites a measured card, and the story around it is fiction.", "O caso se fecha aqui. Tudo o que a equipe concluiu cita um cartão medido, e a história em volta é ficção.")]],
   dare: [
     [LIVE, T("Your own recording runs through the same SDK reading as Marina's. The picker stays locked until you confirm that everyone in it agreed.", "Sua própria gravação passa pela mesma leitura do SDK que a da Marina. O seletor fica travado até você confirmar que todos concordaram.")],
   ],

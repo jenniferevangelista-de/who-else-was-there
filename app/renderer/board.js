@@ -11,9 +11,9 @@ export function layout() {
   });
   arc(TOP, 74, 43, 56, 165, 15);   // A..M, the outer arc
   arc(LOW, 84, 35, 40, 150, 30);   // N..Z, the inner arc
-  [...DIGITS].forEach((c, i) => { pos[c] = { x: 27 + (46 * i) / 9, y: 85 }; });
-  pos.YES = { x: 11, y: 12 }; pos.NO = { x: 89, y: 12 }; pos.GOODBYE = { x: 50, y: 95 };
-  pos[" "] = { x: 50, y: 62 };
+  [...DIGITS].forEach((c, i) => { pos[c] = { x: 27 + (46 * i) / 9, y: 78 }; });
+  pos.YES = { x: 11, y: 12 }; pos.NO = { x: 89, y: 12 }; pos.GOODBYE = { x: 50, y: 91 };
+  pos[" "] = { x: 50, y: 70 };
   return pos;
 }
 
@@ -21,10 +21,10 @@ export function boardHTML() {
   const pos = layout();
   const chars = Object.entries(pos).filter(([k]) => k !== " ")
     .map(([k, p]) => `<span class="ch ${k.length > 1 ? "big" : ""}" data-ch="${k}" style="left:${p.x}%;top:${p.y}%">${k}</span>`).join("");
-  return `<div class="board-wrap"><div class="board"><div class="letters">${chars}</div>
+  return `<div class="board-wrap"><div class="board"><span class="board-name">Ghost Hunt</span><div class="letters">${chars}</div>
     <img class="board-ghost" src="img/wisp.svg" alt="" style="position:absolute;left:8%;top:74%;width:44px;opacity:.85">
     <span style="position:absolute;left:11%;top:22%;transform:translateX(-50%);font-size:30px">☀</span><span style="position:absolute;left:89%;top:22%;transform:translateX(-50%);font-size:30px">☾</span>
-    <img class="planchette" src="img/planchette.svg" alt="the glass" style="left:50%;top:62%"></div></div>`;
+    <img class="planchette" src="img/planchette.svg" alt="the glass" style="left:50%;top:70%"></div></div>`;
 }
 
 /** The characters the glass visits for a message: YES, NO, GOODBYE as one stop; spaces rest in the middle. */

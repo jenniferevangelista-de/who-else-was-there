@@ -79,13 +79,17 @@
 "id": "d2a161bbfd",
 "who": "bigotes"
 },
-"Wait… before you go. Will you come back?": {
-"id": "8ad1078edc",
+"Case closed. Odette stays in Marina's hallway, and we stay here.": {
+"id": "36fb5ba106",
+"who": "xochi"
+},
+"Wait. The glass is warm.": {
+"id": "0bda48dc82",
 "who": "luna"
 },
-"Espera… antes de ir. Você vai voltar?": {
-"id": "ff37c37c96",
-"who": "luna"
+"She came with the video. We opened it. We let her in.": {
+"id": "f5f8e4dc94",
+"who": "xochi"
 },
 "EVERYBODY OUT! Out, out, out!": {
 "id": "cb56a726bc",
@@ -175,12 +179,12 @@
 "id": "aa68a570b1",
 "who": "bigotes"
 },
-"It says it stood behind her. Presage counted a second face from second 8, and she never turned around.": {
-"id": "eeeeaadae4",
+"Her name is Odette. Presage counted her from second 8, standing behind Marina, and Marina never turned around.": {
+"id": "596dc00815",
 "who": "luna"
 },
-"Diz que ficou atrás dela. O Presage contou um segundo rosto a partir do segundo 8, e ela nunca se virou.": {
-"id": "f623e221a3",
+"O nome dela é Odette. O Presage contou ela a partir do segundo 8, atrás da Marina, e a Marina nunca se virou.": {
+"id": "cebf31c1f2",
 "who": "luna"
 },
 "Two faces in the frame is what the SDK reported. It does not say whose. A reflection counts too.": {
@@ -189,6 +193,14 @@
 },
 "Dois rostos no quadro é o que o SDK relatou. Não diz de quem. Reflexo também conta.": {
 "id": "707020ec8d",
+"who": "bigotes"
+},
+"She lived here, in this same house, long ago. One night something told her to stay. She went out by that door anyway, and she never came home.": {
+"id": "5268b63ee9",
+"who": "luna"
+},
+"A glass spelled two words. What I measured is a face with 0 beats per minute, and that face cannot tell me where it is from.": {
+"id": "217b299ee4",
 "who": "bigotes"
 },
 "No. That face gave 0 beats while the detector watched it. Nothing alive holds that still.": {
@@ -223,20 +235,16 @@
 "id": "a5f39744cf",
 "who": "bigotes"
 },
-"The second face left the frame at second 38. The glass says it did not leave the house.": {
-"id": "c97111b3df",
+"She has stood at that door ever since, trying to warn whoever leaves. Everyone walked past her. Marina is the first one who stopped. She held her breath at second 21, and she stayed.": {
+"id": "d72da71ba7",
 "who": "luna"
 },
-"O segundo rosto saiu do quadro no segundo 38. O copo diz que não saiu da casa.": {
-"id": "fedef886ff",
+"Desde então ela fica naquela porta, tentando avisar quem sai. Todo mundo passou direto. A Marina foi a primeira que parou. Ela prendeu a respiração no segundo 21, e ficou.": {
+"id": "a930ee12c6",
 "who": "luna"
 },
-"The SDK stopped counting a second face at second 38. People walk out of frame. That is all I can sign.": {
-"id": "47cab6e3af",
-"who": "bigotes"
-},
-"O SDK parou de contar um segundo rosto no segundo 38. Pessoas saem do quadro. É só isso que eu assino.": {
-"id": "d1188bfcf4",
+"Marina stayed home. That part I can sign. Who asked her to is not something I can measure.": {
+"id": "ae07352c2b",
 "who": "bigotes"
 },
 "It said goodbye.": {
@@ -255,12 +263,8 @@
 "id": "d5053ae8cc",
 "who": "bigotes"
 },
-"It never left. It is still in the hallway, right where she cannot see it.": {
-"id": "99f28d2003",
-"who": "luna"
-},
-"Nunca foi embora. Ainda está no corredor, bem onde ela não consegue ver.": {
-"id": "bac27564cf",
+"Here? Marina's house is across town. We are in our own office.": {
+"id": "a42935c89f",
 "who": "luna"
 },
 "Okay. I have no explanation for that. Yet.": {

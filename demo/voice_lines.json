@@ -100,14 +100,19 @@
   "text": "Uma respiração presa bem na linha dos 3 segundos só é percebida às vezes. Abaixo disso, nunca. Prefiro perder um suspiro a inventar um."
  },
  {
-  "who": "luna",
+  "who": "xochi",
   "lang": "en",
-  "text": "Wait… before you go. Will you come back?"
+  "text": "Case closed. Odette stays in Marina's hallway, and we stay here."
  },
  {
   "who": "luna",
-  "lang": "pt",
-  "text": "Espera… antes de ir. Você vai voltar?"
+  "lang": "en",
+  "text": "Wait. The glass is warm."
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
+  "text": "She came with the video. We opened it. We let her in."
  },
  {
   "who": "luna",
@@ -222,12 +227,12 @@
  {
   "who": "luna",
   "lang": "en",
-  "text": "It says it stood behind her. Presage counted a second face from second 8, and she never turned around."
+  "text": "Her name is Odette. Presage counted her from second 8, standing behind Marina, and Marina never turned around."
  },
  {
   "who": "luna",
   "lang": "pt",
-  "text": "Diz que ficou atrás dela. O Presage contou um segundo rosto a partir do segundo 8, e ela nunca se virou."
+  "text": "O nome dela é Odette. O Presage contou ela a partir do segundo 8, atrás da Marina, e a Marina nunca se virou."
  },
  {
   "who": "bigotes",
@@ -238,6 +243,16 @@
   "who": "bigotes",
   "lang": "pt",
   "text": "Dois rostos no quadro é o que o SDK relatou. Não diz de quem. Reflexo também conta."
+ },
+ {
+  "who": "luna",
+  "lang": "en",
+  "text": "She lived here, in this same house, long ago. One night something told her to stay. She went out by that door anyway, and she never came home."
+ },
+ {
+  "who": "bigotes",
+  "lang": "en",
+  "text": "A glass spelled two words. What I measured is a face with 0 beats per minute, and that face cannot tell me where it is from."
  },
  {
   "who": "luna",
@@ -282,22 +297,17 @@
  {
   "who": "luna",
   "lang": "en",
-  "text": "The second face left the frame at second 38. The glass says it did not leave the house."
+  "text": "She has stood at that door ever since, trying to warn whoever leaves. Everyone walked past her. Marina is the first one who stopped. She held her breath at second 21, and she stayed."
  },
  {
   "who": "luna",
   "lang": "pt",
-  "text": "O segundo rosto saiu do quadro no segundo 38. O copo diz que não saiu da casa."
+  "text": "Desde então ela fica naquela porta, tentando avisar quem sai. Todo mundo passou direto. A Marina foi a primeira que parou. Ela prendeu a respiração no segundo 21, e ficou."
  },
  {
   "who": "bigotes",
   "lang": "en",
-  "text": "The SDK stopped counting a second face at second 38. People walk out of frame. That is all I can sign."
- },
- {
-  "who": "bigotes",
-  "lang": "pt",
-  "text": "O SDK parou de contar um segundo rosto no segundo 38. Pessoas saem do quadro. É só isso que eu assino."
+  "text": "Marina stayed home. That part I can sign. Who asked her to is not something I can measure."
  },
  {
   "who": "luna",
@@ -322,12 +332,7 @@
  {
   "who": "luna",
   "lang": "en",
-  "text": "It never left. It is still in the hallway, right where she cannot see it."
- },
- {
-  "who": "luna",
-  "lang": "pt",
-  "text": "Nunca foi embora. Ainda está no corredor, bem onde ela não consegue ver."
+  "text": "Here? Marina's house is across town. We are in our own office."
  },
  {
   "who": "bigotes",

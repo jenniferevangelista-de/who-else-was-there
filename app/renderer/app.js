@@ -598,9 +598,7 @@ const SCREENS = [
   { id: "board", chapter: "The séance", next: "Read the dossier →", to: "dossier", html: () => {
     const sp = spiritFor(state.evidence);
     return `
-    ${sp ? `<div class="card spirit-card"><div class="kicker">${sp.archetype} · cites ${sp.cites.join(", ")}</div>
-      <h2 style="margin:2px 0">${sp.name}</h2><p style="margin:0">${sp.story} <i class="muted">Its goal: ${sp.goal}.</i></p>
-      <div class="kinds"><span>Kinds of spirit:</span>${SPIRIT_KINDS.map((k) => `<i class="${k === sp.archetype ? "on" : ""}">${k}</i>`).join("")}</div></div>` : ""}
+    ${sp ? `<div class="card spirit-card" id="spiritCard">${spiritCard(sp, new Set())}</div>` : ""}
     <div class="grid2 board-grid">
       <div class="seance-stage">
         <div class="crew-top">${seat("luna", "Luna")}<span>Luna reads the glass</span></div>
@@ -622,6 +620,7 @@ const SCREENS = [
     </div>`; },
     enter(el) {
       music.start();
+      const seen = new Set(), sp = spiritFor(state.evidence), order = ["who", "from", "alive", "why", "protect"];
       $("#useBreath", el)?.addEventListener("click", (e) => {
         if (!state.consent) { state.afterConsent = "board"; return goTo("consent"); }
         e.currentTarget.remove(); startLive(el, createScope(document.createElement("canvas")), "#board-has-no-scope");
@@ -635,9 +634,10 @@ const SCREENS = [
         $("#hush", el).textContent = "";
         $("#answers", el).innerHTML = `<p class="muted" style="margin:6px 0">“${label}”</p><div class="glass-said">The glass said: <b>${L(a.board)}</b></div>` + say("luna", a.luna, a.cites) + say("bigotes", a.bigotes, a.cites);
         el.querySelectorAll(".q").forEach((x) => (x.disabled = false));
+        seen.add(qid); if (sp && $("#spiritCard", el)) $("#spiritCard", el).innerHTML = L(spiritCard(sp, seen));
         if (qid === "bye") return finale(el);
-        nextUp([{ label: "Say goodbye to the spirit", do: () => ask("bye", L("Goodbye.")) }, { label: "Read the dossier →", main: true, do: forward }], "Ask another question, or");
-        if (qid === "where") toast("It did not use the door.", 4000);
+        const nextQ = order.find((q) => !seen.has(q)), btn = nextQ && el.querySelector(`.q[data-q="${nextQ}"]`);
+        nextUp([...(btn ? [{ label: btn.textContent, main: true, do: () => ask(nextQ, btn.textContent) }] : []), { label: "Say goodbye to the spirit", main: !btn, do: () => ask("bye", L("Goodbye.")) }], "Ask another question, or");
       };
       el.querySelectorAll(".q").forEach((b) => b.addEventListener("click", () => ask(b.dataset.q, b.textContent)));
       nextUp([{ label: "Read the dossier →", do: forward }], "Pick a question, or");
@@ -733,7 +733,7 @@ const SCREENS = [
       ${say("bigotes", "A held breath right at the 3-second line is noticed only some of the time. Below it, never. I would rather miss a gasp than invent one.")}
     </div></div>`; } },
 
-  { id: "end", chapter: "Case open", next: "Main menu →", to: "menu", enter() { nextUp([{ label: "Try it yourself →", main: true, do: () => goTo("dare") }, { label: "Enter the Room →", do: () => goTo("room") }, { label: "Main menu", do: () => goTo("menu") }]); }, html: () => state.ownTape ? `
+  { id: "end", chapter: "Case closed", next: "Main menu →", to: "menu", enter() { if (!state.ownTape) sound.beep(70, 260, 0.1); nextUp([{ label: "Try it yourself →", main: true, do: () => goTo("dare") }, { label: "Enter the Room →", do: () => goTo("room") }, { label: "Main menu", do: () => goTo("menu") }]); }, html: () => state.ownTape ? `
     <div class="cliff">
       <img src="img/wisp.svg" alt="" style="width:120px">
       <div class="line">Your tape is read.</div>
@@ -741,11 +741,11 @@ const SCREENS = [
       <p class="sub">The detector only knows what it measured. The rest is yours.</p>
     </div>` : `
     <div class="cliff">
-      <img src="img/wisp.svg" alt="" style="width:120px">
-      <div class="line">It left the frame at ${fmt(SAMPLE_CASE.shadowOutAt)}.</div>
-      <div class="line"><em>The front door never opened.</em></div>
-      <p class="sub">The next morning Marina sent us a second tape. In it, the shadow is outside her bedroom.</p>
-      <p class="sub" style="font-size:18px">Case 02 · coming soon</p>
+      <div class="stamp-closed">CASE CLOSED</div>
+      <div class="line">Odette. <em>The Guardian.</em></div>
+      <p class="sub">She stood at that door so Marina would not go out that night. Marina stayed home, and she is safe.</p>
+      <p class="sub">The crew ran. Nobody has gone back for the glass.</p>
+      <p class="sub" style="font-size:15px">Marina and Odette are fiction. The numbers in this case are samples.</p>
       <div class="kicker" style="margin-top:22px;color:var(--gold)">The séance is over</div>
       <div class="your-turn">Now it is your turn</div>
     </div>` },
@@ -772,8 +772,10 @@ async function finale(el) {
   const a = answer("return", state.evidence);
   if (a.vanished) return;
   el.querySelectorAll(".q").forEach((x) => (x.disabled = true)); clearNext();
+  $("#answers", el).insertAdjacentHTML("beforeend", say("xochi", "Case closed. Odette stays in Marina's hallway, and we stay here."));   // they relax
+  await sleep(4200);
   document.body.classList.add("closing"); music.tense();                       // the lights start to close
-  $("#answers", el).innerHTML = say("luna", "Wait… before you go. <i>Will you come back?</i>");
+  $("#answers", el).innerHTML = say("luna", "Wait. The glass is warm.");
   await sleep(1800);
   $("#hush", el).textContent = "Nobody is breathing. The glass is moving on its own.";
   $("#spell", el).textContent = "";
@@ -802,8 +804,12 @@ async function finale(el) {
   setTimeout(() => document.body.classList.remove("flash"), 260);
   setTimeout(() => document.body.classList.remove("shake"), 700);
   await sleep(900);
-  $("#answers", el).innerHTML = say("bigotes", a.bigotes, a.cites);
-  await sleep(1700);
+  $("#answers", el).innerHTML = say("luna", a.luna, a.cites);                    // it followed them
+  await sleep(3400);
+  $("#answers", el).insertAdjacentHTML("beforeend", say("xochi", "She came with the video. We opened it. We let her in."));
+  await sleep(3400);
+  $("#answers", el).insertAdjacentHTML("beforeend", say("bigotes", a.bigotes, a.cites));
+  await sleep(2600);
   $("#answers", el).insertAdjacentHTML("beforeend", `<div class="scream">RUN! RUN! RUN!</div>`);
   sound.beep(180, 120, 0.06);
   await sleep(500);
@@ -941,6 +947,14 @@ function updateNav() {
   }).join("");
   $("#chapters").querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => goTo(b.dataset.id)));
 }
+/** The spirit's file. For the guardian it fills in as the glass answers: her name, her past, then what she is. */
+function spiritCard(sp, seen) {
+  const all = !sp.unknown, known = (q) => all || seen.has(q);
+  return `<div class="kicker">${known("protect") ? `${sp.archetype} · cites ${sp.cites.join(", ")}` : "Unknown spirit"}</div>
+      <h2 style="margin:2px 0">${known("who") ? sp.name : "Who is she?"}</h2><p style="margin:0">${known("from") ? sp.story : sp.unknown}${known("protect") ? ` <i class="muted">Its goal: ${sp.goal}.</i>` : ""}</p>
+      <div class="kinds"><span>Kinds of spirit:</span>${SPIRIT_KINDS.map((k) => `<i class="${known("protect") && k === sp.archetype ? "on" : ""}">${k}</i>`).join("")}</div>`;
+}
+
 /** The proof tab: what the challenge asks for, where it is in the code, and counters taken from the SDK in this session. */
 function proofHTML() {
   const signals = [["Pulse", "cardio.pulseRate", "The heart and the detector, at your real bpm"], ["Breathing rate", "breathing.rate", "Your breaths per minute in the Room"],
@@ -951,7 +965,7 @@ function proofHTML() {
     ["SDK telemetry", "Off in the code (enableTelemetry: false)."], ["Optional AI service", "None. No language model is called."], ["Not medical", "A game. No diagnosis, treatment or health advice."], ["Never covert", "A pill on top shows when the camera is on, and other people's videos need their consent."]];
   return `<div class="card dark proof">
     <div class="kicker">Prize category we are entering</div>
-    <div class="proof-cat"><h2>Most Creative or Delightful Use</h2><p class="muted">The most original, playful, or unexpected use of SmartSpectra. Here, the discovery is a signal that is missing: a heartbeat that never comes. Your own breath moves the Ouija glass, and your blink moves the ghost.</p></div>
+    <div class="proof-cat"><h2>Most Creative or Delightful Use</h2><p class="muted">The most original, playful, or unexpected use of SmartSpectra. Here, the discovery is a signal that is missing: a heartbeat that never comes. Your own breath moves the glass on the spirit board, and your blink moves the ghost.</p></div>
     <div class="proof-count">
       <div class="stat"><b id="pcMetrics">0</b><span>SDK responses</span></div><div class="stat"><b id="pcPulse">0</b><span>pulse readings</span></div>
       <div class="stat"><b id="pcBreath">0</b><span>breathing readings</span></div><div class="stat"><b id="pcBlinks">0</b><span>blinks seen</span></div>

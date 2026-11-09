@@ -106,7 +106,7 @@ function tapeHTML(tools = false) {
   return `<div class="tape" id="tape">
     ${state.mode === "replay" ? `<canvas class="scene" width="1280" height="720"></canvas>` : `<video playsinline muted></video>`}
     <div class="overlay"><div class="rec"><i></i>${state.ownTape ? "REC · YOUR VIDEO" : "REC · HALLWAY"}</div><div class="stamp" id="stamp" ${state.ownTape ? "hidden" : ""}>NOV 02 · 21:43:00</div>
-    <div class="privacy">faces of the living are blurred</div><div class="flashlight" hidden></div></div>
+    <div class="flashlight" hidden></div></div>
     <button class="torch" title="Flashlight">🔦</button></div>
     <div class="timeline ${tools ? "scrubs" : ""}" id="timeline"><div class="head" id="head"></div></div>
     ${tools ? `<div class="tape-tools" id="tapeTools" hidden><span class="drag-hint">⟷ Drag the marker to move through the recording</span><button class="btn-soft" id="watchAgain">↺ Watch again</button></div>
@@ -297,7 +297,7 @@ const SCREENS = [
         <ul>
           <li><b>The camera is yours.</b> It turns on only when you press a button, and the pill at the top right turns it off at any moment.</li>
           <li><b>Nothing is recorded.</b> No frames are saved. Readings live in memory and vanish when you close the app. A report is saved only if you press Save, with numbers and words only.</li>
-          <li><b>Faces of the living are blurred</b> on every screen, including yours.</li>
+          <li><b>You will see yourself</b> on this screen. No frame or video is saved.</li>
           <li><b>Only bring tapes where everyone agreed to be in them.</b> The detector reads the people in a video, so they get a say.</li>
           <li><b>This is a game, not a medical device.</b> A pulse here is a story clue.</li>
           <li>Presage's SDK runs on this computer; it contacts Presage only to check the app's key. Its usage telemetry is switched off.</li>
@@ -349,7 +349,7 @@ const SCREENS = [
         </div>
         <div class="card dark">
           <div class="kicker">Or let it read you</div><h2>Your heart on the table</h2>
-          <p class="muted">Your own camera, live and blurred, nothing saved. Ask the room a question and stay very still.</p>
+          <p class="muted">Your own camera, live, nothing saved. Ask the room a question and stay very still.</p>
           <button class="btn-main mint" id="goRoom" style="margin-top:10px">Enter the Room</button>
         </div>
       </div>
@@ -676,9 +676,9 @@ const SCREENS = [
         <div id="roomNotes" style="margin-top:12px">${say("xochi", "I will write down what the detector sees. Nothing else.")}</div>
       </div><div class="locker room-ev" id="roomEv"></div></div>
       <div>${scopeHTML("scopeRoom", "GHOST DETECTOR · YOU, LIVE")}
-        <div class="tape" style="margin-top:12px;aspect-ratio:16/9"><video id="me" playsinline muted style="width:100%;height:100%;object-fit:contain;filter:blur(11px) brightness(1.35) saturate(.85)"></video>
+        <div class="tape" style="margin-top:12px;aspect-ratio:16/9"><video id="me" playsinline muted style="width:100%;height:100%;object-fit:contain"></video>
           <img id="mePh" src="img/wisp.svg" alt="" style="position:absolute;left:50%;top:50%;width:90px;transform:translate(-50%,-50%);opacity:.5">
-          <div class="overlay" id="meOv"><div class="rec"><i></i>YOU · LIVE</div><div class="privacy">your face is blurred</div></div></div>
+          <div class="overlay" id="meOv"><div class="rec"><i></i>YOU · LIVE</div></div></div>
         ${liveChips()}
         <div class="blinker" id="blinker" hidden><img src="img/stalker.svg" alt=""><span>It only moves when you blink.</span></div></div>
     </div>`,

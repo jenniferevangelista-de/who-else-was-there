@@ -24,7 +24,7 @@ const SCREEN = {
   locker: [[LOGIC, T("Each card is a number from the scan with its time range. Everything the crew says must cite a card (\"cite or vanish\").", "Cada cartão é um número da leitura com seu intervalo de tempo. Tudo o que a equipe diz precisa citar um cartão (\"cite ou suma\").")]],
   roomLive: [
     [LIVE, T("Your webcam goes through the SDK in this app's main process. Pulse rate, breathing rate, chest trace, talking, blinking and facial expression, all in real time.", "Sua webcam passa pelo SDK no processo principal do app. Pulso, ritmo respiratório, traço do tórax, fala, piscadas e expressão facial, tudo em tempo real.")],
-    [LIVE, T("The image is blurred on screen and never stored. SDK validation hints (light, distance, motion) appear as short messages.", "A imagem fica borrada na tela e nunca é guardada. As dicas de validação do SDK (luz, distância, movimento) aparecem como mensagens curtas.")],
+    [LIVE, T("The image is only shown on screen and never stored. SDK validation hints (light, distance, motion) appear as short messages.", "A imagem só aparece na tela e nunca é guardada. As dicas de validação do SDK (luz, distância, movimento) aparecem como mensagens curtas.")],
   ],
   board: [
     [LIVE, T("Optional camera: the glass moves on your exhale, read from the live chest trace. One breath out carries it three letters.", "O copo anda quando você solta o ar, lido do traço do tórax ao vivo. Uma expirada leva o copo por três letras.")],

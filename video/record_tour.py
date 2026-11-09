@@ -61,7 +61,8 @@ def main():
         page.click("#whatNow .wn.main"); scene("dare", lambda: wait(6))
         page.click("#goRoom"); scene("consent", lambda: wait(7))
         nxt(); scene("room", lambda: (page.click("#roomOn"), wait(9), page.click("#roomAsk"), wait(6)))
-        page.click("#chapters [data-id='tested']"); scene("tested", lambda: wait(7))
+        page.click("#roomReport"); page.wait_for_selector("#reportBody"); scene("report", lambda: wait(9))
+        page.click("#whatNow .wn.main"); scene("tested", lambda: wait(7))
 
         video = page.video.path()
         ctx.close(); b.close()

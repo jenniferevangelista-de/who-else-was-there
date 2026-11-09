@@ -71,6 +71,22 @@
 "id": "20d7d7970e",
 "who": "xochi"
 },
+"Please wait for the analysis. The report is ready as soon as the detector finds your heartbeat.": {
+"id": "48a71c1779",
+"who": "xochi"
+},
+"Aguarde a análise, por favor. O relatório fica pronto assim que o detector achar seu batimento.": {
+"id": "43215b9f5a",
+"who": "xochi"
+},
+"Turn your camera on first, then wait for the analysis.": {
+"id": "9499169bcb",
+"who": "xochi"
+},
+"Ligue sua câmera primeiro e aguarde a análise.": {
+"id": "d78045abd4",
+"who": "xochi"
+},
 "A held breath right at the 3-second line is noticed only some of the time. Below it, never. I would rather miss a gasp than invent one.": {
 "id": "9be3171da7",
 "who": "bigotes"

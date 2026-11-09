@@ -672,7 +672,7 @@ const SCREENS = [
         <div class="kicker">Case 03 · The Room · your camera, live</div><h2>Now the detector reads you</h2>
         <p>Turn your camera on and sit still. The Ghost Detector finds your pulse and your breath, the same way it read Marina. <b>When it has your heartbeat, generate your report.</b></p>
         <p class="muted">Prefer a recording? Analyze a video instead: the path is the same.</p>
-        <div class="row"><button class="btn-main mint" id="roomOn">Turn my camera on</button><button class="btn-soft" id="roomVideo">Analyze a video</button><button class="btn-soft" id="roomReport" disabled>Generate report</button></div>
+        <div class="row"><button class="btn-main mint" id="roomOn">Turn my camera on</button><button class="btn-soft" id="roomVideo">Analyze a video</button><button class="btn-soft" id="roomReport">Generate report</button></div>
         <div class="scanstat" id="liveStat" style="margin-top:14px" hidden><div class="msg" id="liveMsg"></div><div class="bar"><div class="fill"></div></div></div>
         <div id="roomNotes" style="margin-top:12px">${say("xochi", "I will write down what the detector sees. Nothing else.")}</div>
       </div><div class="locker room-ev" id="roomEv"></div></div>
@@ -693,13 +693,16 @@ const SCREENS = [
           const src = state.live?.scan ?? state.fakeScan; if (!src) return;
           const ev = roomEvidence(src, heldBreaths, pulseJumps);
           if (state.live) $("#blinker", el).hidden = false;
-          $("#roomReport", el).disabled = !src.pulse?.some((p) => p.conf >= 50);
           const newest = (kind) => ev.filter((e) => e.kind === kind).slice(-1);   // the full list goes in the report
           $("#roomEv", el).innerHTML = ["you_alive", "you_blinked", "you_held_breath", "you_jumped", "you_showed"].flatMap(newest).map((e) => `<div class="ev"><span class="id">${e.id}</span><div class="kind">${{ you_alive: "You, alive", you_held_breath: "You held your breath", you_jumped: "Your pulse jumped", you_blinked: "You blinked", you_showed: "Your face said" }[e.kind]}</div><div class="val">${e.value}<small style="font-size:20px"> ${e.unit}</small></div><div class="src">${state.liveSdk ? "" : "SIMULATED · "}${e.measuredBy}</div></div>`).join("");
         }, 1000);
       });
       $("#roomVideo", el).addEventListener("click", () => goTo("dare"));
-      $("#roomReport", el).addEventListener("click", makeReport);
+      $("#roomReport", el).addEventListener("click", () => {
+        const src = state.live?.scan ?? state.fakeScan;
+        if (src?.pulse?.some((p) => p.conf >= 50)) return makeReport();
+        $("#roomNotes", el).innerHTML = src ? say("xochi", "Please wait for the analysis. The report is ready as soon as the detector finds your heartbeat.") : say("xochi", "Turn your camera on first, then wait for the analysis.");
+      });
       if (state.live) $("#roomOn", el).click();   // back in the Room with the camera still on: pick the picture and the readings up again
     } },
 

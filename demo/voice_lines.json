@@ -90,6 +90,26 @@
   "text": "Vou anotar o que o detector vê. Mais nada."
  },
  {
+  "who": "xochi",
+  "lang": "en",
+  "text": "Please wait for the analysis. The report is ready as soon as the detector finds your heartbeat."
+ },
+ {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "Aguarde a análise, por favor. O relatório fica pronto assim que o detector achar seu batimento."
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
+  "text": "Turn your camera on first, then wait for the analysis."
+ },
+ {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "Ligue sua câmera primeiro e aguarde a análise."
+ },
+ {
   "who": "bigotes",
   "lang": "en",
   "text": "A held breath right at the 3-second line is noticed only some of the time. Below it, never. I would rather miss a gasp than invent one."

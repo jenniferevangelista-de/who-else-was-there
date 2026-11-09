@@ -279,19 +279,15 @@ body.redflash::before { content: ""; position: fixed; inset: 0; z-index: 49; poi
 .cal-wrap { position: relative; overflow-x: clip; overflow-clip-margin: 8px; }
 .cal-wrap .scratches { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 .cal-wrap .scratches path { fill: none; stroke: #ff668026; stroke-width: 1.4; stroke-linecap: round; }
-.cal-wrap::after { content: ""; position: absolute; inset: -6px; background: #000; opacity: 0; pointer-events: none; z-index: 4; border-radius: 16px; }
-.cal-wrap.blackout::after { opacity: .97; }
-.stalker { position: absolute; z-index: 3; transform: translate(-50%, -100%); pointer-events: none; opacity: 0; filter: drop-shadow(0 0 12px #ff668088); }
+.stalker { position: absolute; z-index: 3; transition: left 1.6s ease-in-out, top 1.6s ease-in-out, height 1.6s ease-in-out; transform: translate(-50%, -100%); pointer-events: none; opacity: 0; filter: drop-shadow(0 0 12px #ff668088); }
 .stalker.on { opacity: .92; animation: loom 3.2s ease-in-out infinite; }
 @keyframes loom { 50% { transform: translate(-50%, -100%) scale(1.05); } }
 .agree { display: flex; gap: 8px; align-items: flex-start; text-align: left; font-size: 14px; color: #d8c6ea; margin-top: 12px; cursor: pointer; }
 .locked-btn { opacity: .4; cursor: not-allowed; }
-@keyframes nightflick { 0%, 91%, 100% { filter: brightness(1); } 92% { filter: brightness(.45); } 94% { filter: brightness(1.15); } 96% { filter: brightness(.6); } }
-.night { animation: nightflick 5.4s linear infinite; }
-.night.arrived { outline: 2px solid var(--danger); outline-offset: 2px; animation: haunt .8s ease-in-out infinite; }
+.night.arrived { outline: 2px solid var(--danger); outline-offset: 2px; box-shadow: 0 0 26px 2px #ff668088; }
 .night.empty::after { content: ""; position: absolute; right: 12px; top: 12px; width: 18px; height: 6px; opacity: 0; transition: opacity .5s; background: radial-gradient(circle at 3px 3px, #ff8aa0 2.4px, transparent 3px), radial-gradient(circle at 15px 3px, #ff8aa0 2.4px, transparent 3px); }
 .night.empty:hover::after { opacity: 1; }
-@media (prefers-reduced-motion: reduce) { .night, .stalker.on, .night.arrived { animation: none; } }
+@media (prefers-reduced-motion: reduce) { .stalker.on { animation: none; } }
 .night { position: relative; aspect-ratio: 1 / .82; border-radius: 16px; border: 1px solid color-mix(in srgb, var(--danger) calc(var(--near, 0) * 70%), #e8c27a2e); background: linear-gradient(180deg, color-mix(in srgb, #7a1230 calc(var(--near, 0) * 55%), #ffffff06), #0a0610 130%); color: var(--cream); padding: 8px 10px; text-align: left; display: flex; flex-direction: column; justify-content: space-between; transition: transform .15s, background .15s; }
 .night:hover { transform: translateY(-3px); background: #ffffff14; }
 .night .d { font: 600 italic 22px/1 var(--f-title); }
@@ -299,8 +295,7 @@ body.redflash::before { content: ""; position: fixed; inset: 0; z-index: 49; poi
 .night .faces img { width: 20px; height: 20px; }
 .night.empty { opacity: .5; }
 .night.visitor { background: #ff86b81a; border-color: #ff86b866; }
-.night.no_pulse { background: radial-gradient(120% 120% at 50% 0%, #ff668055, #2a1838); border-color: var(--danger); box-shadow: 0 0 0 0 #ff668088; animation: haunt 1.8s ease-in-out infinite; }
-@keyframes haunt { 50% { box-shadow: 0 0 26px 2px #ff668088; } }
+.night.no_pulse { background: radial-gradient(120% 120% at 50% 0%, #ff668055, #2a1838); border-color: var(--danger); box-shadow: 0 0 18px 1px #ff668066; }
 .night.locked { background: repeating-linear-gradient(45deg, #ffffff06 0 8px, #ffffff0d 8px 16px); color: #cdbbe0; }
 .night.sel { outline: 2px solid var(--gold); outline-offset: 2px; }
 .night .tag { font-size: 11px; letter-spacing: 1px; text-transform: uppercase; color: #ffd2e3; }

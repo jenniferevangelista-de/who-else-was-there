@@ -396,10 +396,10 @@ const SCREENS = [
     </div>`; },
     enter(el) {
       const m = sampleMonth();
-      // Story art, not data: a figure that crosses the month one blackout at a time and stops on the night of the case.
+      // Story art, not data: a figure that glides across the month and stops on the night of the case.
       const cells = [...el.querySelectorAll(".night")], wrap = $("#calWrap", el), stalker = $("#stalker", el);
       const target = cells.findIndex((c) => c.dataset.date === "2026-11-02");
-      cells.forEach((c, i) => { c.style.setProperty("--near", Math.max(0, 1 - Math.abs(i - target) / 16).toFixed(2)); c.style.animationDelay = `${(i * 0.37) % 5}s`; });
+      cells.forEach((c, i) => { c.style.setProperty("--near", Math.max(0, 1 - Math.abs(i - target) / 16).toFixed(2)); });
       const stand = (i) => { const c = cells[i]; stalker.style.left = `${c.offsetLeft + c.offsetWidth / 2}px`; stalker.style.top = `${c.offsetTop + c.offsetHeight}px`; stalker.style.height = `${c.offsetHeight * 1.5}px`; stalker.classList.add("on"); };
       const arrive = () => cells[target].classList.add("arrived");
       if (matchMedia("(prefers-reduced-motion: reduce)").matches) { setTimeout(() => { stand(target); arrive(); }, 300); }
@@ -409,9 +409,8 @@ const SCREENS = [
         const hop = setInterval(() => {
           if (!document.body.contains(el)) return clearInterval(hop);
           at = Math.min(target, at + 3 + Math.floor(Math.random() * 2));
-          wrap.classList.add("blackout"); sound.beep(62, 320, 0.09);
-          setTimeout(() => { stand(at); }, 90);
-          setTimeout(() => { wrap.classList.remove("blackout"); if (at === target) arrive(); }, 240);
+          sound.beep(62, 320, 0.09); stand(at);
+          if (at === target) setTimeout(arrive, 1700);
           if (at === target) clearInterval(hop);
         }, 2300);
       }

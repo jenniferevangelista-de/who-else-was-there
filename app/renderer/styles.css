@@ -272,7 +272,7 @@ body.redflash::before { content: ""; position: fixed; inset: 0; z-index: 49; poi
 @media (prefers-reduced-motion: reduce) { * { animation: none !important; transition: none !important; } }
 
 /* ---------- the haunting calendar ---------- */
-.cal { display: grid; grid-template-columns: repeat(7, 1fr); gap: 10px; }
+.cal { display: grid; grid-template-columns: repeat(7, minmax(0, 1fr)); gap: 10px; }
 .cal .dow { text-align: center; font-size: 12px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
 .haunted { background: radial-gradient(90% 70% at 85% 100%, #5a0f2466, transparent 70%), linear-gradient(180deg, #120a1c, #07040c) !important; box-shadow: inset 0 0 90px #000d, 0 0 0 1px #ff668033 !important; }
 .haunted h2 { text-shadow: 0 0 26px #ff668044; }
@@ -394,7 +394,6 @@ body.flash::after { content: ""; position: fixed; inset: 0; background: #fff; op
 .board .stays { animation: stays 2.4s ease-in-out infinite; transform-origin: 50% 80%; }
 @keyframes stays { 0%, 100% { transform: scale(1.5) translateY(0); } 50% { transform: scale(1.5) translateY(-8px); } }
 
-.cal .night { aspect-ratio: 1 / .64; }
 
 /* Screens that must fit the window without scrolling */
 .cal { gap: 6px; }

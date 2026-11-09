@@ -405,7 +405,7 @@ const SCREENS = [
       const target = cells.findIndex((c) => c.dataset.date === "2026-11-02");
       cells.forEach((c, i) => { c.style.setProperty("--near", Math.max(0, 1 - Math.abs(i - target) / 16).toFixed(2)); });
       const stand = (i) => { const c = cells[i]; stalker.style.left = `${c.offsetLeft + c.offsetWidth / 2}px`; stalker.style.top = `${c.offsetTop + c.offsetHeight}px`; stalker.style.height = `${c.offsetHeight * 1.5}px`; stalker.classList.add("on"); };
-      const arrive = () => cells[target].classList.add("arrived");
+      const arrive = () => { cells[target].classList.add("arrived"); stalker.style.opacity = ".4"; };   // the case tag stays readable through the figure
       if (matchMedia("(prefers-reduced-motion: reduce)").matches) { setTimeout(() => { stand(target); arrive(); }, 300); }
       else {
         let at = Math.max(0, target - 21);

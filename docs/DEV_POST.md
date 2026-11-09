@@ -12,6 +12,7 @@ tags: devchallenge, presagechallenge, webdev, javascript
 | **Platform** | Electron desktop app, English and Portuguese |
 | **Privacy** | Camera only after consent, no frames saved, no video recorded, SDK telemetry off |
 | **Tested** | 19,000 tests on fake data with a known answer |
+| **Play it now** | [Web demo in your browser](https://jenniferevangelista-de.github.io/who-else-was-there/), on sample numbers. The live camera reading runs in the desktop app, because the Presage SDK is native (Node.js/Electron) |
 | **Code** | [github.com/jenniferevangelista-de/who-else-was-there](https://github.com/jenniferevangelista-de/who-else-was-there) (MIT) |
 
 ## What I Built
@@ -50,6 +51,8 @@ It is a desktop app in Electron, in English and Portuguese, with original music 
 **Pitch:**
 
 {% embed https://youtu.be/AibgwE4xLh4 %}
+
+**Play it in your browser, no install:** https://jenniferevangelista-de.github.io/who-else-was-there/ (sample numbers).
 
 No login is needed. Without a Presage key the app opens on sample numbers, and every sample screen is tagged. With a key, The Room reads your camera live.
 

@@ -6,13 +6,13 @@ const T = (en, pt) => ({ en, pt });
 const LIVE = T("live", "ao vivo"), SAMPLE = T("sample here, real with a tape", "exemplo aqui, real com um vídeo"), LOGIC = T("our logic", "nossa lógica");
 
 const SCREEN = {
-  cold: [[LOGIC, T("The whole idea in two lines: a living face has a heartbeat. The Pulse-o-Scope is built on Presage SmartSpectra's camera pulse reading.", "A ideia em duas frases: rosto vivo tem batimento. O Pulse-o-Scope é feito com a leitura de pulso por câmera do Presage SmartSpectra.")]],
+  cold: [[LOGIC, T("The whole idea in two lines: a living face has a heartbeat. The Ghost Detector is built on Presage SmartSpectra's camera pulse reading.", "A ideia em duas frases: rosto vivo tem batimento. O Detector de Fantasma é feito com a leitura de pulso por câmera do Presage SmartSpectra.")]],
   title: [[LOGIC, T("Three characters, three readings of the same data: Luna believes, Dr. Bigotes doubts, Xochi only records.", "Três personagens, três leituras dos mesmos dados: a Luna acredita, o Dr. Bigotes duvida, a Xochi só registra.")]],
   consent: [[LOGIC, T("Consent comes first. Camera only on a button press, video only (no microphone), off at any time, no frames saved.", "O consentimento vem primeiro. Câmera só ao apertar um botão, só vídeo (sem microfone), desliga a qualquer hora, nenhum quadro salvo.")]],
   case: [[LOGIC, T("The hook. Marina is a character, and the screen says so.", "O gancho. A Marina é uma personagem, e a tela diz isso.")]],
   calendar: [[SAMPLE, T("Each square is one night summarised as faces counted and faces with a pulse, from SDK pulse rate and validation status. The moving figure is story art, not data.", "Cada quadrado é uma noite resumida em rostos contados e rostos com pulso, a partir do pulso e do status de validação do SDK. A figura que anda é arte da história, não dado.")]],
   tape: [
-    [SAMPLE, T("Pulse rate with confidence (cardio.pulseRate). Only readings at 50% or more drive the heart and the scope, and the beat speed is the bpm itself.", "Pulso com confiança (cardio.pulseRate). Só leituras de 50% ou mais movem o coração e o scope, e a velocidade da batida é o próprio bpm.")],
+    [SAMPLE, T("Pulse rate with confidence (cardio.pulseRate). Only readings at 50% or more drive the heart and the detector, and the beat speed is the bpm itself.", "Pulso com confiança (cardio.pulseRate). Só leituras de 50% ou mais movem o coração e o detector, e a velocidade da batida é o próprio bpm.")],
     [SAMPLE, T("Validation status: the SDK's multiple-faces code becomes \"a second face\".", "Status de validação: o código de múltiplos rostos do SDK vira \"um segundo rosto\".")],
     [SAMPLE, T("Chest trace (breathing.upperTrace): a flat stretch of 3 s or more becomes \"she held her breath\".", "Traço do tórax (breathing.upperTrace): um trecho reto de 3 s ou mais vira \"ela prendeu a respiração\".")],
     [LOGIC, T("A rise of 8 bpm within 10 s becomes \"her pulse jumped\". A recording is fed to the SDK frame by frame through a canvas stream.", "Uma subida de 8 bpm em 10 s vira \"o pulso dela disparou\". A gravação entra no SDK quadro a quadro por um stream de canvas.")],

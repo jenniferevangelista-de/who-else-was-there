@@ -2,7 +2,7 @@
 
 **Every face in this video has a heartbeat. Except one.**
 
-A cute, spooky ghost hunt built on the [Presage SmartSpectra SDK](https://smartspectra.presagetech.com/docs). A client was about to go out, everything was fine, and a feeling at the door made her stay. She never saw what stood behind her. The crew's new instrument, the Pulse-o-Scope, reads a pulse from every face in her hallway tape. Living faces beat. The face that does not is the case. Then the spirit answers on a board that only moves when **you** breathe out, and the crew never agrees on what it meant.
+A cute, spooky ghost hunt built on the [Presage SmartSpectra SDK](https://smartspectra.presagetech.com/docs). A client was about to go out, everything was fine, and a feeling at the door made her stay. She never saw what stood behind her. The crew's new instrument, the Ghost Detector, reads a pulse from every face in her hallway tape. Living faces beat. The face that does not is the case. Then the spirit answers on a board that only moves when **you** breathe out, and the crew never agrees on what it meant.
 
 [![ci](https://github.com/jenniferevangelista-de/who-else-was-there/actions/workflows/ci.yml/badge.svg)](https://github.com/jenniferevangelista-de/who-else-was-there/actions/workflows/ci.yml)
 

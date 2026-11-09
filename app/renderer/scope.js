@@ -1,4 +1,4 @@
-// The Pulse-o-Scope: a phosphor line that beats with a live pulse, or lies flat.
+// The Ghost Detector: a phosphor line that beats with a live pulse, or lies flat.
 // It draws what it is given (a bpm, a breathing trace, or nothing); it never invents a reading.
 
 import { sound } from "./sound.js";
@@ -61,8 +61,8 @@ export function createScope(canvas, { beeps = true } = {}) {
   };
 }
 
-/** The scope card markup. */
-export function scopeHTML(id, label = "PULSE-O-SCOPE") {
+/** The detector card markup. */
+export function scopeHTML(id, label = "GHOST DETECTOR") {
   return `
   <div class="scope" id="${id}">
     <img class="sticker" src="img/heart.svg" alt="">

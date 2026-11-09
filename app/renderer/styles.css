@@ -20,6 +20,7 @@
 }
 * { box-sizing: border-box; }
 html, body { height: 100%; }
+* { scrollbar-width: none; }  /* no scrollbars anywhere: each screen scales itself to fit the window (fitScreen in app.js) */
 body {
   margin: 0; color: var(--cream); font: 400 19px/1.5 var(--f-body);
   background:
@@ -59,7 +60,7 @@ header.top { position: fixed; top: 0; left: 0; right: 0; z-index: 20; display: f
 
 /* ---------- stage ---------- */
 main#stage { position: relative; z-index: 1; height: 100%; padding: 74px 28px 98px; display: grid; place-items: center; }
-section.screen { display: none; width: min(1200px, 100%); max-height: 100%; overflow: auto; scrollbar-width: thin; padding: 18px 20px 12px; }
+section.screen { display: none; width: min(1200px, 100%); max-height: 100%; overflow: hidden; padding: 18px 20px 12px; }
 section.screen.on { display: block; animation: rise .55s cubic-bezier(.2,.8,.2,1); }
 @keyframes rise { from { opacity: 0; transform: translateY(16px); filter: blur(4px); } }
 
@@ -123,7 +124,7 @@ nav.story .where { text-align: center; font-size: 14px; color: #d8c6ea; margin-t
 .say.bigotes .who { color: #4f6fc2; }
 .say.xochi .who { color: #b07a1f; }
 
-/* ---------- the Pulse-o-Scope ---------- */
+/* ---------- the Ghost Detector ---------- */
 .scope { background: linear-gradient(180deg, #efe1ff, #d9c4f3); border-radius: 30px; padding: 14px 14px 12px; box-shadow: var(--soft), inset 0 1px 0 #fff; color: var(--ink); position: relative; border: 1px solid #b89ce0; }
 .scope .screen-glass { position: relative; background: radial-gradient(120% 140% at 50% 40%, #154031, var(--glass)); border-radius: 20px; overflow: hidden; height: 190px; box-shadow: inset 0 0 0 3px #2a1838, inset 0 0 40px #000a; }
 .scope .screen-glass::after { content: ""; position: absolute; inset: 0; background: repeating-linear-gradient(0deg, #00000026 0 2px, transparent 2px 4px); pointer-events: none; }
@@ -173,7 +174,7 @@ nav.story .where { text-align: center; font-size: 14px; color: #d8c6ea; margin-t
 .lang button.on { background: var(--gold); color: #2a1840; }
 #hoodPill { position: fixed; left: 24px; bottom: 80px; z-index: 21; background: #1a102ccc; color: #bfaed6; border: 1px solid #c3a8ff44; border-radius: 999px; padding: 5px 12px; font-size: 12px; cursor: pointer; }
 #hoodPill:hover, #hoodPill[aria-expanded="true"] { color: var(--mint); border-color: #9af5c888; }
-#hood { position: fixed; left: 24px; bottom: 114px; z-index: 21; width: min(400px, calc(100vw - 48px)); max-height: 56vh; overflow: auto; background: #140b22f5; color: #e6dcf2; border: 1px solid #c3a8ff55; border-radius: 16px; padding: 14px 16px; font-size: 14px; line-height: 1.4; box-shadow: 0 18px 40px -14px #000; }
+#hood { position: fixed; left: 24px; bottom: 114px; z-index: 21; width: min(400px, calc(100vw - 48px)); max-height: calc(100vh - 170px); overflow: auto; background: #140b22f5; color: #e6dcf2; border: 1px solid #c3a8ff55; border-radius: 16px; padding: 14px 16px; font-size: 14px; line-height: 1.4; box-shadow: 0 18px 40px -14px #000; }
 #hood ul { margin: 6px 0 0; padding: 0; list-style: none; } #hood li { margin: 0 0 9px; }
 .hood-h { font-size: 12px; letter-spacing: 1.4px; text-transform: uppercase; color: var(--gold); }
 .hood-tag { display: inline-block; font-size: 11px; font-weight: 700; padding: 1px 7px; border-radius: 999px; background: #c3a8ff33; color: #d9c8ff; margin-right: 3px; }
@@ -275,7 +276,7 @@ body.redflash::before { content: ""; position: fixed; inset: 0; z-index: 49; poi
 .cal .dow { text-align: center; font-size: 12px; letter-spacing: 2px; color: var(--gold); text-transform: uppercase; }
 .haunted { background: radial-gradient(90% 70% at 85% 100%, #5a0f2466, transparent 70%), linear-gradient(180deg, #120a1c, #07040c) !important; box-shadow: inset 0 0 90px #000d, 0 0 0 1px #ff668033 !important; }
 .haunted h2 { text-shadow: 0 0 26px #ff668044; }
-.cal-wrap { position: relative; }
+.cal-wrap { position: relative; overflow-x: clip; overflow-clip-margin: 8px; }
 .cal-wrap .scratches { position: absolute; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 1; }
 .cal-wrap .scratches path { fill: none; stroke: #ff668026; stroke-width: 1.4; stroke-linecap: round; }
 .cal-wrap::after { content: ""; position: absolute; inset: -6px; background: #000; opacity: 0; pointer-events: none; z-index: 4; border-radius: 16px; }
@@ -399,3 +400,24 @@ body.flash::after { content: ""; position: fixed; inset: 0; background: #fff; op
 @keyframes stays { 0%, 100% { transform: scale(1.5) translateY(0); } 50% { transform: scale(1.5) translateY(-8px); } }
 
 .cal .night { aspect-ratio: 1 / .64; }
+
+/* Screens that must fit the window without scrolling */
+.cal { gap: 6px; }
+.night { aspect-ratio: auto; height: clamp(52px, calc((100vh - 500px) / 5), 112px); padding: 6px 9px; }
+.spirit-card { padding: 10px 22px; }
+.spirit-card h2 { font-size: 30px; }
+.spirit-card .kinds { margin-top: 4px; }
+.board-grid { grid-template-columns: 1.15fr 1fr; margin-top: 10px; align-items: start; gap: 16px; }
+.board-grid .seance-stage { padding: 92px 70px 0; }
+.seance-stage .crew-top .face, .seance-stage .crew-top img { width: 92px; height: 100px; }
+.seance-stage .crew-left, .seance-stage .crew-right { width: 92px; bottom: 8px; }
+.seance-stage .crew-left { left: -8px; } .seance-stage .crew-right { right: -8px; }
+.seance-stage .crew-left .face, .seance-stage .crew-left img, .seance-stage .crew-right .face, .seance-stage .crew-right img { width: 88px; height: 96px; }
+.board-grid .spell { font-size: 42px; min-height: 50px; margin-top: 6px; }
+.board-grid .card { padding: 14px 18px; }
+.board-grid .card p { font-size: 14px; margin-bottom: 6px; }
+.board-grid .questions { gap: 6px; margin-top: 6px !important; }
+.board-grid .q { padding: 6px 13px; font-size: 14px; }
+.board-grid .hush { margin: 4px 0; }
+.board-grid .say { margin: 6px 0; gap: 10px; }
+.board-grid .say img { width: 46px; height: 50px; }

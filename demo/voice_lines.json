@@ -12,12 +12,12 @@
  {
   "who": "xochi",
   "lang": "en",
-  "text": "I kept watch every night. Click any night and the scope will analyze it."
+  "text": "I kept watch every night. Click any night and the detector will analyze it."
  },
  {
   "who": "xochi",
   "lang": "pt",
-  "text": "Fiquei de vigia todas as noites. Clique em uma noite e o scope vai analisar."
+  "text": "Fiquei de vigia todas as noites. Clique em uma noite e o detector vai analisar."
  },
  {
   "who": "bigotes",
@@ -42,12 +42,12 @@
  {
   "who": "xochi",
   "lang": "en",
-  "text": "The scope needs a face to find a heartbeat. Let it work."
+  "text": "The detector needs a face to find a heartbeat. Let it work."
  },
  {
   "who": "xochi",
   "lang": "pt",
-  "text": "O scope precisa de um rosto para achar um batimento. Deixe ele trabalhar."
+  "text": "O detector precisa de um rosto para achar um batimento. Deixe ele trabalhar."
  },
  {
   "who": "xochi",
@@ -62,12 +62,12 @@
  {
   "who": "xochi",
   "lang": "en",
-  "text": "I will write down what the scope sees. Nothing else."
+  "text": "I will write down what the detector sees. Nothing else."
  },
  {
   "who": "xochi",
   "lang": "pt",
-  "text": "Vou anotar o que o scope vê. Mais nada."
+  "text": "Vou anotar o que o detector vê. Mais nada."
  },
  {
   "who": "luna",
@@ -142,12 +142,12 @@
  {
   "who": "xochi",
   "lang": "en",
-  "text": "I'm Xochi. I keep watch all night and write down only what the scope saw."
+  "text": "I'm Xochi. I keep watch all night and write down only what the detector saw."
  },
  {
   "who": "xochi",
   "lang": "pt",
-  "text": "Eu sou a Xochi. Fico de vigia a noite toda e anoto só o que o scope viu."
+  "text": "Eu sou a Xochi. Fico de vigia a noite toda e anoto só o que o detector viu."
  },
  {
   "who": "xochi",
@@ -242,12 +242,12 @@
  {
   "who": "luna",
   "lang": "en",
-  "text": "No. That face gave 0 beats while the scope watched it. Nothing alive holds that still."
+  "text": "No. That face gave 0 beats while the detector watched it. Nothing alive holds that still."
  },
  {
   "who": "luna",
   "lang": "pt",
-  "text": "Não. Esse rosto deu 0 batimentos enquanto o scope observava. Nada vivo fica tão parado."
+  "text": "Não. Esse rosto deu 0 batimentos enquanto o detector observava. Nada vivo fica tão parado."
  },
  {
   "who": "bigotes",

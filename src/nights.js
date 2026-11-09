@@ -1,5 +1,5 @@
 // The haunting calendar: one square per night of the hallway camera.
-// Each night is a short summary of what the Pulse-o-Scope reported for that night's clip:
+// Each night is a short summary of what the Ghost Detector reported for that night's clip:
 // how many faces, how many of them showed a pulse. Pure data helpers; the sample month is labelled SAMPLE.
 
 /** What a night square says, from its face counts. */

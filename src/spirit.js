@@ -27,7 +27,7 @@ export function answer(qid, ev) {
     },
     alive: still ? {
       board: "NO", cites: [still.id],
-      luna: `No. That face gave 0 beats while the scope watched it. Nothing alive holds that still.`,
+      luna: `No. That face gave 0 beats while the detector watched it. Nothing alive holds that still.`,
       bigotes: `A face with no pulse is a photo, a mask or a screen. Ordinary. I just cannot tell you who put it there.`,
     } : shadow && {
       board: "NO FACE", cites: [shadow.id],
@@ -66,7 +66,7 @@ export function reading(ev) {
   const lines = [];
   if (live) lines.push({ who: "xochi", text: `One living face from start to end, with a pulse around ${Math.round(live.value)} bpm.`, cites: [live.id] });
   if (face2) lines.push({ who: "luna", text: `At second ${sec(face2.t0)} something else had a face in that hallway, for ${Math.round(face2.value)} seconds.`, cites: [face2.id] });
-  if (still) lines.push({ who: "bigotes", text: `I pointed the scope at it for ${Math.round(still.t1 - still.t0)} seconds. 0 beats per minute. A living face in good light shows a pulse; this one showed none.`, cites: [still.id] });
+  if (still) lines.push({ who: "bigotes", text: `I pointed the detector at it for ${Math.round(still.t1 - still.t0)} seconds. 0 beats per minute. A living face in good light shows a pulse; this one showed none.`, cites: [still.id] });
   if (held) lines.push({ who: "luna", text: `She stopped at the door and held her breath for ${held.value} seconds.`, cites: [held.id] });
   if (jump) lines.push({ who: "bigotes", text: `Then her pulse rose ${jump.value} bpm. A startle, most likely.`, cites: [jump.id] });
   // Luna reads what the spirit meant, Bigotes refuses to. The case never settles it.
@@ -88,8 +88,8 @@ export function spiritFor(ev) {
   if (still) return { archetype: "The Watcher", name: "Odette", story: "A face on the wall that never blinks.", goal: "to be noticed", cites: [still.id] };
   if (alive) return { archetype: "The Intruder", name: "Someone", story: "Not a spirit at all. Someone alive, in the corner of the frame.", goal: "unknown", cites: [alive.id] };
   if (shade) return { archetype: "The Shade", name: "Ash", story: "A shape in the frame, with no face to read.", goal: "to stay unseen", cites: [shade.id] };
-  if (veiled) return { archetype: "The Veiled", name: "Vesper", story: "Something too dark for the scope to read.", goal: "to stay unread", cites: [veiled.id] };
-  if (face2) return { archetype: "The Visitor", name: "Nobody", story: "A second face the scope could not place.", goal: "unknown", cites: [face2.id] };
+  if (veiled) return { archetype: "The Veiled", name: "Vesper", story: "Something too dark for the detector to read.", goal: "to stay unread", cites: [veiled.id] };
+  if (face2) return { archetype: "The Visitor", name: "Nobody", story: "A second face the detector could not place.", goal: "unknown", cites: [face2.id] };
   return null;
 }
 

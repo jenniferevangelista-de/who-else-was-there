@@ -7,12 +7,12 @@
 "id": "d9f27d3bd2",
 "who": "luna"
 },
-"I kept watch every night. Click any night and the scope will analyze it.": {
-"id": "0ca158b8d1",
+"I kept watch every night. Click any night and the detector will analyze it.": {
+"id": "5f6279f9d3",
 "who": "xochi"
 },
-"Fiquei de vigia todas as noites. Clique em uma noite e o scope vai analisar.": {
-"id": "557aaad7f2",
+"Fiquei de vigia todas as noites. Clique em uma noite e o detector vai analisar.": {
+"id": "4d15878ef0",
 "who": "xochi"
 },
 "I'll watch her pulse. Ghosts don't have one, people do.": {
@@ -31,12 +31,12 @@
 "id": "583965a563",
 "who": "luna"
 },
-"The scope needs a face to find a heartbeat. Let it work.": {
-"id": "39fb90db12",
+"The detector needs a face to find a heartbeat. Let it work.": {
+"id": "1ae3ed970d",
 "who": "xochi"
 },
-"O scope precisa de um rosto para achar um batimento. Deixe ele trabalhar.": {
-"id": "007ac4a4f7",
+"O detector precisa de um rosto para achar um batimento. Deixe ele trabalhar.": {
+"id": "a180c18ccb",
 "who": "xochi"
 },
 "Click a card. I will show you that moment of the tape, and the crew will argue about it.": {
@@ -47,12 +47,12 @@
 "id": "a228645934",
 "who": "xochi"
 },
-"I will write down what the scope sees. Nothing else.": {
-"id": "08da2eae21",
+"I will write down what the detector sees. Nothing else.": {
+"id": "b25484e3b4",
 "who": "xochi"
 },
-"Vou anotar o que o scope vê. Mais nada.": {
-"id": "4031d3cc81",
+"Vou anotar o que o detector vê. Mais nada.": {
+"id": "20d7d7970e",
 "who": "xochi"
 },
 "Spirit of this room… is someone here with us?": {
@@ -111,12 +111,12 @@
 "id": "c8cf77aeec",
 "who": "bigotes"
 },
-"I'm Xochi. I keep watch all night and write down only what the scope saw.": {
-"id": "05acc60134",
+"I'm Xochi. I keep watch all night and write down only what the detector saw.": {
+"id": "e7784eb347",
 "who": "xochi"
 },
-"Eu sou a Xochi. Fico de vigia a noite toda e anoto só o que o scope viu.": {
-"id": "bfd56c7af9",
+"Eu sou a Xochi. Fico de vigia a noite toda e anoto só o que o detector viu.": {
+"id": "726c351035",
 "who": "xochi"
 },
 "Marina, alive the whole time. This is the line every other card is compared to.": {
@@ -191,12 +191,12 @@
 "id": "707020ec8d",
 "who": "bigotes"
 },
-"No. That face gave 0 beats while the scope watched it. Nothing alive holds that still.": {
-"id": "3efac3ffca",
+"No. That face gave 0 beats while the detector watched it. Nothing alive holds that still.": {
+"id": "42308ed763",
 "who": "luna"
 },
-"Não. Esse rosto deu 0 batimentos enquanto o scope observava. Nada vivo fica tão parado.": {
-"id": "b8ba9d55c4",
+"Não. Esse rosto deu 0 batimentos enquanto o detector observava. Nada vivo fica tão parado.": {
+"id": "adc7c06b03",
 "who": "luna"
 },
 "A face with no pulse is a photo, a mask or a screen. Ordinary. I just cannot tell you who put it there.": {

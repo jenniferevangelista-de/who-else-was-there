@@ -1,6 +1,6 @@
 """Captures the live-signal segment from the real app (started with the key and --remote-debugging-port=9333).
 It only watches: the person presses "Turn my camera on" themselves. Recording starts when the camera turns on
-and ends 24 s after the scope first reads LIVE. The camera preview is covered in memory, before any frame is
+and ends 24 s after the detector first reads LIVE. The camera preview is covered in memory, before any frame is
 written, so no face or room ever reaches the disk.
   python video/record_live.py   -> video/recordings/live.mp4
 """
@@ -17,7 +17,7 @@ from playwright.sync_api import sync_playwright
 HERE = Path(__file__).resolve().parent
 TMP = HERE / "recordings" / "_live"
 OUT = HERE / "recordings" / "live.mp4"
-WAIT_MAX, AFTER_LIVE, HARD_MAX, PRE_FRAMES = 1500, 24, 1500, 60     # only the last few seconds before LIVE are kept
+WAIT_MAX, AFTER_LIVE, HARD_MAX, PRE_FRAMES = 43200, 24, 1500, 60    # only the last few seconds before LIVE are kept
 STATE = "(() => { const c = document.querySelector('#camPill').classList.contains('cam-on');" \
         " const s = [...document.querySelectorAll('[data-state]')].map(e => e.textContent).join('|');" \
         " const r = document.querySelector('#me')?.getBoundingClientRect();" \

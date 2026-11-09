@@ -136,7 +136,7 @@ function wireTape(el) {
   btn.addEventListener("click", (e) => { e.stopPropagation(); beam.hidden = !beam.hidden; btn.classList.toggle("on", !beam.hidden); sound.beep(300, 40); });
   tape.addEventListener("mousemove", (e) => {
     const b = tape.getBoundingClientRect();
-    beam.style.setProperty("--x", e.clientX - b.left + "px"); beam.style.setProperty("--y", e.clientY - b.top + "px");
+    const k = screenZoom(tape); beam.style.setProperty("--x", (e.clientX - b.left) / k + "px"); beam.style.setProperty("--y", (e.clientY - b.top) / k + "px");
   });
   // the timeline: press anywhere or drag the marker to move through the recording
   const tl = $("#timeline", el); if (!tl?.classList.contains("scrubs")) return;
@@ -159,7 +159,7 @@ function pulseAt(t) {
   const p = [...src.pulse].reverse().find((q) => q.t <= t && q.conf >= 50);
   return p && t - p.t <= 3.5 ? p.v : null;
 }
-/** Drive the scope and the heart from second t. They move only while the tape does, at the speed of that second's bpm. */
+/** Drive the detector and the heart from second t. They move only while the tape does, at the speed of that second's bpm. */
 function beatAt(el, t, moving) {
   const v = pulseAt(t), s = state.tapeScope, bpm = $("#scopeTape [data-bpm]", el), st = $("#scopeTape [data-state]", el);
   heartBadge($("#tape .overlay", el), { ...marinaFace(t), bpm: v ?? undefined, still: !moving });
@@ -211,12 +211,12 @@ async function autoScope(el, scope, R, box, ov) {
   const tape = $("#tape", el), st = $("#scopePoint [data-state]", el), bpm = $("#scopePoint [data-bpm]", el);
   const C = SAMPLE_CASE, until = C.shadowOutAt - 4, from = C.shadowInAt;
   box.style.display = "none"; tape.classList.add("sweeping"); tape.style.cursor = "default";
-  st.textContent = "SEARCHING"; msg("The scope is running. Looking for faces in the frame…", 8); sound.beep(520, 90, 0.04);
+  st.textContent = "SEARCHING"; msg("The detector is running. Looking for faces in the frame…", 8); sound.beep(520, 90, 0.04);
   await sleep(1700); if (!alive()) return;
   msg("One face with a pulse: Marina. Still looking…", 18); sound.beep(880, 80, 0.05); heartBadge(ov, { ...marinaFace(from + 4), bpm: 74 });
   await sleep(1400); if (!alive()) return;
   tape.classList.remove("sweeping"); place(from + 4); box.style.display = ""; box.classList.add("found"); box.querySelector(".tag").textContent = "second face";
-  st.textContent = "LOCKED ON"; msg("A second face, right behind her. Locking the scope on it…", 28); sound.sting();
+  st.textContent = "LOCKED ON"; msg("A second face, right behind her. Locking the detector on it…", 28); sound.sting();
   await sleep(1500); if (!alive()) return;
   state.tapeT = from; st.textContent = "READING";
   await playTape({ until, rate: 2.4, onTime: (t) => {
@@ -234,7 +234,7 @@ async function autoScope(el, scope, R, box, ov) {
   heartBadge(ov, { x: f.x, y: R.y + R.h + 0.2, dead: true });
   bpm.textContent = "0"; st.textContent = "NO PULSE";
   $("#pointNotes", el).innerHTML = L(`<div class="cliff" style="padding:0"><div class="line" style="font-size:40px">A face.<br><em>0 beats per minute.</em></div>
-    <p class="sub">The scope watched it for ${Math.round(verdict.t1 - verdict.t0)} seconds. It never breathed. <b>And it was standing right behind her.</b></p></div>`);
+    <p class="sub">The detector watched it for ${Math.round(verdict.t1 - verdict.t0)} seconds. It never breathed. <b>And it was standing right behind her.</b></p></div>`);
   state.flat = true; updateNav();
   nextUp([{ label: "See all the evidence →", main: true, do: forward }, { label: "↺ Read it again", do: () => go(state.i) }]);
 }
@@ -280,8 +280,8 @@ const SCREENS = [
       Living faces beat. <b style="color:var(--danger)">The ones that don't are the case.</b></p>
       <div class="crew" style="margin-top:22px">
         <div class="member" data-intro="luna" data-line="Quiet… I'm Luna. I open the board, and I believe in everything. Almost." role="button" tabindex="0"><div class="halo"><img src="img/luna.svg" alt="Luna"></div><b>Luna</b><span>the medium · opens the board</span></div>
-        <div class="member" data-intro="bigotes" data-line="Dr. Bigotes. I believe in data. Show me a pulse and I'll show you a person." role="button" tabindex="0"><div class="halo"><img src="img/bigotes.svg" alt="Dr. Bigotes"></div><b>Dr. Bigotes</b><span>the skeptic · checks the scope</span></div>
-        <div class="member" data-intro="xochi" data-line="I'm Xochi. I keep watch all night and write down only what the scope saw." role="button" tabindex="0"><div class="halo"><img src="img/xochi.svg" alt="Xochi"></div><b>Xochi</b><span>the night watch · writes it down</span></div>
+        <div class="member" data-intro="bigotes" data-line="Dr. Bigotes. I believe in data. Show me a pulse and I'll show you a person." role="button" tabindex="0"><div class="halo"><img src="img/bigotes.svg" alt="Dr. Bigotes"></div><b>Dr. Bigotes</b><span>the skeptic · checks the detector</span></div>
+        <div class="member" data-intro="xochi" data-line="I'm Xochi. I keep watch all night and write down only what the detector saw." role="button" tabindex="0"><div class="halo"><img src="img/xochi.svg" alt="Xochi"></div><b>Xochi</b><span>the night watch · writes it down</span></div>
       </div>
       <div id="introSay" style="max-width:640px;margin:14px auto 0;text-align:left"><p class="muted" style="text-align:center">Tap a hunter to say hello.</p></div>
     </div>` },
@@ -294,13 +294,13 @@ const SCREENS = [
           <li><b>The camera is yours.</b> It turns on only when you press a button, and the pill at the top right turns it off at any moment.</li>
           <li><b>Nothing is recorded.</b> No frames are saved. Readings live in memory and vanish when you close the app.</li>
           <li><b>Faces of the living are blurred</b> on every screen, including yours.</li>
-          <li><b>Only bring tapes where everyone agreed to be in them.</b> The scope reads the people in a video, so they get a say.</li>
+          <li><b>Only bring tapes where everyone agreed to be in them.</b> The detector reads the people in a video, so they get a say.</li>
           <li><b>This is a game, not a medical device.</b> A pulse here is a story clue.</li>
           <li>Presage's SDK runs on this computer; it contacts Presage only to check the app's key. Its usage telemetry is switched off.</li>
         </ul>
       </div>
       <div class="card dark">
-        <div class="kicker">The new instrument</div><h2 style="color:var(--mint)">Pulse-o-Scope</h2>
+        <div class="kicker">The new instrument</div><h2 style="color:var(--mint)">Ghost Detector</h2>
         <p>Point it at a face in a recording. Presage SmartSpectra reads the tiny colour changes a heartbeat makes in the skin.</p>
         ${scopeHTML("scopeDemo")}
         <p class="muted" style="margin-top:12px">Living faces make the line beat. Photos, masks and screens make it lie flat.</p>
@@ -321,7 +321,7 @@ const SCREENS = [
       <div class="card dark" style="text-align:center">
         <img src="img/wisp.svg" alt="" style="width:140px;margin:10px auto;display:block">
         <p class="lead">A voice message from Marina</p>
-        <p class="muted">She sent it at 7:12 in the morning, with the video from her hallway camera. The scope will analyze that video next.</p>
+        <p class="muted">She sent it at 7:12 in the morning, with the video from her hallway camera. The detector will analyze that video next.</p>
         <button class="btn-soft" id="playMsg" style="color:var(--cream)">▶ Hear it again</button>
       </div>
     </div>`,
@@ -339,7 +339,7 @@ const SCREENS = [
       <div class="grid2 dare-cards">
         <div class="card dark">
           <div class="kicker">Bring your own tape</div><h2>Who else was in yours?</h2>
-          <p class="muted">The scope reads every face in it, and Luna opens the board. Was it a spirit? The crew will never agree.</p>
+          <p class="muted">The detector reads every face in it, and Luna opens the board. Was it a spirit? The crew will never agree.</p>
           <label class="agree"><input type="checkbox" id="tapeAgree"> Everyone in this recording agreed to be in it and to have it read.</label>
           <label class="btn-main ghost locked-btn" id="ownTapeBtn" style="display:inline-block;margin-top:10px">Choose a video<input type="file" accept="video/*" id="ownTape" class="sr" disabled></label>
         </div>
@@ -357,7 +357,7 @@ const SCREENS = [
       $("#ownTape", el).addEventListener("change", (e) => {
         const f = e.target.files[0]; if (!f) return;
         if (!state.liveSdk) return toast("Reading your own tape needs the Presage key on this computer. Add it and reopen the app.", 6000);
-        state.ownTape = URL.createObjectURL(f); state.mode = "live"; state.evidence = []; state.scans = null; toast(`Loaded ${f.name}. The scope is reading it.`);
+        state.ownTape = URL.createObjectURL(f); state.mode = "live"; state.evidence = []; state.scans = null; toast(`Loaded ${f.name}. The detector is reading it.`);
         go(SCREENS.findIndex((s) => s.id === "tape"));
       });
     } },
@@ -391,7 +391,7 @@ const SCREENS = [
           <div class="stat"><b>${tot.livingFaces}</b><span>living faces</span></div>
           <div class="stat"><b style="color:var(--danger)">${tot.stillFaces}</b><span>with no pulse</span></div>
         </div>
-        <div class="card" style="margin-top:18px" id="nightNote">${say("xochi", "I kept watch every night. Click any night and the scope will analyze it.")}</div>
+        <div class="card" style="margin-top:18px" id="nightNote">${say("xochi", "I kept watch every night. Click any night and the detector will analyze it.")}</div>
       </div>
     </div>`; },
     enter(el) {
@@ -400,7 +400,7 @@ const SCREENS = [
       const cells = [...el.querySelectorAll(".night")], wrap = $("#calWrap", el), stalker = $("#stalker", el);
       const target = cells.findIndex((c) => c.dataset.date === "2026-11-02");
       cells.forEach((c, i) => { c.style.setProperty("--near", Math.max(0, 1 - Math.abs(i - target) / 16).toFixed(2)); c.style.animationDelay = `${(i * 0.37) % 5}s`; });
-      const stand = (i) => { const c = cells[i], w = wrap.getBoundingClientRect(), b = c.getBoundingClientRect(); stalker.style.left = `${b.left - w.left + b.width / 2}px`; stalker.style.top = `${b.bottom - w.top}px`; stalker.style.height = `${b.height * 1.5}px`; stalker.classList.add("on"); };
+      const stand = (i) => { const c = cells[i]; stalker.style.left = `${c.offsetLeft + c.offsetWidth / 2}px`; stalker.style.top = `${c.offsetTop + c.offsetHeight}px`; stalker.style.height = `${c.offsetHeight * 1.5}px`; stalker.classList.add("on"); };
       const arrive = () => cells[target].classList.add("arrived");
       if (matchMedia("(prefers-reduced-motion: reduce)").matches) { setTimeout(() => { stand(target); arrive(); }, 300); }
       else {
@@ -446,10 +446,10 @@ const SCREENS = [
       setTimeout(() => el.querySelector('[data-date="2026-11-02"]')?.focus(), 300);
     } },
 
-  { id: "tape", chapter: "The tape", next: "Point the scope →", canNext: () => state.tapeDone, html: () => `
+  { id: "tape", chapter: "The tape", next: "Point the detector →", canNext: () => state.tapeDone, html: () => `
     <div class="grid2">
       <div><div class="an-head"><span class="kicker">Marina's video · November 2 · hallway camera</span><b id="anStatus">Analyzing the video Marina sent…</b></div>${tapeHTML(true)}</div>
-      <div>${scopeHTML("scopeTape", "PULSE-O-SCOPE · WHOLE FRAME")}
+      <div>${scopeHTML("scopeTape", "GHOST DETECTOR · WHOLE FRAME")}
         <div class="card" style="margin-top:16px" id="tapeNotes">${say("bigotes", "I'll watch her pulse. Ghosts don't have one, people do.")}</div></div>
     </div>`,
     async enter(el) {
@@ -499,11 +499,11 @@ const SCREENS = [
       $("#tapeNotes", el).insertAdjacentHTML("beforeend", L(`<p class="cliff" style="padding:10px 0"><span class="line" style="font-size:34px">Who is the <em>second face</em>?</span></p>`));
     } },
 
-  { id: "point", chapter: "Point the scope", next: "Open the evidence →", canNext: () => state.flat, html: () => `
+  { id: "point", chapter: "Point the detector", next: "Open the evidence →", canNext: () => state.flat, html: () => `
     <div class="grid2">
-      <div><div class="an-head"><span class="kicker">Marina's video · one spot</span><b>Reading the second face on its own</b></div>${tapeHTML()}${state.mode === "replay" ? "" : `<p class="muted">Click the spot you want the scope to read, then press the button.</p>`}</div>
-      <div>${scopeHTML("scopePoint", "PULSE-O-SCOPE · ONE SPOT")}
-        <div class="card" style="margin-top:16px" id="pointNotes">${say("xochi", "The scope needs a face to find a heartbeat. Let it work.")}
+      <div><div class="an-head"><span class="kicker">Marina's video · one spot</span><b>Reading the second face on its own</b></div>${tapeHTML()}${state.mode === "replay" ? "" : `<p class="muted">Click the spot you want the detector to read, then press the button.</p>`}</div>
+      <div>${scopeHTML("scopePoint", "GHOST DETECTOR · ONE SPOT")}
+        <div class="card" style="margin-top:16px" id="pointNotes">${say("xochi", "The detector needs a face to find a heartbeat. Let it work.")}
           ${state.mode === "replay" ? `<div class="scanstat"><div class="msg" id="scanMsg"></div><div class="bar"><div class="fill" id="scanFill"></div></div></div>` : `<button class="btn-main mint" id="scanBtn">Read this spot</button>`}</div></div>
     </div>`,
     enter(el) {
@@ -515,7 +515,7 @@ const SCREENS = [
       const tape = $("#tape", el), ov = $("#tape .overlay", el);
       const box = document.createElement("div"); box.className = "scanbox";
       const place = () => Object.assign(box.style, { left: R.x * 100 + "%", top: R.y * 100 + "%", width: R.w * 100 + "%", height: R.h * 100 + "%" });
-      box.innerHTML = `<span class="tag">scope target</span>`; place(); ov.append(box);
+      box.innerHTML = `<span class="tag">detector target</span>`; place(); ov.append(box);
       tape.addEventListener("click", (e) => {
         const b = tape.getBoundingClientRect();
         R.x = Math.min(1 - R.w, Math.max(0, (e.clientX - b.left) / b.width - R.w / 2));
@@ -549,9 +549,9 @@ const SCREENS = [
           heartBadge(ov, { x: R.x + R.w / 2, y: R.y + R.h + 0.2, dead: true });
           $("#scopePoint [data-bpm]", el).textContent = "0"; $("#scopePoint [data-state]", el).textContent = "NO PULSE";
           $("#pointNotes", el).innerHTML = `<div class="cliff" style="padding:0"><div class="line" style="font-size:40px">A face.<br><em>0 beats per minute.</em></div>
-            <p class="sub">The scope watched it for ${Math.round(verdict.t1 - verdict.t0)} seconds. It never breathed.</p></div>`;
+            <p class="sub">The detector watched it for ${Math.round(verdict.t1 - verdict.t0)} seconds. It never breathed.</p></div>`;
         } else {
-          $("#pointNotes", el).innerHTML = say("bigotes", verdict ? `The scope says: ${KIND[verdict.kind].name.toLowerCase()}.` : "Too short to say anything. Try a spot with a face.");
+          $("#pointNotes", el).innerHTML = say("bigotes", verdict ? `The detector says: ${KIND[verdict.kind].name.toLowerCase()}.` : "Too short to say anything. Try a spot with a face.");
         }
         state.flat = true; updateNav();
       });
@@ -602,7 +602,7 @@ const SCREENS = [
     ${sp ? `<div class="card spirit-card"><div class="kicker">${sp.archetype} · cites ${sp.cites.join(", ")}</div>
       <h2 style="margin:2px 0">${sp.name}</h2><p style="margin:0">${sp.story} <i class="muted">Its goal: ${sp.goal}.</i></p>
       <div class="kinds"><span>Kinds of spirit:</span>${SPIRIT_KINDS.map((k) => `<i class="${k === sp.archetype ? "on" : ""}">${k}</i>`).join("")}</div></div>` : ""}
-    <div class="grid2" style="margin-top:18px;grid-template-columns:2fr 1fr">
+    <div class="grid2 board-grid">
       <div class="seance-stage">
         <div class="crew-top">${seat("luna", "Luna")}<span>Luna reads the glass</span></div>
         <div class="crew-left">${seat("bigotes", "Dr. Bigotes")}<i class="candle"></i><span>Dr. Bigotes checks the evidence</span></div>
@@ -658,14 +658,14 @@ const SCREENS = [
   { id: "room", chapter: "The Room", next: "Main menu →", to: "menu", html: () => `
     <div class="grid2">
       <div class="card dark">
-        <div class="kicker">Case 03 · The Room · your camera, live</div><h2>Now the scope reads you</h2>
-        <p>Turn your camera on and sit still. The Pulse-o-Scope finds your pulse and your breath, the same way it read Marina. Then ask the room's spirit a question and <b>stay still while the glass stops</b>.</p>
+        <div class="kicker">Case 03 · The Room · your camera, live</div><h2>Now the detector reads you</h2>
+        <p>Turn your camera on and sit still. The Ghost Detector finds your pulse and your breath, the same way it read Marina. Then ask the room's spirit a question and <b>stay still while the glass stops</b>.</p>
         <p class="muted">If your pulse jumps right after the glass stops, the game will notice. That is the only trick: it is your own heartbeat.</p>
         <div class="row"><button class="btn-main mint" id="roomOn">Turn my camera on</button><button class="btn-soft" id="roomAsk" disabled>Is someone here?</button></div>
         <div class="scanstat" id="liveStat" style="margin-top:14px" hidden><div class="msg" id="liveMsg"></div><div class="bar"><div class="fill"></div></div></div>
-        <div id="roomNotes" style="margin-top:12px">${say("xochi", "I will write down what the scope sees. Nothing else.")}</div>
+        <div id="roomNotes" style="margin-top:12px">${say("xochi", "I will write down what the detector sees. Nothing else.")}</div>
       </div>
-      <div>${scopeHTML("scopeRoom", "PULSE-O-SCOPE · YOU, LIVE")}
+      <div>${scopeHTML("scopeRoom", "GHOST DETECTOR · YOU, LIVE")}
         <div class="tape" style="margin-top:12px;aspect-ratio:16/9"><video id="me" playsinline muted style="width:100%;height:100%;object-fit:contain;filter:blur(11px) brightness(1.35) saturate(.85)"></video>
           <img id="mePh" src="img/wisp.svg" alt="" style="position:absolute;left:50%;top:50%;width:90px;transform:translate(-50%,-50%);opacity:.5">
           <div class="overlay" id="meOv"><div class="rec"><i></i>YOU · LIVE</div><div class="privacy">your face is blurred</div></div></div>
@@ -737,7 +737,7 @@ const SCREENS = [
       <img src="img/wisp.svg" alt="" style="width:120px">
       <div class="line">Your tape is read.</div>
       <div class="line"><em>Was it a spirit?</em></div>
-      <p class="sub">The scope only knows what it measured. The rest is yours.</p>
+      <p class="sub">The detector only knows what it measured. The rest is yours.</p>
     </div>` : `
     <div class="cliff">
       <img src="img/wisp.svg" alt="" style="width:120px">
@@ -755,7 +755,7 @@ SCREENS.push({ id: "menu", chapter: "Main menu", next: "Start with the 30 nights
       <div class="kicker" style="text-align:center;color:var(--gold);letter-spacing:5px">MAIN MENU</div>
       <h2 style="text-align:center;margin:4px 0 16px">Where do you want to start?</h2>
       <div class="menu-grid">
-        ${[["calendar", "img/heart.svg", "The 30 nights", "Marina's camera, night by night. Click a night and the scope analyzes it.", "Pulse · faces in frame"],
+        ${[["calendar", "img/heart.svg", "The 30 nights", "Marina's camera, night by night. Click a night and the detector analyzes it.", "Pulse · faces in frame"],
            ["case", "img/heart-still.svg", "Marina's video", "The night of November 2. The video she sent us, analyzed, then the board.", "Pulse · two faces · held breath · one spot"],
            ["room", "img/wisp.svg", "The Room", "Your own camera, live. It reads your heart, your breath and your blinks.", "Live pulse · breathing · blinking · expression"],
            ["dare", "img/stalker.svg", "Bring your own video", "Do you dare? Everyone in it has to agree first.", "The same reading, on your tape"],
@@ -861,7 +861,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
     const skip = async () => { await cameraOff(); state.noCam = true; goTo(SCREENS[state.i].id === "board" ? "board" : "menu"); };
     const slow = setTimeout(() => { if (found || !document.body.contains(el)) return; say_("More light on your face helps a lot. You can keep waiting or go on without the camera.", true); nextUp([{ label: "↻ Try again", do: retry }, { label: "Continue without a camera →", do: skip }], "Taking longer than usual."); }, 40000);
     state.live = await presage.live({
-      onStream: (s, name) => { const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); } if (name) toast(`Using camera: ${name}`, 3500); say_("Camera on. Sit still and look at the screen: the scope is finding your pulse, usually 15 to 20 seconds.", true); },
+      onStream: (s, name) => { const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); } if (name) toast(`Using camera: ${name}`, 3500); say_("Camera on. Sit still and look at the screen: the detector is finding your pulse, usually 15 to 20 seconds.", true); },
       onSample: ({ pulse, talking, breathing, blinks, expression }) => {
         chips({ breathing, blinks, expression });
         state.talking = talking; $("#talkFlag") && ($("#talkFlag").textContent = talking ? "you're talking · the glass waits" : "");
@@ -886,7 +886,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
         const st = document.querySelector(`${state.view.sel} [data-state]`); if (st) st.textContent = "ERROR";
         clearTimeout(slow); state.view.scope.idle();
         say_("Presage could not read you this time. Face a window or a lamp, get a little closer, and try again.");
-        nextUp([{ label: "↻ Try again", main: true, do: retry }, { label: "Continue without a camera →", do: skip }], "The scope could not read you.");
+        nextUp([{ label: "↻ Try again", main: true, do: retry }, { label: "Continue without a camera →", do: skip }], "The detector could not read you.");
         toast(`Presage error ${code}: ${message}`, 8000);
       },
     });
@@ -939,6 +939,26 @@ function updateNav() {
   }).join("");
   $("#chapters").querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => goTo(b.dataset.id)));
 }
+/** The zoom fitScreen gave the current screen: page coordinates are divided by it before being used as lengths inside the screen. */
+const screenZoom = (node) => parseFloat(node.closest(".screen")?.style.zoom) || 1;
+
+/** No scrollbars: a screen taller or wider than the window is scaled down until all of it fits. `again` starts over from full size. */
+function fitScreen(again) {
+  const s = document.querySelector("#stage .screen"); if (!s) return;
+  if (again) s.style.zoom = "";
+  for (let i = 0; i < 5; i++) {
+    const r = Math.min(s.clientHeight / s.scrollHeight, s.clientWidth / s.scrollWidth);
+    if (r >= 0.995) break;
+    s.style.zoom = Math.max(0.5, (parseFloat(s.style.zoom) || 1) * r * 0.995).toFixed(3);
+  }
+}
+let fitFrame = 0, fitAgain = false;
+function scheduleFit(again) {
+  fitAgain ||= again;
+  if (!fitFrame) fitFrame = requestAnimationFrame(() => { fitFrame = 0; const a = fitAgain; fitAgain = false; fitScreen(a); });
+}
+const fitWatch = new ResizeObserver(() => scheduleFit(true));
+
 function go(i, isBack) {
   if (i < 0 || i >= SCREENS.length) i = 0;
   if (!isBack && state.started && i !== state.i) state.hist.push(state.i);
@@ -952,6 +972,7 @@ function go(i, isBack) {
   stage.append(sec);
   updateNav();
   SCREENS[i].enter?.(sec);
+  fitScreen(true); fitWatch.disconnect(); fitWatch.observe(sec);
   if (!$("#hood").hidden) $("#hood").innerHTML = hoodHTML(SCREENS[i].id);
 }
 
@@ -964,6 +985,10 @@ async function boot() {
   $("#mode").textContent = state.liveSdk ? "SAMPLE TAPE · LIVE CAMERA" : "SAMPLE DATA";
   $("#camPill").addEventListener("click", cameraOff);
   voice.watch($("#stage"));
+  addEventListener("resize", () => scheduleFit(true));
+  document.fonts?.ready.then(() => scheduleFit(true));
+  $("#stage").addEventListener("load", () => scheduleFit(false), true);                                 // images arriving late
+  new MutationObserver(() => scheduleFit(false)).observe($("#stage"), { subtree: true, childList: true, characterData: true }); // answers and results added to a screen
   // Portuguese: anything written on the page after the screen is built (labels, statuses, toasts) goes through the same dictionary
   const translate = (root) => { if (getLang() !== "pt") return; const w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT); for (let n = root.nodeType === 3 ? root : w.nextNode(); n; n = root.nodeType === 3 ? null : w.nextNode()) { const v = Lx(n.nodeValue); if (v !== n.nodeValue) n.nodeValue = v; } };
   new MutationObserver((rec) => { for (const r of rec) { if (r.type === "characterData") translate(r.target); else r.addedNodes.forEach(translate); } }).observe(document.body, { subtree: true, childList: true, characterData: true });

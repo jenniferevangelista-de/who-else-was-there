@@ -2,7 +2,7 @@
 // Pure functions: no SDK, no DOM, no clock. Every card says what was measured and by whom.
 //
 // A "scan" is one pass of the SDK over a recording (the whole frame) or over a region of it
-// (where the Pulse-o-Scope was pointed). Each scan carries plain samples:
+// (where the Ghost Detector was pointed). Each scan carries plain samples:
 //   pulse:       [{ t, v, conf }]      beats per minute, SmartSpectra confidence 0..100
 //   breathing:   [{ t, v, conf }]      breaths per minute
 //   trace:       [{ t, v }]            live chest movement (breathing.upperTrace)

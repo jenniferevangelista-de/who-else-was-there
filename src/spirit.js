@@ -46,8 +46,8 @@ export function answer(qid, ev) {
       bigotes: `The SDK found no face in that spot. A coat, a curtain, a shadow.`,
     },
     why: (held || jump) && {
-      board: "DONT GO", cites: [held?.id, jump?.id].filter(Boolean),
-      luna: held ? `She held her breath at second ${sec(held.t0)}. She felt it, she never saw it. It was telling her: don't go.` : `Her pulse jumped. That is when it reached her.`,
+      board: "DANGER", cites: [held?.id, jump?.id].filter(Boolean),
+      luna: held ? `She held her breath at second ${sec(held.t0)}. She saw nothing, but something stopped her at that door. The spirit wanted to protect her from the danger that was coming.` : `Her pulse jumped at the door. The spirit wanted to protect her from the danger that was coming.`,
       bigotes: jump ? `Her pulse rose ${Math.round(jump.value)} bpm in a few seconds. A startle does that. So does a flickering lamp. A bad feeling is not a ghost.` : `Holding your breath is what people do when they listen.`,
     },
     bye: { board: "GOODBYE", cites: ev.slice(0, 1).map((e) => e.id), luna: `It said goodbye.`, bigotes: `Session closed.` },

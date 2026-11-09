@@ -72,7 +72,7 @@ export function buildReport(scan, { stats = null, simulated = false, glassAt = n
     talkingSamples: talking.length, talkingPct: talking.length ? Math.round((100 * talking.filter((k) => k.on).length) / talking.length) : null,
     expressions, checks, checksTotal: scan.validation?.length ?? 0,
     readyPct: checks.find((c) => c.code === 0)?.pct ?? null,
-    sdkResponses: stats?.metrics ?? null, sdkErrors: stats?.errors?.length ?? null,
+    sdkResponses: stats?.metrics ?? scan.responses ?? null, sdkErrors: stats?.errors?.length ?? null,
     spirit: spiritResult(pulse, checks),
     timeline,
   };

@@ -45,6 +45,7 @@ function collector(sdk, clock, { onMetrics, onValidation } = {}) {
       if (!scan.trace.length || t > scan.trace[scan.trace.length - 1].t) scan.trace.push({ t, v: p.value });
     }
     scan.t1 = tNow;
+    scan.responses = (scan.responses ?? 0) + 1;
     onMetrics?.();
   });
   return scan;

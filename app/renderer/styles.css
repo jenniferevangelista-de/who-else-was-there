@@ -426,7 +426,9 @@ body.flash::after { content: ""; position: fixed; inset: 0; background: #fff; op
 .proof-cat h2 { font-size: 34px; margin: 0; color: var(--mint); }
 .proof-cat p { margin: 2px 0 8px; font-size: 15px; }
 .proof-count { display: grid; grid-template-columns: repeat(4, 1fr) 2.4fr; gap: 10px; align-items: center; background: #ffffff0c; border: 1px solid #e8c27a33; border-radius: 14px; padding: 8px 12px; }
-.proof-status p { margin: 2px 0 6px; font-size: 14px; }
+.proof-tag { display: inline-block; font-size: 12px; font-weight: 800; letter-spacing: 1px; color: var(--gold); border: 1px solid currentColor; border-radius: 999px; padding: 3px 10px; }
+.proof-tag.real { color: var(--mint); }
+.proof-status p { margin: 6px 0; font-size: 14px; }
 .proof-status .btn-soft { padding: 4px 14px; font-size: 14px; }
 .proof .tbl { font-size: 13.5px; }
 .proof .tbl td, .proof .tbl th { padding: 4px 6px; }

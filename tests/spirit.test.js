@@ -16,6 +16,7 @@ test("every question gets an answer that cites existing evidence", () => {
 });
 test("are you alive: NO when a face had no pulse", () => {
   assert.equal(answer("alive", ev).board, "NO");
+  assert.equal(answer("why", ev).board, "DANGER");
 });
 test("only a shadow: the spirit says it has no face", () => {
   const e2 = buildEvidence({ full: livingScan({ ghostFrom: 999 }), regions: [shadowScan()] });

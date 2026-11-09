@@ -79,6 +79,8 @@ function nextUp(options, title = "What now?") {
 function clearNext() { const b = $("#whatNow"); b.hidden = true; b.innerHTML = ""; document.body.classList.remove("has-next"); }
 const targetOf = (s) => (typeof s.to === "function" ? s.to() : s.to);
 const forward = () => { const s = SCREENS[state.i]; if (s.act) return s.act(); if (s.id === "consent") state.consent = true; const t = targetOf(s); if (t) goTo(t); else go(state.i + 1); };
+const SAMPLE_BLINKS = 16;
+const openProof = (from) => { state.proofFrom = from; goTo("tested"); };
 function goTo(id) {
   if (id === "room" && !state.consent) { state.afterConsent = id; id = "consent"; }   // the rules come before any camera
   go(SCREENS.findIndex((s) => s.id === id));
@@ -652,8 +654,8 @@ const SCREENS = [
       nextUp([{ label: "Say goodbye to the spirit", do: state.sayGoodbye }], "Pick a question, or");
     } },
 
-  { id: "dossier", chapter: "Xochi's dossier", next: "Main menu →", to: "menu",
-    enter(el) { $("#dl", el)?.addEventListener("click", downloadDossier); nextUp([{ label: "Main menu →", main: true, do: forward }]); }, html: () => `
+  { id: "dossier", chapter: "Xochi's dossier", next: "Proof and tests →", act: () => openProof("marina"),
+    enter(el) { $("#dl", el)?.addEventListener("click", downloadDossier); nextUp([{ label: "Proof and tests →", main: true, do: () => openProof("marina") }, { label: "Main menu", do: () => goTo("menu") }]); }, html: () => `
     <div class="card">
       <div class="kicker">Xochi's dossier · ${state.ownTape ? "Your tape" : "Case 01 · The Door"}</div><h2>What we know, and what we don't</h2>
       ${reading(state.evidence).map((l) => say(l.who, l.text, l.cites)).join("")}
@@ -712,14 +714,14 @@ const SCREENS = [
       });
     } },
 
-  { id: "report", chapter: "Your report", next: "Main menu →", to: "menu",
+  { id: "report", chapter: "Your report", next: "Proof and tests →", act: () => openProof("report"),
     html: () => state.report ? reportHTML(state.report, getLang()) : `<div class="cliff"><div class="line">No report yet</div><p class="sub">Enter the Room, turn your camera on and wait for your heartbeat.</p></div>`,
     enter(el) {
       if (!state.report) return nextUp([{ label: "Enter the Room →", main: true, do: () => goTo("room") }]);
       bindReport(el, () => scheduleFit(true));
       nextUp(state.report.source === "video"
-        ? [{ label: "Main menu", main: true, do: () => goTo("menu") }, { label: "Save report", do: () => saveReport(el) }]
-        : [{ label: "Save report", main: true, do: () => saveReport(el) }, { label: "Back to the Room", do: () => goTo("room") }, { label: "Main menu", do: () => goTo("menu") }]);
+        ? [{ label: "Proof and tests →", main: true, do: () => openProof("report") }, { label: "Main menu", do: () => goTo("menu") }, { label: "Save report", do: () => saveReport(el) }]
+        : [{ label: "Proof and tests →", main: true, do: () => openProof("report") }, { label: "Save report", do: () => saveReport(el) }, { label: "Back to the Room", do: () => goTo("room") }, { label: "Main menu", do: () => goTo("menu") }]);
     } },
 
   { id: "tested", chapter: "Proof and tests", next: "Main menu →", to: "menu", enter(el) { nextUp([{ label: "Main menu →", main: true, do: () => goTo("menu") }]); bindProof(el); }, html: () => {
@@ -754,7 +756,7 @@ const SCREENS = [
       ${say("bigotes", "A held breath right at the 3-second line is noticed only some of the time. Below it, never. I would rather miss a gasp than invent one.")}
     </div></div>`; } },
 
-  { id: "end", chapter: "Case closed", next: "Main menu →", to: "menu", enter() { if (!state.ownTape) sound.beep(70, 260, 0.1); nextUp([{ label: "Try it yourself →", main: true, do: () => goTo("dare") }, { label: "Read Xochi's dossier", do: () => goTo("dossier") }, { label: "Main menu", do: () => goTo("menu") }]); }, html: () => state.ownTape ? `
+  { id: "end", chapter: "Case closed", next: "Proof and tests →", act: () => openProof("marina"), enter() { if (!state.ownTape) sound.beep(70, 260, 0.1); nextUp([{ label: "Try it yourself →", main: true, do: () => goTo("dare") }, { label: "Proof and tests →", do: () => openProof("marina") }, { label: "Read Xochi's dossier", do: () => goTo("dossier") }, { label: "Main menu", do: () => goTo("menu") }]); }, html: () => state.ownTape ? `
     <div class="cliff">
       <img src="img/wisp.svg" alt="" style="width:120px">
       <div class="line">Your tape is read.</div>
@@ -1028,7 +1030,7 @@ function proofHTML() {
     <div class="proof-count">
       <div class="stat"><b id="pcMetrics">0</b><span>SDK responses</span></div><div class="stat"><b id="pcPulse">0</b><span>pulse readings</span></div>
       <div class="stat"><b id="pcBreath">0</b><span>breathing readings</span></div><div class="stat"><b id="pcBlinks">0</b><span>blinks seen</span></div>
-      <div class="proof-status"><span class="kicker">Counted live, in this session</span><p id="pcStatus"></p><button class="btn-soft" id="pcRoom">Enter the Room →</button></div>
+      <div class="proof-status"><span class="proof-tag" id="pcTag"></span><p id="pcStatus"></p><button class="btn-soft" id="pcRoom">Enter the Room →</button></div>
     </div>
     <div class="grid2" style="grid-template-columns:1.1fr 1fr;margin-top:12px">
       <div><table class="tbl"><thead><tr><th>Signal</th><th>Presage field</th><th>What it does here</th></tr></thead><tbody>
@@ -1037,6 +1039,18 @@ function proofHTML() {
       <table class="tbl"><thead><tr><th>What the challenge asks</th><th>In this app</th></tr></thead><tbody>
         ${asks.map(([a, b]) => `<tr><td><b>${a}</b></td><td>${b}</td></tr>`).join("")}</tbody></table>
     </div></div>`;
+}
+
+/** Marina is fiction, so her journey shows sample numbers. The visitor's own camera or video shows what the SDK really returned. */
+function proofNumbers() {
+  const c = window.__presageStats, r = state.report;
+  if (state.proofFrom !== "marina" || state.mode !== "replay") {
+    if (state.live && c) return { real: true, source: "camera", ...c };
+    if (r && !r.simulated) return { real: true, source: r.source, metrics: r.sdkResponses, pulse: r.pulse.readings, breathing: r.breathing.readings, blinks: r.blinks };
+    if (state.liveSdk && c?.metrics) return { real: true, source: "camera", ...c };
+  }
+  const full = sampleScans().full;
+  return { real: false, source: "sample", metrics: full.trace.length, pulse: full.pulse.length, breathing: full.breathing.length, blinks: SAMPLE_BLINKS };
 }
 
 function bindProof(el) {
@@ -1048,10 +1062,15 @@ function bindProof(el) {
   $("#pcRoom", el).addEventListener("click", () => goTo("room"));
   let shown = null;
   const paint = () => {
-    const c = window.__presageStats, n = (k) => (c?.[k] ?? 0).toLocaleString(getLang() === "pt" ? "pt-BR" : "en-US");
+    const c = proofNumbers(), n = (k) => (c[k] ?? 0).toLocaleString(getLang() === "pt" ? "pt-BR" : "en-US");
     [["#pcMetrics", "metrics"], ["#pcPulse", "pulse"], ["#pcBreath", "breathing"], ["#pcBlinks", "blinks"]].forEach(([id, k]) => { $(id, el).textContent = n(k); });
-    const text = !state.liveSdk ? "This copy has no Presage key, so nothing is counted here." : !c ? "No camera session yet. Enter the Room and turn the camera on: these numbers come straight from the SDK." : c.pulse ? "Presage returned your pulse in this session." : "Presage is answering. Waiting for the first pulse reading.";
-    if (text !== shown) { shown = text; $("#pcStatus", el).textContent = text; }
+    const text = !c.real ? (state.liveSdk ? "Marina is a character, so these are sample numbers. Your own camera or video shows real ones here." : "This copy has no Presage key, so these are sample numbers.") : c.source === "video" ? "Presage SmartSpectra returned these numbers from your video." : c.pulse ? "Presage SmartSpectra returned these numbers from your camera." : "Presage is answering. Waiting for the first pulse reading.";
+    if (text !== shown) {
+      shown = text; $("#pcStatus", el).textContent = text;
+      const tag = $("#pcTag", el); tag.classList.toggle("real", c.real);
+      tag.textContent = !c.real ? (state.proofFrom === "report" ? "SAMPLE NUMBERS · NO PRESAGE KEY" : "SAMPLE NUMBERS · MARINA'S CASE") : c.source === "video" ? "REAL READING · YOUR VIDEO" : "REAL READING · YOUR CAMERA";
+      $("#pcRoom", el).hidden = c.real;
+    }
   };
   paint();
   const tick = setInterval(() => { if (!document.body.contains(el)) return clearInterval(tick); paint(); }, 1000);
@@ -1085,6 +1104,9 @@ function go(i, isBack) {
   document.body.classList.remove("closing", "redflash");
   music.stop(SCREENS[i].id !== "board");
   if (i >= SCREENS.findIndex((x) => x.id === "locker") && !state.evidence.length) state.evidence = buildEvidence(sampleScans());
+  if (SCREENS[i].id !== "tested") state.proofFrom = null;
+  // the "sample" badge only stays up where the numbers on screen are samples
+  $("#mode").hidden = state.mode !== "replay" || !!state.ownTape || (SCREENS[i].id === "report" && !!state.report && !state.report.simulated) || (SCREENS[i].id === "tested" && proofNumbers().real) || (SCREENS[i].id === "room" && state.liveSdk);
   state.seen.add(state.i); state.i = i; voice.clear(); clearNext(); state.playToken = (state.playToken ?? 0) + 1;
   const stage = $("#stage"); stage.innerHTML = "";
   const sec = document.createElement("section"); sec.className = "screen on"; sec.innerHTML = L(SCREENS[i].html());

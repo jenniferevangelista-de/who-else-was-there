@@ -416,3 +416,19 @@ body.flash::after { content: ""; position: fixed; inset: 0; background: #fff; op
 .board-grid .hush { margin: 4px 0; }
 .board-grid .say { margin: 6px 0; gap: 10px; }
 .board-grid .say img { width: 46px; height: 50px; }
+
+/* Proof and tests */
+.tabs { display: flex; gap: 8px; justify-content: center; margin-bottom: 10px; }
+.tab { border: 1px solid #e8c27a66; background: transparent; color: var(--cream); border-radius: 999px; padding: 7px 18px; font-weight: 600; cursor: pointer; }
+.tab.on { background: linear-gradient(180deg, #ffb3cf, var(--pink)); color: #2a1840; border-color: transparent; }
+[data-pane][hidden] { display: none; }
+.proof { padding: 16px 22px; }
+.proof-cat h2 { font-size: 34px; margin: 0; color: var(--mint); }
+.proof-cat p { margin: 2px 0 8px; font-size: 15px; }
+.proof-count { display: grid; grid-template-columns: repeat(4, 1fr) 2.4fr; gap: 10px; align-items: center; background: #ffffff0c; border: 1px solid #e8c27a33; border-radius: 14px; padding: 8px 12px; }
+.proof-status p { margin: 2px 0 6px; font-size: 14px; }
+.proof-status .btn-soft { padding: 4px 14px; font-size: 14px; }
+.proof .tbl { font-size: 13.5px; }
+.proof .tbl td, .proof .tbl th { padding: 4px 6px; }
+.proof code { font: 12.5px Consolas, ui-monospace, monospace; color: var(--blush); }
+.proof-code { font-size: 13px; margin: 8px 0 0; color: #cdbbe0; }

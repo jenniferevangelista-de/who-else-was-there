@@ -701,12 +701,14 @@ const SCREENS = [
       });
     } },
 
-  { id: "tested", chapter: "How it was tested", next: "Main menu →", to: "menu", enter() { nextUp([{ label: "Main menu →", main: true, do: () => goTo("menu") }]); }, html: () => {
+  { id: "tested", chapter: "Proof and tests", next: "Main menu →", to: "menu", enter(el) { nextUp([{ label: "Main menu →", main: true, do: () => goTo("menu") }]); bindProof(el); }, html: () => {
     const P = MEASURED.planted, R = MEASURED.receipts;
     const pct = (a, b) => Math.round((100 * a) / b) + "%";
     const faceRows = [["living", "A living face, good light"], ["still", "A still face (photo, mask)"], ["shadow", "No face at all"], ["dim_living", "A living face, too dark"], ["dim_still", "A still face, too dark"]];
     return `
-    <div class="card dark">
+    <div class="tabs" role="tablist"><button class="tab on" data-tab="proof" role="tab">Presage SmartSpectra proof</button><button class="tab" data-tab="tests" role="tab">Tests of our logic</button></div>
+    <div data-pane="proof">${proofHTML()}</div>
+    <div data-pane="tests" hidden><div class="card dark">
       <div class="kicker">How it was tested · Dr. Bigotes insisted</div><h2>Planted ghosts</h2>
       <p class="muted" style="margin-top:0">${P.what}</p>
       <div style="display:grid;grid-template-columns:repeat(4,1fr);gap:12px;margin:16px 0">
@@ -715,21 +717,21 @@ const SCREENS = [
         <div class="stat"><b>${R.frames_saved}</b><span>frames saved</span></div>
         <div class="stat"><b>${R.language_model_calls}</b><span>language model calls</span></div>
       </div>
-      <div class="grid2" style="grid-template-columns:1.2fr 1fr">
+      <div class="grid2" style="grid-template-columns:1.25fr 1fr 1fr">
         <table class="tbl"><thead><tr><th>Planted scan</th><th>Should read</th><th>Read right</th></tr></thead><tbody>
           ${faceRows.map(([k, label]) => `<tr><td>${label}</td><td>${P.faces[k].expected.replace("_", " ")}</td><td><b>${P.faces[k].correct} / ${P.faces[k].runs}</b></td></tr>`).join("")}
         </tbody></table>
-        <div>
+        <div style="display:contents">
           <table class="tbl"><thead><tr><th>Breath held for</th><th>Noticed</th></tr></thead><tbody>
             ${Object.entries(P.held_breath).map(([k, v]) => `<tr><td>${k}</td><td>${pct(v.detected, v.runs)}${v.should_detect ? "" : " <span class='muted'>(should stay quiet)</span>"}</td></tr>`).join("")}
           </tbody></table>
-          <table class="tbl" style="margin-top:12px"><thead><tr><th>Pulse rise in 6 s</th><th>Noticed</th></tr></thead><tbody>
+          <table class="tbl"><thead><tr><th>Pulse rise in 6 s</th><th>Noticed</th></tr></thead><tbody>
             ${Object.entries(P.pulse_jump).map(([k, v]) => `<tr><td>${k}</td><td>${pct(v.detected, v.runs)}${v.should_detect ? "" : " <span class='muted'>(should stay quiet)</span>"}</td></tr>`).join("")}
           </tbody></table>
         </div>
       </div>
       ${say("bigotes", "A held breath right at the 3-second line is noticed only some of the time. Below it, never. I would rather miss a gasp than invent one.")}
-    </div>`; } },
+    </div></div>`; } },
 
   { id: "end", chapter: "Case open", next: "Main menu →", to: "menu", enter() { nextUp([{ label: "Try it yourself →", main: true, do: () => goTo("dare") }, { label: "Enter the Room →", do: () => goTo("room") }, { label: "Main menu", do: () => goTo("menu") }]); }, html: () => state.ownTape ? `
     <div class="cliff">
@@ -758,7 +760,7 @@ SCREENS.push({ id: "menu", chapter: "Main menu", next: "Start with the 30 nights
            ["case", "img/heart-still.svg", "Marina's video", "The night of November 2. The video she sent us, analyzed, then the board.", "Pulse · two faces · held breath · one spot"],
            ["room", "img/wisp.svg", "The Room", "Your own camera, live. It reads your heart, your breath and your blinks.", "Live pulse · breathing · blinking · expression"],
            ["dare", "img/stalker.svg", "Bring your own video", "Do you dare? Everyone in it has to agree first.", "The same reading, on your tape"],
-           ["tested", "img/bigotes.svg", "How it was tested", "Planted ghosts, and the receipts Dr. Bigotes insisted on.", "Our logic, measured"]]
+           ["tested", "img/bigotes.svg", "Proof and tests", "Proof that this runs on Presage SmartSpectra, and the tests Dr. Bigotes insisted on.", "Live counters · our logic, measured"]]
           .map(([id, img, t, d, tag]) => `<button class="menu-card" data-go="${id}"><img src="${img}" alt=""><b>${t}</b><span>${d}</span><small>${tag}</small></button>`).join("")}
       </div>
     </div>` });
@@ -861,7 +863,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
     const slow = setTimeout(() => { if (found || !document.body.contains(el)) return; say_("More light on your face helps a lot. You can keep waiting or go on without the camera.", true); nextUp([{ label: "↻ Try again", do: retry }, { label: "Continue without a camera →", do: skip }], "Taking longer than usual."); }, 40000);
     state.live = await presage.live({
       onStream: (s, name) => { const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); } if (name) toast(`Using camera: ${name}`, 3500); say_("Camera on. Sit still and look at the screen: the detector is finding your pulse, usually 15 to 20 seconds.", true); },
-      onSample: ({ pulse, talking, breathing, blinks, expression }) => {
+      onSample: ({ pulse, weak, talking, breathing, blinks, expression }) => {
         chips({ breathing, blinks, expression });
         state.talking = talking; $("#talkFlag") && ($("#talkFlag").textContent = talking ? "you're talking · the glass waits" : "");
         const { scope: sc, sel: at } = state.view;
@@ -870,7 +872,8 @@ async function startLive(el, scope, sel = "#scopeMe") {
           if (SCREENS[state.i].id === "room") nextUp([{ label: "Is someone here?", main: true, do: () => $("#roomAsk")?.click() }, { label: "Main menu", do: () => goTo("menu") }], "It has your heartbeat. Next:");
         }
         if (pulse) { sc.set(pulse); const b = document.querySelector(`${at} [data-bpm]`); if (b) b.textContent = Math.round(pulse); }
-        const st = document.querySelector(`${at} [data-state]`); if (st) st.textContent = pulse ? "LIVE" : "WARMING UP";
+        const st = document.querySelector(`${at} [data-state]`); if (st) st.textContent = pulse ? "LIVE" : weak ? "WEAK SIGNAL" : "WARMING UP";
+        if (weak && !found) say_("Found you, but the signal is weak. Turn toward a light and hold still.", true);
       },
       onTrace: (trace) => {
         const recent = trace.slice(-60); if (recent.length < 5) return;
@@ -922,7 +925,7 @@ const SECTIONS = [
   { name: "Marina's video", ids: ["case", "tape", "point", "locker"] },
   { name: "The Séance", ids: ["board", "dossier", "end"] },
   { name: "Your turn", ids: ["dare", "consent", "room"] },
-  { name: "How it was tested", ids: ["tested"] },
+  { name: "Proof and tests", ids: ["tested"] },
 ];
 function updateNav() {
   const s = SCREENS[state.i];
@@ -938,6 +941,49 @@ function updateNav() {
   }).join("");
   $("#chapters").querySelectorAll(".chip").forEach((b) => b.addEventListener("click", () => goTo(b.dataset.id)));
 }
+/** The proof tab: what the challenge asks for, where it is in the code, and counters taken from the SDK in this session. */
+function proofHTML() {
+  const signals = [["Pulse", "cardio.pulseRate", "The heart and the detector, at your real bpm"], ["Breathing rate", "breathing.rate", "Your breaths per minute in the Room"],
+    ["Chest movement", "breathing.upperTrace", "Your exhale moves the glass"], ["Talking", "face.talking", "The glass waits while you speak"],
+    ["Blinks", "face.blinking", "The figure moves only when you blink"], ["Facial expression", "face.expression", "Becomes an evidence card"], ["Face checks", "validationStatus", "Light, distance and a second face in the frame"]];
+  const asks = [["Live signal", "Pulse, breathing and expressions from your own camera, in the Room."], ["Camera consent", "A rules screen first. The camera starts only when you press the button, video only, and one click turns it off."],
+    ["Storage and deletion", "No frames or video are saved. Readings stay in memory and vanish when the app closes."], ["Sharing", "The app adds no server of its own. Frames go to the Presage SDK, which uses your key to reach Presage."],
+    ["SDK telemetry", "Off in the code (enableTelemetry: false)."], ["Optional AI service", "None. No language model is called."], ["Not medical", "A game. No diagnosis, treatment or health advice."], ["Never covert", "A pill on top shows when the camera is on, and other people's videos need their consent."]];
+  return `<div class="card dark proof">
+    <div class="kicker">Prize category we are entering</div>
+    <div class="proof-cat"><h2>Most Creative or Delightful Use</h2><p class="muted">The most original, playful, or unexpected use of SmartSpectra. Here, the discovery is a signal that is missing: a heartbeat that never comes. Your own breath moves the Ouija glass, and your blink moves the ghost.</p></div>
+    <div class="proof-count">
+      <div class="stat"><b id="pcMetrics">0</b><span>SDK responses</span></div><div class="stat"><b id="pcPulse">0</b><span>pulse readings</span></div>
+      <div class="stat"><b id="pcBreath">0</b><span>breathing readings</span></div><div class="stat"><b id="pcBlinks">0</b><span>blinks seen</span></div>
+      <div class="proof-status"><span class="kicker">Counted live, in this session</span><p id="pcStatus"></p><button class="btn-soft" id="pcRoom">Enter the Room →</button></div>
+    </div>
+    <div class="grid2" style="grid-template-columns:1.1fr 1fr;margin-top:12px">
+      <div><table class="tbl"><thead><tr><th>Signal</th><th>Presage field</th><th>What it does here</th></tr></thead><tbody>
+        ${signals.map(([a, b, c]) => `<tr><td>${a}</td><td><code>${b}</code></td><td>${c}</td></tr>`).join("")}</tbody></table>
+        <p class="proof-code">SDK: <code>@smartspectra/node-sdk 3.4.0</code><br><span>Camera in:</span> <code>sdk.useMediaStream()</code><br><span>Readings out:</span> <code>decodeMetrics()</code><br><span>Where in the code:</span> <code>app/renderer/presage.js</code></p></div>
+      <table class="tbl"><thead><tr><th>What the challenge asks</th><th>In this app</th></tr></thead><tbody>
+        ${asks.map(([a, b]) => `<tr><td><b>${a}</b></td><td>${b}</td></tr>`).join("")}</tbody></table>
+    </div></div>`;
+}
+
+function bindProof(el) {
+  el.querySelectorAll(".tab").forEach((b) => b.addEventListener("click", () => {
+    el.querySelectorAll(".tab").forEach((x) => x.classList.toggle("on", x === b));
+    el.querySelectorAll("[data-pane]").forEach((p) => { p.hidden = p.dataset.pane !== b.dataset.tab; });
+    scheduleFit(true);
+  }));
+  $("#pcRoom", el).addEventListener("click", () => goTo("room"));
+  let shown = null;
+  const paint = () => {
+    const c = window.__presageStats, n = (k) => (c?.[k] ?? 0).toLocaleString(getLang() === "pt" ? "pt-BR" : "en-US");
+    [["#pcMetrics", "metrics"], ["#pcPulse", "pulse"], ["#pcBreath", "breathing"], ["#pcBlinks", "blinks"]].forEach(([id, k]) => { $(id, el).textContent = n(k); });
+    const text = !state.liveSdk ? "This copy has no Presage key, so nothing is counted here." : !c ? "No camera session yet. Enter the Room and turn the camera on: these numbers come straight from the SDK." : c.pulse ? "Presage returned your pulse in this session." : "Presage is answering. Waiting for the first pulse reading.";
+    if (text !== shown) { shown = text; $("#pcStatus", el).textContent = text; }
+  };
+  paint();
+  const tick = setInterval(() => { if (!document.body.contains(el)) return clearInterval(tick); paint(); }, 1000);
+}
+
 /** The zoom fitScreen gave the current screen: page coordinates are divided by it before being used as lengths inside the screen. */
 const screenZoom = (node) => parseFloat(node.closest(".screen")?.style.zoom) || 1;
 

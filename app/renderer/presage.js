@@ -12,11 +12,15 @@ const METRICS = [...breathingMetrics, MetricType?.PULSE_RATE ?? 15, MetricType?.
 async function makeSdk() {
   const apiKey = await window.pod?.key();
   if (!apiKey) throw new Error("No PRESAGE_API_KEY in this computer's environment.");
-  return new SmartSpectraSDK({ apiKey, requestedMetrics: METRICS, enableTelemetry: false, enableAccumulatedOutput: false, logLevel: 1 });
+  return new SmartSpectraSDK({ apiKey, requestedMetrics: METRICS, enableTelemetry: false, enableAccumulatedOutput: false });
 }
 
-/** Collect samples from an SDK into a scan, timing every reading with `clock()` seconds. */
-function collector(sdk, clock) {
+/**
+ * Collect samples from an SDK into a scan, timing every reading with `clock()` seconds.
+ * The SDK keeps one listener per event, so registering the same event again would silently replace this one:
+ * anything else that wants those events passes `onMetrics` / `onValidation` here.
+ */
+function collector(sdk, clock, { onMetrics, onValidation } = {}) {
   const scan = { t0: clock(), t1: clock(), pulse: [], breathing: [], trace: [], talking: [], validation: [], blinks: 0, expression: null };
   let blinkOn = false;
   let originUs = null, originT = null;
@@ -25,7 +29,7 @@ function collector(sdk, clock) {
     if (originUs === null) { originUs = us; originT = clock(); }
     return Math.round((originT + (us - originUs) / 1e6) * 100) / 100;
   };
-  sdk.on("validationStatus", (code, ts) => scan.validation.push({ t: at(ts), code }));
+  sdk.on("validationStatus", (code, ts, hint) => { scan.validation.push({ t: at(ts), code }); onValidation?.(code, hint); });
   sdk.on("metrics", (buf) => {
     const m = decodeMetrics(buf);
     if (!m || m instanceof Uint8Array) return;
@@ -41,6 +45,7 @@ function collector(sdk, clock) {
       if (!scan.trace.length || t > scan.trace[scan.trace.length - 1].t) scan.trace.push({ t, v: p.value });
     }
     scan.t1 = tNow;
+    onMetrics?.();
   });
   return scan;
 }
@@ -100,20 +105,25 @@ async function openCamera() {
 export async function live({ onStream, onSample, onTrace, onValidation, onStatus, onError } = {}) {
   const sdk = await makeSdk();
   const t0 = performance.now();
-  const scan = collector(sdk, () => (performance.now() - t0) / 1000);
+  let stats = null;
+  const scan = collector(sdk, () => (performance.now() - t0) / 1000, {
+    onValidation: (code, hint) => { stats.validation[code] = (stats.validation[code] ?? 0) + 1; onValidation?.(code, hint); },
+    onMetrics: () => {
+      const p = scan.pulse.at(-1), b = scan.breathing.at(-1), k = scan.talking.at(-1);
+      Object.assign(stats, { metrics: stats.metrics + 1, pulse: scan.pulse.length, lastPulse: p?.v ?? null, lastConf: p?.conf ?? null, maxConf: Math.max(stats.maxConf, p?.conf ?? 0), breathing: scan.breathing.length, lastBreath: b?.v ?? null, lastBreathConf: b?.conf ?? null, trace: scan.trace.length, blinks: scan.blinks });
+      onSample?.({ weak: !!p && p.conf < 50, pulse: p?.conf >= 50 ? p.v : null, breathing: b?.conf >= 50 ? b.v : null, talking: !!k?.on, blinks: scan.blinks, expression: scan.expression });
+      onTrace?.(scan.trace);
+    },
+  });
   const { stream, label } = await openCamera();
   const release = () => stream.getTracks().forEach((t) => t.stop());
+  // Numbers only, in memory: the session counters shown on the proof screen. Never saved.
+  stats = window.__presageStats = { blinks: 0, metrics: 0, pulse: 0, lastPulse: null, lastConf: null, maxConf: 0, breathing: 0, lastBreath: null, lastBreathConf: null, trace: 0, validation: {}, status: [], errors: [] };
   sdk.useMediaStream(stream);
   onStream?.(stream, label);
-  sdk.on("validationStatus", (code, ts, hint) => onValidation?.(code, hint));
-  sdk.on("processingStatus", (s) => onStatus?.(s));
+  sdk.on("processingStatus", (s) => { stats.status.push(s); onStatus?.(s); });
   // Without this, a bad key (kAuthenticationFailed) or a camera failure after start() would leave the scope on WARMING UP forever.
-  sdk.on("error", (code, message, retryable) => onError?.(code, message, retryable));
-  sdk.on("metrics", () => {
-    const p = scan.pulse.at(-1), b = scan.breathing.at(-1), k = scan.talking.at(-1);
-    onSample?.({ pulse: p?.conf >= 50 ? p.v : null, breathing: b?.conf >= 50 ? b.v : null, talking: !!k?.on, blinks: scan.blinks, expression: scan.expression });
-    onTrace?.(scan.trace);
-  });
+  sdk.on("error", (code, message, retryable) => { stats.errors.push(`${code}: ${message}`); onError?.(code, message, retryable); });
   try { await sdk.start(); } catch (e) { release(); throw e; }
   return { scan, async stop() { await sdk.stop().catch(() => {}); sdk.destroy(); release(); } };
 }

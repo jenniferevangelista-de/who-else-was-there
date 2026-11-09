@@ -29,9 +29,13 @@ It is a desktop app in Electron, in English and Portuguese, with original music 
 
 ## Demo
 
-**Demo, with the live signal:** VIDEO_DEMO_LINK
+**Demo, with the live signal:**
 
-**Pitch:** VIDEO_PITCH_LINK
+{% embed https://youtu.be/OwtlWGyNFdw %}
+
+**Pitch:**
+
+{% embed https://youtu.be/AibgwE4xLh4 %}
 
 No login is needed. Without a Presage key the app opens on sample numbers, and every sample screen is tagged. With a key, The Room reads your camera live.
 

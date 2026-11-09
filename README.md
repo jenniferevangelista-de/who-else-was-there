@@ -8,6 +8,8 @@ Entry for the DEV Presage SmartSpectra SDK Challenge, category **Most Creative o
 
 [![ci](https://github.com/jenniferevangelista-de/who-else-was-there/actions/workflows/ci.yml/badge.svg)](https://github.com/jenniferevangelista-de/who-else-was-there/actions/workflows/ci.yml)
 
+**Videos:** [Demo with the live signal (4:16)](https://youtu.be/OwtlWGyNFdw) · [Pitch (2:17)](https://youtu.be/AibgwE4xLh4)
+
 **Contents:** [The game in one minute](#the-game-in-one-minute) · [Everything you can do](#everything-you-can-do) · [The challenge's questions, answered](#the-challenges-questions-answered) · [How the SDK is used](#how-the-sdk-is-used) · [How we tested it](#how-we-tested-it) · [Run it yourself](#run-it-yourself) · [Consent and data](#consent-and-data-handling)
 
 ## The game in one minute

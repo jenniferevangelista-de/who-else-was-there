@@ -194,6 +194,8 @@ npm start
 
 **With a key**, set `PRESAGE_API_KEY` in your environment before `npm start`. Then open **The Room** to read your camera, or **Bring your own video** to read a recording. The key is read from the environment by the main process and is never written to disk.
 
+**On Windows with Smart App Control on,** Windows can block the SDK's unsigned libraries. The app then opens on sample numbers instead of live readings.
+
 ```bash
 npm test                         # 36 unit tests
 npm run benchmark                # writes demo/measured.json

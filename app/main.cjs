@@ -8,7 +8,7 @@ const path = require('node:path');
 const fs = require('node:fs');
 const { app, BrowserWindow, ipcMain, session } = require('electron');
 
-const REPLAY = process.argv.includes('--replay') || !process.env.PRESAGE_API_KEY;
+let REPLAY = process.argv.includes('--replay') || !process.env.PRESAGE_API_KEY;
 const CASE_VIDEO = path.join(__dirname, '..', 'case', 'the-door.mp4');
 
 if (app.isPackaged && !process.env.SMARTSPECTRA_CAPI_PATH) {
@@ -24,7 +24,10 @@ function createWindow() {
     width: 1400, height: 900, minWidth: 1100, minHeight: 720, backgroundColor: '#120a1f', title: 'Ghost Hunt: Who Else Was There?',
     webPreferences: { preload: path.join(__dirname, '..', 'dist', 'preload.cjs'), contextIsolation: true, sandbox: true, nodeIntegration: false },
   });
-  if (!REPLAY) require('@smartspectra/node-sdk/main').bindSmartSpectraIpc(win);
+  if (!REPLAY) {
+    try { require('@smartspectra/node-sdk/main').bindSmartSpectraIpc(win); }
+    catch (e) { REPLAY = true; console.error('The SDK could not load, so the app opens on sample numbers:', e.message); }   // e.g. Windows Smart App Control blocks its DLLs
+  }
   win.webContents.setWindowOpenHandler(() => ({ action: 'deny' }));
   win.webContents.on('will-navigate', (e) => e.preventDefault());
   win.setMenuBarVisibility(false);

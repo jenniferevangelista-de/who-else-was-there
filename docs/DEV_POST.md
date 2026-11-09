@@ -8,17 +8,24 @@ tags: devchallenge, presagechallenge, webdev, javascript
 
 ## What I Built
 
-Most camera-vitals apps measure the pulse that is there. **Ghost Hunt** hunts for the pulse that is missing.
+Most camera-vitals apps measure the pulse that is there. **Ghost Hunt** is a cute, spooky game that hunts for the pulse that is **missing**.
 
-Marina was about to go out. At the door, a feeling hit her so hard she couldn't breathe, and she stayed home. She lives alone and saw nothing, but the hallway camera was on. Three tiny ghost hunters point a new instrument at her tape, the Ghost Detector. Living faces beat. The face that does not is the case.
+Marina was about to go out. At the door, a feeling hit her so hard she couldn't breathe, and she stayed home. She lives alone and saw nothing, but the hallway camera was on. Three tiny ghost hunters point a new instrument at her tape, the Ghost Detector. Living faces have a heartbeat. The face that does not is the case.
 
-Then the spirit answers on a board that moves only when **you** breathe out. Each spirit gets one of seven kinds, picked from the evidence: Guardian, Haunter, Watcher, Intruder, Shade, Veiled or Visitor. Luna, the medium, deciphers what it wants. Dr. Bigotes refuses to sign it. Xochi writes it all down.
+**What you can do in it**
 
-And then it is your turn. The detector reads you, live. Or upload a video of your own, once everyone in it has agreed: Presage reads it as it plays, and you get a report with the measurements and a verdict on whether there is a spirit in it.
+- **Browse 30 nights of tape** on a haunted calendar, and let the detector analyze any night.
+- **Analyze the tape:** drag to any second, or search the hallway with a flashlight.
+- **Point the detector at one spot:** it finds the second face and locks on. 0 beats per minute.
+- **Collect evidence cards** that jump to the exact moment on the tape.
+- **Ask the spirit** on a board that moves only when **you** breathe out, and waits if you talk.
+- **Learn what it is.** Each spirit gets one of seven kinds, picked from the evidence: Guardian, Haunter, Watcher, Intruder, Shade, Veiled or Visitor. Luna, the medium, deciphers what it wants. Dr. Bigotes, the skeptic, refuses to sign it. Xochi writes it all down.
+- **Get read yourself in The Room:** your real pulse, breathing and expression, live from your camera. A figure moves only when you blink.
+- **Upload your own video,** once you confirm everyone in it agreed. Presage reads it as it plays, and you get a report with a verdict: is there a spirit in it?
 
-![Nine screens of the app](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/preview_sheet.jpg)
+![Nine screens of the app. From top left: the crew, the 30 nights, the tape, one spot, the spirit board, The Room, the dossier, the proof tab and the rules.](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/preview_sheet.jpg)
 
-It is a desktop app in Electron, in English and Portuguese, with original music and voices.
+It is a desktop app in Electron, in English and Portuguese, with original music and voices. Marina's story is drawn and tagged as sample data on every screen. The Room and uploaded videos are real SDK readings.
 
 ## Demo
 
@@ -32,13 +39,15 @@ No login is needed. Without a Presage key the app opens on sample numbers, and e
 
 {% github jenniferevangelista-de/who-else-was-there %}
 
-Setup is in the README. The SDK integration is in `app/renderer/presage.js`.
+Setup is in the README, along with a walkthrough of every screen. The SDK integration is in `app/renderer/presage.js`.
 
 ## How It Responds to Human Signals
 
 Seven SmartSpectra signals, and each one has a job in the game.
 
 ![Signal map](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/charts/07_signal_map.png)
+
+*How to read it: each row is a signal, each column is a part of the game, and a big green dot means that signal changes something on that screen.*
 
 - **Pulse** (`cardio.pulseRate`) drives the heart and the detector line, in real time. Readings under 50% confidence do not count.
 - **Chest movement** (`breathing.upperTrace`) moves the séance glass when you breathe out, and finds a held breath.
@@ -51,17 +60,23 @@ One rule keeps the spirit honest: **cite or vanish**. There is no language model
 
 ![Architecture](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/architecture.png)
 
-### Measured, including where it breaks
+*How to read it: follow the top row from left to right. The camera goes into Presage's SDK, our code turns its numbers into evidence cards, and only then can the spirit speak.*
 
-The computer vision belongs to Presage, and I treat it as an instrument. My layer is signal processing and rules, so I tested those the way a detector should be tested: **19,000 synthetic scans with a known answer**, from fixed seeds, reproducible with `npm run benchmark`. They test my logic, not Presage's accuracy.
+### How I tested it, including where it breaks
 
-![1,000 correct verdicts](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/charts/01_verdicts.png)
+The computer vision belongs to Presage, and I treat it as an instrument. What is mine is the logic that decides what the numbers mean, so I tested that. It works like hiding a fake ghost to see if the detector finds it: **19,000 tests on fake data where I already know the answer**, reproducible with `npm run benchmark`. They test my rules, not Presage's accuracy, and no real person is in them.
 
-Living faces called a ghost: **0 of 400**. Then I pushed the noise up until the rules failed, because that is the useful part.
+![1,000 right answers out of 1,000](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/charts/01_verdicts.png)
+
+*How to read it: the left side is what I hid, the top is what the detector answered. Numbers on the green diagonal are right answers. Anything off it would be a mistake.*
+
+A living face was called a ghost **0 times in 400**. Then I pushed the noise up until the rules failed, because that is the useful part.
 
 ![Pulse stress test](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/charts/04_stress_pulse.png)
 
-With 9 bpm or more of reading noise, the pulse-jump rule starts raising false alarms. The README lists every limit I found.
+*How to read it: each number is how many of 200 tests got the right answer. Green is right, pink is wrong. Going up, the reading gets more jittery. Real jumps are always caught, but from 9 bpm of jitter the alarm starts going off by itself.*
+
+The README explains every chart and lists every limit I found.
 
 ## Prize Categories
 

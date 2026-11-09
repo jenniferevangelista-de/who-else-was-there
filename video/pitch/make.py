@@ -321,14 +321,14 @@ def breaks(s):
     for i, y in enumerate(ys):
         cells += f'<div class="a s" style="left:{X - 90}px;top:{Y + i * H + 34}px;width:70px;text-align:right;font-size:46px;color:#d8c6ea">{y}</div>'
         for j, x in enumerate(xs):
-            v = data[y, x]; order.append(f"#br-{i}{j}")
-            cells += f'<div id="br-{i}{j}" class="a" style="left:{X + j * W}px;top:{Y + i * H}px;width:{W - 6}px;height:{H - 6}px;background:{seq(v / 200)};border-radius:6px;text-align:center;line-height:{H - 6}px;font-size:44px;font-weight:700;color:{"#1a0f2b" if v > 90 else "#f6f0ff"}">{v}</div>'
+            v = data[y, x] if x >= 8 else 200 - data[y, x]; order.append(f"#br-{i}{j}")      # right answers out of 200: under +8 the rule should stay quiet
+            cells += f'<div id="br-{i}{j}" class="a" style="left:{X + j * W}px;top:{Y + i * H}px;width:{W - 6}px;height:{H - 6}px;background:{"#9af5c8" if v >= 150 else "#f08ab5" if v < 60 else "#3a2a50"};border-radius:6px;text-align:center;line-height:{H - 6}px;font-size:44px;font-weight:700;color:{"#1a0f2b" if v >= 150 or v < 60 else "#f6f0ff"}">{v}</div>'
     for j, x in enumerate(xs): cells += f'<div class="a s" style="left:{X + j * W}px;top:{Y + 6 * H + 4}px;width:{W}px;text-align:center;font-size:46px;color:#d8c6ea">{"none" if not x else "+" + str(x)}</div>'
     false9 = data[9, 0]
     body = f'''<div id="br-t" class="a d" style="left:120px;top:30px;font-size:96px">Where my pulse-jump rule breaks</div>
 <div id="br-g" class="a" style="left:0;top:0;width:1920px;height:1080px">{cells}</div>
 <div class="a" id="br-y" style="left:30px;top:150px;width:140px;font-size:32px;color:#b7a6c9">noise (bpm)</div>
-<div class="a" id="br-x" style="left:{X}px;top:{Y + 6 * H + 64}px;font-size:32px;color:#b7a6c9">planted jump (bpm)</div>
+<div class="a" id="br-x" style="left:{X}px;top:{Y + 6 * H + 64}px;font-size:32px;color:#b7a6c9">planted jump (bpm) &middot; right answers out of 200: green right, pink wrong</div>
 <div id="br-box" class="a" style="left:{X - 7}px;top:{Y - 7}px;width:{W + 8}px;height:{3 * H + 8}px;border:7px solid #ff86b8;border-radius:10px"></div>
 <div id="br-1" class="a" style="left:1370px;top:180px;width:480px"><div class="s" style="font-size:150px;line-height:.9;color:#ff86b8">{false9}/200</div><div style="font-size:44px;line-height:1.2;margin-top:12px">false alarms at 9 bpm of noise, with no jump at all</div></div>
 <div id="br-2" class="a d" style="left:1370px;top:555px;width:500px;font-size:62px">A detector you can't trust is just a ghost story.</div>'''

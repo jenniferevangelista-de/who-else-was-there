@@ -30,7 +30,8 @@ export function boardHTML() {
 /** The characters the glass visits for a message: YES, NO, GOODBYE as one stop; spaces rest in the middle. */
 export function sequence(message) {
   const m = message.trim().toUpperCase();
-  if (["YES", "NO", "GOODBYE"].includes(m)) return [m];
+  const stop = { YES: "YES", SIM: "YES", NO: "NO", "NÃO": "NO", GOODBYE: "GOODBYE", ADEUS: "GOODBYE" }[m];
+  if (stop) return [stop];
   return [...m.replace(/[^A-Z0-9 ]/g, "")];
 }
 

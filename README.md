@@ -37,7 +37,7 @@ Without a key the app opens in **replay mode** (sample numbers, no camera). With
 
 - **Camera consent:** the rules are shown before the hunt. The camera turns on only when you press a button, and the pill at the top right turns it off at any time. Video only; the microphone is never requested.
 - **Tapes you bring:** the file picker stays locked until you confirm that everyone in the recording agreed to be in it and to have it read.
-- **Storage and retention:** the app saves no frames and records no video. Readings live in memory and vanish when the app closes. A dossier file is written only if you press Download; it holds numbers and words, no images.
+- **Storage and retention:** the app saves no frames and records no video. Readings live in memory and vanish when the app closes. A dossier or session report is written only if you press Download or Save; each holds numbers and words, no images.
 - **Display:** faces of the living are blurred on every screen.
 - **Sharing:** the app sends nothing to any server of its own, and it has none.
 - **The SDK:** Presage SmartSpectra is initialised with your API key and uses Presage's authenticated channel. Its aggregate diagnostic telemetry, which by Presage's documentation excludes frames and measured values, is switched off (`enableTelemetry: false`). See Presage's [Telemetry and Privacy](https://smartspectra.presagetech.com/docs/telemetry-and-privacy) page and Privacy Policy for the SDK's own requests and retention.

@@ -117,7 +117,7 @@
     }
   },
   "receipts": {
-    "unit_tests": 26,
+    "unit_tests": 36,
     "frames_saved": 0,
     "video_recorded": false,
     "sdk_telemetry": "off",

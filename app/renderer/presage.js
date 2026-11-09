@@ -21,7 +21,7 @@ async function makeSdk() {
  * anything else that wants those events passes `onMetrics` / `onValidation` here.
  */
 function collector(sdk, clock, { onMetrics, onValidation } = {}) {
-  const scan = { t0: clock(), t1: clock(), pulse: [], breathing: [], trace: [], talking: [], validation: [], blinks: 0, expression: null };
+  const scan = { t0: clock(), t1: clock(), pulse: [], breathing: [], trace: [], talking: [], validation: [], blinks: 0, expression: null, expressions: {} };
   let blinkOn = false;
   let originUs = null, originT = null;
   const at = (ts) => {
@@ -39,7 +39,7 @@ function collector(sdk, clock, { onMetrics, onValidation } = {}) {
     if (s.breathing !== undefined) scan.breathing.push({ t: tNow, v: s.breathing, conf: s.breathingConf });
     if (s.talking !== undefined) scan.talking.push({ t: tNow, on: s.talking });
     for (const b of m.face?.blinking ?? []) { if (b.detected && !blinkOn) scan.blinks++; blinkOn = !!b.detected; }
-    if (s.expression?.name && s.expression.stable && s.expression.conf >= 50) scan.expression = s.expression.name;
+    if (s.expression?.name && s.expression.stable && s.expression.conf >= 50) { scan.expression = s.expression.name; scan.expressions[scan.expression] = (scan.expressions[scan.expression] ?? 0) + 1; }
     for (const p of m.breathing?.upperTrace ?? []) {
       const t = at(p.timestamp);
       if (!scan.trace.length || t > scan.trace[scan.trace.length - 1].t) scan.trace.push({ t, v: p.value });

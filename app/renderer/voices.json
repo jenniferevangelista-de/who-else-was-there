@@ -15,6 +15,14 @@
 "id": "4d15878ef0",
 "who": "xochi"
 },
+"I'll watch every pulse in this video. Ghosts don't have one, people do.": {
+"id": "1bd8c3168f",
+"who": "bigotes"
+},
+"Vou observar cada pulso deste vídeo. Fantasma não tem, gente tem.": {
+"id": "6631a37f4c",
+"who": "bigotes"
+},
 "I'll watch her pulse. Ghosts don't have one, people do.": {
 "id": "2dd6dddf4d",
 "who": "bigotes"
@@ -22,6 +30,14 @@
 "Vou observar o pulso dela. Fantasma não tem, gente tem.": {
 "id": "83fa0d27d6",
 "who": "bigotes"
+},
+"Were you expecting anyone else in this video?": {
+"id": "9c3c732ed4",
+"who": "luna"
+},
+"Você esperava mais alguém neste vídeo?": {
+"id": "9373337ba9",
+"who": "luna"
 },
 "Marina said she lives alone.": {
 "id": "478c051740",
@@ -79,16 +95,36 @@
 "id": "d2a161bbfd",
 "who": "bigotes"
 },
+"We have the answers for this case. I will get back to our client tonight: Marina can rest.": {
+"id": "6e0c7b47db",
+"who": "luna"
+},
+"Já temos as respostas do caso. Vou retornar para a cliente hoje à noite: a Marina pode ficar tranquila.": {
+"id": "2123c2c336",
+"who": "luna"
+},
 "Case closed. Odette stays in Marina's hallway, and we stay here.": {
 "id": "36fb5ba106",
+"who": "xochi"
+},
+"Caso encerrado. A Odette fica no corredor da Marina, e nós ficamos aqui.": {
+"id": "a0d236ee69",
 "who": "xochi"
 },
 "Wait. The glass is warm.": {
 "id": "0bda48dc82",
 "who": "luna"
 },
+"Espera. O copo está quente.": {
+"id": "7b9add88a2",
+"who": "luna"
+},
 "She came with the video. We opened it. We let her in.": {
 "id": "f5f8e4dc94",
+"who": "xochi"
+},
+"Ela veio junto com o vídeo. A gente abriu. A gente deixou ela entrar.": {
+"id": "74c285563d",
 "who": "xochi"
 },
 "EVERYBODY OUT! Out, out, out!": {
@@ -98,6 +134,14 @@
 "TODO MUNDO PRA FORA! Fora, fora, fora!": {
 "id": "032a0f9190",
 "who": "luna"
+},
+"Analysis done. Your report is ready.": {
+"id": "30bbc398a9",
+"who": "xochi"
+},
+"Análise feita. Seu relatório está pronto.": {
+"id": "6b0c62d891",
+"who": "xochi"
 },
 "Quiet… I'm Luna. I open the board, and I believe in everything. Almost.": {
 "id": "e160929bdd",
@@ -199,8 +243,16 @@
 "id": "5268b63ee9",
 "who": "luna"
 },
+"Ela morou aqui, nesta mesma casa, há muito tempo. Uma noite, algo disse para ela ficar. Ela saiu por aquela porta mesmo assim, e nunca mais voltou.": {
+"id": "2e6bdb806c",
+"who": "luna"
+},
 "A glass spelled two words. What I measured is a face with 0 beats per minute, and that face cannot tell me where it is from.": {
 "id": "217b299ee4",
+"who": "bigotes"
+},
+"Um copo soletrou duas palavras. O que eu medi foi um rosto com 0 batimentos por minuto, e esse rosto não me diz de onde veio.": {
+"id": "301189811d",
 "who": "bigotes"
 },
 "No. That face gave 0 beats while the detector watched it. Nothing alive holds that still.": {
@@ -235,16 +287,20 @@
 "id": "a5f39744cf",
 "who": "bigotes"
 },
-"She has stood at that door ever since, trying to warn whoever leaves. Everyone walked past her. Marina is the first one who stopped. She held her breath at second 21, and she stayed.": {
-"id": "d72da71ba7",
+"She has stood at that door ever since, trying to warn whoever leaves. Everyone walked past her. Marina is the first one who stopped. She held her breath at second 21, and she stayed. Now I know what she is: a guardian spirit. She was trying to protect Marina from something bad that was about to happen.": {
+"id": "c4c93fadcb",
 "who": "luna"
 },
-"Desde então ela fica naquela porta, tentando avisar quem sai. Todo mundo passou direto. A Marina foi a primeira que parou. Ela prendeu a respiração no segundo 21, e ficou.": {
-"id": "a930ee12c6",
+"Desde então ela fica naquela porta, tentando avisar quem sai. Todo mundo passou direto. A Marina foi a primeira que parou. Ela prendeu a respiração no segundo 21, e ficou. Agora eu sei o que ela é: um espírito guardião. Ela estava tentando proteger a Marina de algo ruim que ia acontecer.": {
+"id": "d95a374c82",
 "who": "luna"
 },
 "Marina stayed home. That part I can sign. Who asked her to is not something I can measure.": {
 "id": "ae07352c2b",
+"who": "bigotes"
+},
+"A Marina ficou em casa. Isso eu assino. Quem pediu para ela ficar eu não consigo medir.": {
+"id": "35de55cfd0",
 "who": "bigotes"
 },
 "It said goodbye.": {
@@ -265,6 +321,10 @@
 },
 "Here? Marina's house is across town. We are in our own office.": {
 "id": "a42935c89f",
+"who": "luna"
+},
+"Aqui? A casa da Marina fica do outro lado da cidade. Nós estamos no nosso escritório.": {
+"id": "386f3282e4",
 "who": "luna"
 },
 "Okay. I have no explanation for that. Yet.": {

@@ -12,6 +12,8 @@ import * as presage from "./presage.js";
 import { sound } from "./sound.js";
 import { L, Lx, getLang, setLang } from "../../src/i18n.js";
 import { hoodHTML } from "./hood.js";
+import { buildReport } from "../../src/report.js";
+import { reportHTML, bindReport, reportFile } from "./report.js";
 import MEASURED from "../../demo/measured.json";
 
 const $ = (s, r = document) => r.querySelector(s);
@@ -76,7 +78,7 @@ function nextUp(options, title = "What now?") {
 }
 function clearNext() { const b = $("#whatNow"); b.hidden = true; b.innerHTML = ""; document.body.classList.remove("has-next"); }
 const targetOf = (s) => (typeof s.to === "function" ? s.to() : s.to);
-const forward = () => { const s = SCREENS[state.i]; if (s.id === "consent") state.consent = true; const t = targetOf(s); if (t) goTo(t); else go(state.i + 1); };
+const forward = () => { const s = SCREENS[state.i]; if (s.act) return s.act(); if (s.id === "consent") state.consent = true; const t = targetOf(s); if (t) goTo(t); else go(state.i + 1); };
 function goTo(id) {
   if (id === "room" && !state.consent) { state.afterConsent = id; id = "consent"; }   // the rules come before any camera
   go(SCREENS.findIndex((s) => s.id === id));
@@ -101,7 +103,7 @@ function heartBadge(el, { x, y, bpm, dead, still }) {
 function tapeHTML(tools = false) {
   return `<div class="tape" id="tape">
     ${state.mode === "replay" ? `<canvas class="scene" width="1280" height="720"></canvas>` : `<video playsinline muted></video>`}
-    <div class="overlay"><div class="rec"><i></i>REC · HALLWAY</div><div class="stamp" id="stamp">NOV 02 · 21:43:00</div>
+    <div class="overlay"><div class="rec"><i></i>${state.ownTape ? "REC · YOUR VIDEO" : "REC · HALLWAY"}</div><div class="stamp" id="stamp" ${state.ownTape ? "hidden" : ""}>NOV 02 · 21:43:00</div>
     <div class="privacy">faces of the living are blurred</div><div class="flashlight" hidden></div></div>
     <button class="torch" title="Flashlight">🔦</button></div>
     <div class="timeline ${tools ? "scrubs" : ""}" id="timeline"><div class="head" id="head"></div></div>
@@ -162,7 +164,7 @@ function pulseAt(t) {
 /** Drive the detector and the heart from second t. They move only while the tape does, at the speed of that second's bpm. */
 function beatAt(el, t, moving) {
   const v = pulseAt(t), s = state.tapeScope, bpm = $("#scopeTape [data-bpm]", el), st = $("#scopeTape [data-state]", el);
-  heartBadge($("#tape .overlay", el), { ...marinaFace(t), bpm: v ?? undefined, still: !moving });
+  if (!state.ownTape) heartBadge($("#tape .overlay", el), { ...marinaFace(t), bpm: v ?? undefined, still: !moving });   // on someone's own video there is no known place to pin it
   if (!s || !bpm) return;
   s.hold(!moving);
   if (v) { s.set(v); bpm.textContent = Math.round(v); st.textContent = moving ? (state.mode === "replay" ? "SAMPLE" : "READING") : "PAUSED"; }
@@ -292,7 +294,7 @@ const SCREENS = [
         <div class="kicker">Before we hunt</div><h2>The rules of the house</h2>
         <ul>
           <li><b>The camera is yours.</b> It turns on only when you press a button, and the pill at the top right turns it off at any moment.</li>
-          <li><b>Nothing is recorded.</b> No frames are saved. Readings live in memory and vanish when you close the app.</li>
+          <li><b>Nothing is recorded.</b> No frames are saved. Readings live in memory and vanish when you close the app. A report is saved only if you press Save, with numbers and words only.</li>
           <li><b>Faces of the living are blurred</b> on every screen, including yours.</li>
           <li><b>Only bring tapes where everyone agreed to be in them.</b> The detector reads the people in a video, so they get a say.</li>
           <li><b>This is a game, not a medical device.</b> A pulse here is a story clue.</li>
@@ -339,7 +341,7 @@ const SCREENS = [
       <div class="grid2 dare-cards">
         <div class="card dark">
           <div class="kicker">Bring your own tape</div><h2>Who else was in yours?</h2>
-          <p class="muted">The detector reads every face in it, and Luna opens the board. Was it a spirit? The crew will never agree.</p>
+          <p class="muted">The detector reads it and gives a report: the measurements, and a verdict on whether there is a spirit in it.</p>
           <label class="agree"><input type="checkbox" id="tapeAgree"> Everyone in this recording agreed to be in it and to have it read.</label>
           <label class="btn-main ghost locked-btn" id="ownTapeBtn" style="display:inline-block;margin-top:10px">Choose a video<input type="file" accept="video/*" id="ownTape" class="sr" disabled></label>
         </div>
@@ -357,7 +359,7 @@ const SCREENS = [
       $("#ownTape", el).addEventListener("change", (e) => {
         const f = e.target.files[0]; if (!f) return;
         if (!state.liveSdk) return toast("Reading your own tape needs the Presage key on this computer. Add it and reopen the app.", 6000);
-        state.ownTape = URL.createObjectURL(f); state.mode = "live"; state.evidence = []; state.scans = null; toast(`Loaded ${f.name}. The detector is reading it.`);
+        state.ownTape = URL.createObjectURL(f); state.mode = "live"; state.evidence = []; state.scans = null; $("#mode").hidden = true; toast(`Loaded ${f.name}. The detector is reading it.`);
         go(SCREENS.findIndex((s) => s.id === "tape"));
       });
     } },
@@ -445,11 +447,11 @@ const SCREENS = [
       setTimeout(() => el.querySelector('[data-date="2026-11-02"]')?.focus(), 300);
     } },
 
-  { id: "tape", chapter: "The tape", next: "Point the detector →", canNext: () => state.tapeDone, html: () => `
+  { id: "tape", chapter: "The tape", next: () => state.ownTape ? "See the report →" : "Point the detector →", to: () => state.ownTape ? "report" : null, canNext: () => state.tapeDone, html: () => `
     <div class="grid2">
-      <div><div class="an-head"><span class="kicker">Marina's video · November 2 · hallway camera</span><b id="anStatus">Analyzing the video Marina sent…</b></div>${tapeHTML(true)}</div>
+      <div><div class="an-head"><span class="kicker">${state.ownTape ? "Your video" : "Marina's video · November 2 · hallway camera"}</span><b id="anStatus">${state.ownTape ? "Analyzing your video…" : "Analyzing the video Marina sent…"}</b></div>${tapeHTML(true)}</div>
       <div>${scopeHTML("scopeTape", "GHOST DETECTOR · WHOLE FRAME")}
-        <div class="card" style="margin-top:16px" id="tapeNotes">${say("bigotes", "I'll watch her pulse. Ghosts don't have one, people do.")}</div></div>
+        <div class="card" style="margin-top:16px" id="tapeNotes">${state.ownTape ? say("bigotes", "I'll watch every pulse in this video. Ghosts don't have one, people do.") : say("bigotes", "I'll watch her pulse. Ghosts don't have one, people do.")}</div></div>
     </div>`,
     async enter(el) {
       state.tapeDone = false; state.tapeT = 0; updateNav(); wireTape(el);
@@ -462,22 +464,25 @@ const SCREENS = [
       } else state.duration = SAMPLE_CASE.durationSec;
       $("#scopeTape [data-state]", el).textContent = state.mode === "replay" ? "SAMPLE" : "READING";
       // the tape plays once while the SDK reads the whole frame
-      let full = null;
-      const scanning = fullScan().then((s) => (full = s)).catch((e) => toast(e.message, 6000));
+      let full = null, reading = { pulse: [], validation: [] };          // on your own video, only what the SDK has really returned so far
+      state.tapeSrc = state.ownTape ? reading : null;
+      const scanning = fullScan((_, s) => { reading = s; }).then((s) => (full = s)).catch((e) => toast(e.message, 6000));
       const sample = sampleScans().full;
       let warned = false;
       await playTape({
         until: state.duration, rate: state.mode === "replay" ? 1.5 : 1,
         onTime: (t) => {
-          const src = full ?? sample;
+          const src = state.ownTape ? full ?? reading : full ?? sample;
           state.tapeSrc = src; beatAt(el, t, true);
-          const two = src.validation.find((v) => Math.abs(v.t - t) < 0.5)?.code === 2;
+          const two = state.ownTape ? src.validation.filter((v) => v.code === 2 && Math.abs(v.t - t) < 2).length >= 5 : src.validation.find((v) => Math.abs(v.t - t) < 0.5)?.code === 2;
           if (two && !warned) {
             warned = true; sound.sting();
-            $("#tapeNotes", el).innerHTML = say("bigotes", `Wait. Presage just reported <b>two faces</b> in the frame. At ${fmt(t)}.`) + say("luna", "Marina said she lives alone.");
+            $("#tapeNotes", el).innerHTML = say("bigotes", `Wait. Presage just reported <b>two faces</b> in the frame. At ${fmt(t)}.`) + (state.ownTape ? say("luna", "Were you expecting anyone else in this video?") : say("luna", "Marina said she lives alone."));
           }
         },
       });
+      // a video with no face to read can leave the SDK waiting: the report then uses everything it returned while the video played
+      if (state.ownTape) { await Promise.race([scanning, sleep(12000)]); return finishOwnTape(el, full ?? (reading.t1 === undefined ? null : reading)); }
       await scanning;
       state.scans = { full: full ?? sample, regions: [] };
       if (!document.body.contains(el)) return;
@@ -595,7 +600,7 @@ const SCREENS = [
       nextUp([{ label: "Open the board →", main: true, do: () => goTo("board") }], "Click a card, or");
     } },
 
-  { id: "board", chapter: "The séance", next: "Read the dossier →", to: "dossier", html: () => {
+  { id: "board", chapter: "The séance", next: "Say goodbye →", act: () => state.sayGoodbye?.(), html: () => {
     const sp = spiritFor(state.evidence);
     return `
     ${sp ? `<div class="card spirit-card" id="spiritCard">${spiritCard(sp, new Set())}</div>` : ""}
@@ -625,26 +630,30 @@ const SCREENS = [
         if (!state.consent) { state.afterConsent = "board"; return goTo("consent"); }
         e.currentTarget.remove(); startLive(el, createScope(document.createElement("canvas")), "#board-has-no-scope");
       });
+      let busy = false;
       const ask = async (qid, label) => {
+        if (busy) return; busy = true;
         el.querySelectorAll(".q").forEach((x) => (x.disabled = true)); clearNext();
         const a = answer(qid, state.evidence);
         $("#spell", el).textContent = "";
         $("#hush", el).textContent = state.live ? "Breathe out slowly. Stay silent." : "The glass is moving.";
-        await spell($(".board", el), L(a.board), { nextExhale: () => waitExhale(), isSilent: () => !state.talking, onChar: (t) => { $("#spell", el).textContent = t; sound.beep(520 + t.length * 20, 110, 0.03); } });
+        await spell($(".board", el), Lx(a.board), { nextExhale: () => waitExhale(), isSilent: () => !state.talking, onChar: (t) => { $("#spell", el).textContent = t; sound.beep(520 + t.length * 20, 110, 0.03); } });
         $("#hush", el).textContent = "";
-        $("#answers", el).innerHTML = `<p class="muted" style="margin:6px 0">“${label}”</p><div class="glass-said">The glass said: <b>${L(a.board)}</b></div>` + say("luna", a.luna, a.cites) + say("bigotes", a.bigotes, a.cites);
+        $("#answers", el).innerHTML = `<p class="muted" style="margin:6px 0">“${label}”</p><div class="glass-said">The glass said: <b>${Lx(a.board)}</b></div>` + say("luna", a.luna, a.cites) + say("bigotes", a.bigotes, a.cites);
         el.querySelectorAll(".q").forEach((x) => (x.disabled = false));
         seen.add(qid); if (sp && $("#spiritCard", el)) $("#spiritCard", el).innerHTML = L(spiritCard(sp, seen));
         if (qid === "bye") return finale(el);
+        busy = false;
         const nextQ = order.find((q) => !seen.has(q)), btn = nextQ && el.querySelector(`.q[data-q="${nextQ}"]`);
-        nextUp([...(btn ? [{ label: btn.textContent, main: true, do: () => ask(nextQ, btn.textContent) }] : []), { label: "Say goodbye to the spirit", main: !btn, do: () => ask("bye", L("Goodbye.")) }], "Ask another question, or");
+        nextUp([...(btn ? [{ label: btn.textContent, main: true, do: () => ask(nextQ, btn.textContent) }] : []), { label: "Say goodbye to the spirit", main: !btn, do: state.sayGoodbye }], "Ask another question, or");
       };
       el.querySelectorAll(".q").forEach((b) => b.addEventListener("click", () => ask(b.dataset.q, b.textContent)));
-      nextUp([{ label: "Read the dossier →", do: forward }], "Pick a question, or");
+      state.sayGoodbye = () => ask("bye", Lx("Goodbye."));
+      nextUp([{ label: "Say goodbye to the spirit", do: state.sayGoodbye }], "Pick a question, or");
     } },
 
-  { id: "dossier", chapter: "Xochi's dossier", next: "Close the case →", to: "end",
-    enter(el) { $("#dl", el)?.addEventListener("click", downloadDossier); nextUp([{ label: "Close the case →", main: true, do: forward }]); }, html: () => `
+  { id: "dossier", chapter: "Xochi's dossier", next: "Main menu →", to: "menu",
+    enter(el) { $("#dl", el)?.addEventListener("click", downloadDossier); nextUp([{ label: "Main menu →", main: true, do: forward }]); }, html: () => `
     <div class="card">
       <div class="kicker">Xochi's dossier · ${state.ownTape ? "Your tape" : "Case 01 · The Door"}</div><h2>What we know, and what we don't</h2>
       ${reading(state.evidence).map((l) => say(l.who, l.text, l.cites)).join("")}
@@ -656,21 +665,20 @@ const SCREENS = [
 
   { id: "room", chapter: "The Room", next: "Main menu →", to: "menu", html: () => `
     <div class="grid2">
-      <div class="card dark">
+      <div><div class="card dark">
         <div class="kicker">Case 03 · The Room · your camera, live</div><h2>Now the detector reads you</h2>
         <p>Turn your camera on and sit still. The Ghost Detector finds your pulse and your breath, the same way it read Marina. Then ask the room's spirit a question and <b>stay still while the glass stops</b>.</p>
         <p class="muted">If your pulse jumps right after the glass stops, the game will notice. That is the only trick: it is your own heartbeat.</p>
-        <div class="row"><button class="btn-main mint" id="roomOn">Turn my camera on</button><button class="btn-soft" id="roomAsk" disabled>Is someone here?</button></div>
+        <div class="row"><button class="btn-main mint" id="roomOn">Turn my camera on</button><button class="btn-soft" id="roomAsk" disabled>Is someone here?</button><button class="btn-soft" id="roomReport" disabled>Generate report</button></div>
         <div class="scanstat" id="liveStat" style="margin-top:14px" hidden><div class="msg" id="liveMsg"></div><div class="bar"><div class="fill"></div></div></div>
         <div id="roomNotes" style="margin-top:12px">${say("xochi", "I will write down what the detector sees. Nothing else.")}</div>
-      </div>
+      </div><div class="locker room-ev" id="roomEv"></div></div>
       <div>${scopeHTML("scopeRoom", "GHOST DETECTOR · YOU, LIVE")}
         <div class="tape" style="margin-top:12px;aspect-ratio:16/9"><video id="me" playsinline muted style="width:100%;height:100%;object-fit:contain;filter:blur(11px) brightness(1.35) saturate(.85)"></video>
           <img id="mePh" src="img/wisp.svg" alt="" style="position:absolute;left:50%;top:50%;width:90px;transform:translate(-50%,-50%);opacity:.5">
           <div class="overlay" id="meOv"><div class="rec"><i></i>YOU · LIVE</div><div class="privacy">your face is blurred</div></div></div>
         ${liveChips()}
-        <div class="blinker" id="blinker" hidden><img src="img/stalker.svg" alt=""><span>It only moves when you blink.</span></div>
-        <div class="locker" id="roomEv" style="margin-top:16px"></div></div>
+        <div class="blinker" id="blinker" hidden><img src="img/stalker.svg" alt=""><span>It only moves when you blink.</span></div></div>
     </div>`,
     enter(el) {
       const scope = createScope($("#scopeRoom canvas", el));
@@ -683,7 +691,9 @@ const SCREENS = [
           const src = state.live?.scan ?? state.fakeScan; if (!src) return;
           const ev = roomEvidence(src, heldBreaths, pulseJumps);
           if (state.live) $("#blinker", el).hidden = false;
-          $("#roomEv", el).innerHTML = ev.map((e) => `<div class="ev"><span class="id">${e.id}</span><div class="kind">${{ you_alive: "You, alive", you_held_breath: "You held your breath", you_jumped: "Your pulse jumped", you_blinked: "You blinked", you_showed: "Your face said" }[e.kind]}</div><div class="val">${e.value}<small style="font-size:20px"> ${e.unit}</small></div><div class="src">${state.liveSdk ? "" : "SIMULATED · "}${e.measuredBy}</div></div>`).join("");
+          $("#roomReport", el).disabled = !src.pulse?.some((p) => p.conf >= 50);
+          const newest = (kind) => ev.filter((e) => e.kind === kind).slice(-1);   // the full list goes in the report
+          $("#roomEv", el).innerHTML = ["you_alive", "you_blinked", "you_held_breath", "you_jumped", "you_showed"].flatMap(newest).map((e) => `<div class="ev"><span class="id">${e.id}</span><div class="kind">${{ you_alive: "You, alive", you_held_breath: "You held your breath", you_jumped: "Your pulse jumped", you_blinked: "You blinked", you_showed: "Your face said" }[e.kind]}</div><div class="val">${e.value}<small style="font-size:20px"> ${e.unit}</small></div><div class="src">${state.liveSdk ? "" : "SIMULATED · "}${e.measuredBy}</div></div>`).join("");
           const jump = ev.filter((e) => e.kind === "you_jumped").at(-1);
           if (jump && state.glassStoppedAt && jump.t0 >= state.glassStoppedAt && jump.t0 - state.glassStoppedAt < 8 && !state.roomScared) {
             state.roomScared = true; document.body.classList.add("lightsout");
@@ -692,6 +702,7 @@ const SCREENS = [
           }
         }, 1000);
       });
+      $("#roomReport", el).addEventListener("click", makeReport);
       $("#roomAsk", el).addEventListener("click", async () => {
         $("#roomNotes", el).innerHTML = say("luna", "Spirit of this room… is someone here with us?");
         await sleep(2500);
@@ -699,6 +710,16 @@ const SCREENS = [
         state.glassStoppedAt = now; state.roomScared = false;
         $("#roomNotes", el).innerHTML = say("luna", "The glass went to <b>YES</b>, and stopped. Stay very still…");
       });
+    } },
+
+  { id: "report", chapter: "Your report", next: "Main menu →", to: "menu",
+    html: () => state.report ? reportHTML(state.report, getLang()) : `<div class="cliff"><div class="line">No report yet</div><p class="sub">Enter the Room, turn your camera on and wait for your heartbeat.</p></div>`,
+    enter(el) {
+      if (!state.report) return nextUp([{ label: "Enter the Room →", main: true, do: () => goTo("room") }]);
+      bindReport(el, () => scheduleFit(true));
+      nextUp(state.report.source === "video"
+        ? [{ label: "Main menu", main: true, do: () => goTo("menu") }, { label: "Save report", do: () => saveReport(el) }]
+        : [{ label: "Save report", main: true, do: () => saveReport(el) }, { label: "Back to the Room", do: () => goTo("room") }, { label: "Main menu", do: () => goTo("menu") }]);
     } },
 
   { id: "tested", chapter: "Proof and tests", next: "Main menu →", to: "menu", enter(el) { nextUp([{ label: "Main menu →", main: true, do: () => goTo("menu") }]); bindProof(el); }, html: () => {
@@ -733,7 +754,7 @@ const SCREENS = [
       ${say("bigotes", "A held breath right at the 3-second line is noticed only some of the time. Below it, never. I would rather miss a gasp than invent one.")}
     </div></div>`; } },
 
-  { id: "end", chapter: "Case closed", next: "Main menu →", to: "menu", enter() { if (!state.ownTape) sound.beep(70, 260, 0.1); nextUp([{ label: "Try it yourself →", main: true, do: () => goTo("dare") }, { label: "Enter the Room →", do: () => goTo("room") }, { label: "Main menu", do: () => goTo("menu") }]); }, html: () => state.ownTape ? `
+  { id: "end", chapter: "Case closed", next: "Main menu →", to: "menu", enter() { if (!state.ownTape) sound.beep(70, 260, 0.1); nextUp([{ label: "Try it yourself →", main: true, do: () => goTo("dare") }, { label: "Read Xochi's dossier", do: () => goTo("dossier") }, { label: "Main menu", do: () => goTo("menu") }]); }, html: () => state.ownTape ? `
     <div class="cliff">
       <img src="img/wisp.svg" alt="" style="width:120px">
       <div class="line">Your tape is read.</div>
@@ -750,7 +771,7 @@ const SCREENS = [
       <div class="your-turn">Now it is your turn</div>
     </div>` },
 ];
-const ORDER = ["cold", "title", "menu", "calendar", "case", "tape", "point", "locker", "board", "dossier", "end", "dare", "consent", "room", "tested"];
+const ORDER = ["cold", "title", "menu", "calendar", "case", "tape", "point", "locker", "board", "dossier", "end", "dare", "consent", "room", "report", "tested"];
 SCREENS.push({ id: "menu", chapter: "Main menu", next: "Start with the 30 nights →", to: "calendar", enter() { document.querySelectorAll("[data-go]").forEach((b) => b.addEventListener("click", () => goTo(b.dataset.go))); }, html: () => `
     <div class="menu-wrap">
       <div class="kicker" style="text-align:center;color:var(--gold);letter-spacing:5px">MAIN MENU</div>
@@ -772,11 +793,15 @@ async function finale(el) {
   const a = answer("return", state.evidence);
   if (a.vanished) return;
   el.querySelectorAll(".q").forEach((x) => (x.disabled = true)); clearNext();
-  $("#answers", el).insertAdjacentHTML("beforeend", say("xochi", "Case closed. Odette stays in Marina's hallway, and we stay here."));   // they relax
-  await sleep(4200);
+  const heard = (ms) => Promise.all([sleep(ms), voice.idle()]);                 // every line is finished before the next one starts
+  await heard(2200);
+  $("#answers", el).innerHTML = say("luna", "We have the answers for this case. I will get back to our client tonight: Marina can rest.");                  // the case is solved, and they relax
+  await heard(4600);
+  $("#answers", el).insertAdjacentHTML("beforeend", say("xochi", "Case closed. Odette stays in Marina's hallway, and we stay here."));
+  await heard(3000);
   document.body.classList.add("closing"); music.tense();                       // the lights start to close
   $("#answers", el).innerHTML = say("luna", "Wait. The glass is warm.");
-  await sleep(1800);
+  await heard(1800);
   $("#hush", el).textContent = "Nobody is breathing. The glass is moving on its own.";
   $("#spell", el).textContent = "";
   $("#spell", el).classList.add("blood");
@@ -805,11 +830,11 @@ async function finale(el) {
   setTimeout(() => document.body.classList.remove("shake"), 700);
   await sleep(900);
   $("#answers", el).innerHTML = say("luna", a.luna, a.cites);                    // it followed them
-  await sleep(3400);
+  await heard(3400);
   $("#answers", el).insertAdjacentHTML("beforeend", say("xochi", "She came with the video. We opened it. We let her in."));
-  await sleep(3400);
+  await heard(3400);
   $("#answers", el).insertAdjacentHTML("beforeend", say("bigotes", a.bigotes, a.cites));
-  await sleep(2600);
+  await heard(2600);
   $("#answers", el).insertAdjacentHTML("beforeend", `<div class="scream">RUN! RUN! RUN!</div>`);
   sound.beep(180, 120, 0.06);
   await sleep(500);
@@ -818,7 +843,7 @@ async function finale(el) {
   el.querySelector(".crew-right")?.classList.add("flee-right");
   el.querySelector(".crew-top")?.classList.add("flee-up");
   setTimeout(() => el.querySelector(".board-ghost")?.classList.add("stays"), 1200);   // everyone ran. It did not.
-  await sleep(2200);
+  await heard(2200);
   if (document.body.contains(el)) goTo("end");
 }
 
@@ -830,7 +855,7 @@ function chips({ breathing, blinks, expression }) {
   if (breathing) set("chipBreath", Math.round(breathing));
   set("chipBlink", blinks ?? "--"); set("chipFace", expression ?? "--");
   const g = document.querySelector("#blinker img");
-  if (g && blinks > lastBlinks) { g.style.transform = `scale(${Math.min(2.6, 1 + blinks * 0.14)})`; sound.beep(70, 240, 0.08); }
+  if (g && blinks > lastBlinks) { g.style.transform = `scale(${Math.min(1.7, 1 + blinks * 0.03)})`; sound.beep(70, 240, 0.08); }
   lastBlinks = blinks ?? lastBlinks;
 }
 async function startLive(el, scope, sel = "#scopeMe") {
@@ -875,7 +900,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
         const { scope: sc, sel: at } = state.view;
         if (pulse && !found) {
           found = true; clearTimeout(slow); sound.chime(); say_("Got you. That heartbeat is yours.");
-          if (SCREENS[state.i].id === "room") nextUp([{ label: "Is someone here?", main: true, do: () => $("#roomAsk")?.click() }, { label: "Main menu", do: () => goTo("menu") }], "It has your heartbeat. Next:");
+          if (SCREENS[state.i].id === "room") nextUp([{ label: "Is someone here?", main: true, do: () => $("#roomAsk")?.click() }, { label: "Generate report", do: makeReport }, { label: "Main menu", do: () => goTo("menu") }], "It has your heartbeat. Next:");
         }
         if (pulse) { sc.set(pulse); const b = document.querySelector(`${at} [data-bpm]`); if (b) b.textContent = Math.round(pulse); }
         const st = document.querySelector(`${at} [data-state]`); if (st) st.textContent = pulse ? "LIVE" : weak ? "WEAK SIGNAL" : "WARMING UP";
@@ -888,7 +913,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
         const f = $("#breathFill"); if (f) f.style.width = level * 100 + "%";
         if (level < 0.15) state.lastExhale = performance.now();
       },
-      onValidation: (code, hint) => { if (code && hint) { toast(hint, 1800); if (!found) say_(hint, true); } },
+      onValidation: (code, hint) => { if (code && hint && !found) { if ($("#liveStat")) say_(hint, true); else toast(hint, 1800); } },
       onError: (code, message) => {
         console.error("SmartSpectra error", code, message);
         const st = document.querySelector(`${state.view.sel} [data-state]`); if (st) st.textContent = "ERROR";
@@ -916,12 +941,46 @@ function downloadDossier() {
     ...ev.map((e) => `${e.id}  ${KIND[e.kind].name}: ${e.value} ${e.unit}, ${fmt(e.t0)}${e.t1 !== e.t0 ? " to " + fmt(e.t1) : ""}`),
     "", "THE CREW", ...reading(ev).map((l) => `${l.who.toUpperCase()}: ${l.text} [${l.cites.join(", ")}]`),
     "", sp ? `THE SPIRIT (fiction): ${sp.name}, ${sp.archetype}. ${sp.story}` : "",
-    "", `${state.mode === "replay" ? "These numbers are samples." : "The measurements are real."} The spirit is fiction. No frames, images or faces are in this file.`,
   ];
   const a = document.createElement("a");
   a.href = URL.createObjectURL(new Blob([L(lines.join("\n"))], { type: "text/plain" }));
   a.download = "xochi-dossier.txt"; a.click();
-  toast("Dossier saved. It holds numbers and words only.");
+  toast("Dossier saved.");
+}
+
+// ------------------------------------------------------------------ the session report (built on request, numbers and words only)
+/** Your own video ends in its report: there is no Marina, no second tape and no séance to go to. */
+async function finishOwnTape(el, scan) {
+  if (!document.body.contains(el)) return;
+  state.tapeDone = true; updateNav();
+  if (!scan) {
+    $("#anStatus", el).textContent = "The detector could not read this video.";
+    return nextUp([{ label: "Try another video", main: true, do: () => goTo("dare") }, { label: "Main menu", do: () => goTo("menu") }]);
+  }
+  state.report = buildReport(scan, { source: "video", when: new Date().toISOString() });
+  $("#anStatus", el).textContent = "Analysis finished.";
+  $("#tapeNotes", el).innerHTML = say("xochi", "Analysis done. Your report is ready.");
+  await Promise.all([sleep(1800), voice.idle()]);
+  if (document.body.contains(el)) goTo("report");
+}
+function leaveOwnTape() {
+  URL.revokeObjectURL(state.ownTape);
+  state.ownTape = null; state.video = null; state.tapeSrc = null; state.scans = null; state.evidence = [];
+  state.mode = state.liveSdk && state.info.caseVideo ? "live" : "replay";
+  $("#mode").hidden = state.mode !== "replay";
+}
+async function makeReport() {
+  const scan = state.live?.scan ?? state.fakeScan; if (!scan) return;
+  state.report = buildReport(scan, { stats: state.live ? window.__presageStats : null, simulated: !state.live, glassAt: state.glassStoppedAt ?? null, when: new Date().toISOString() });
+  state.glassStoppedAt = null;
+  await cameraOff();
+  goTo("report");
+}
+function saveReport(el) {
+  const a = document.createElement("a");
+  a.href = URL.createObjectURL(new Blob([reportFile($("#reportBody", el), "Ghost Detector report")], { type: "text/html" }));
+  a.download = `ghost-detector-report-${(state.report.when ?? "").slice(0, 10)}.html`; a.click();
+  toast("Report saved.");
 }
 
 // ------------------------------------------------------------------ navigation
@@ -930,12 +989,12 @@ const SECTIONS = [
   { name: "The 30 nights", ids: ["calendar"] },
   { name: "Marina's video", ids: ["case", "tape", "point", "locker"] },
   { name: "The Séance", ids: ["board", "dossier", "end"] },
-  { name: "Your turn", ids: ["dare", "consent", "room"] },
+  { name: "Your turn", ids: ["dare", "consent", "room", "report"] },
   { name: "Proof and tests", ids: ["tested"] },
 ];
 function updateNav() {
   const s = SCREENS[state.i];
-  $("#next").textContent = s.next ?? "Next →";
+  $("#next").textContent = (typeof s.next === "function" ? s.next() : s.next) ?? "Next →";
   $("#next").disabled = s.canNext ? !s.canNext() : false;
   $("#back").style.visibility = state.hist.length ? "visible" : "hidden";
   $("#where").textContent = `${Lx(s.chapter)} · ${state.i + 1} ${getLang() === "pt" ? "de" : "of"} ${SCREENS.length}`;
@@ -951,7 +1010,7 @@ function updateNav() {
 function spiritCard(sp, seen) {
   const all = !sp.unknown, known = (q) => all || seen.has(q);
   return `<div class="kicker">${known("protect") ? `${sp.archetype} · cites ${sp.cites.join(", ")}` : "Unknown spirit"}</div>
-      <h2 style="margin:2px 0">${known("who") ? sp.name : "Who is she?"}</h2><p style="margin:0">${known("from") ? sp.story : sp.unknown}${known("protect") ? ` <i class="muted">Its goal: ${sp.goal}.</i>` : ""}</p>
+      <h2 style="margin:2px 0">${known("who") ? sp.name : "Who is she?"}</h2><p style="margin:0">${known("from") || known("protect") ? sp.story : sp.unknown}${known("protect") ? ` <i class="muted">Its goal: ${sp.goal}.</i>` : ""}</p>
       <div class="kinds"><span>Kinds of spirit:</span>${SPIRIT_KINDS.map((k) => `<i class="${known("protect") && k === sp.archetype ? "on" : ""}">${k}</i>`).join("")}</div>`;
 }
 
@@ -961,7 +1020,7 @@ function proofHTML() {
     ["Chest movement", "breathing.upperTrace", "Your exhale moves the glass"], ["Talking", "face.talking", "The glass waits while you speak"],
     ["Blinks", "face.blinking", "The figure moves only when you blink"], ["Facial expression", "face.expression", "Becomes an evidence card"], ["Face checks", "validationStatus", "Light, distance and a second face in the frame"]];
   const asks = [["Live signal", "Pulse, breathing and expressions from your own camera, in the Room."], ["Camera consent", "A rules screen first. The camera starts only when you press the button, video only, and one click turns it off."],
-    ["Storage and deletion", "No frames or video are saved. Readings stay in memory and vanish when the app closes."], ["Sharing", "The app adds no server of its own. Frames go to the Presage SDK, which uses your key to reach Presage."],
+    ["Storage and deletion", "No frames or video are saved. Readings stay in memory and vanish when the app closes. A report is saved only if you press Save, numbers and words only."], ["Sharing", "The app adds no server of its own. Frames go to the Presage SDK, which uses your key to reach Presage."],
     ["SDK telemetry", "Off in the code (enableTelemetry: false)."], ["Optional AI service", "None. No language model is called."], ["Not medical", "A game. No diagnosis, treatment or health advice."], ["Never covert", "A pill on top shows when the camera is on, and other people's videos need their consent."]];
   return `<div class="card dark proof">
     <div class="kicker">Prize category we are entering</div>
@@ -1022,6 +1081,7 @@ function go(i, isBack) {
   if (i < 0 || i >= SCREENS.length) i = 0;
   if (!isBack && state.started && i !== state.i) state.hist.push(state.i);
   state.started = true;
+  if (state.ownTape && !["tape", "report"].includes(SCREENS[i].id)) leaveOwnTape();
   document.body.classList.remove("closing", "redflash");
   music.stop(SCREENS[i].id !== "board");
   if (i >= SCREENS.findIndex((x) => x.id === "locker") && !state.evidence.length) state.evidence = buildEvidence(sampleScans());

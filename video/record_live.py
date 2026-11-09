@@ -53,7 +53,7 @@ def main():
         TMP.mkdir(parents=True)
         cdp = page.context.new_cdp_session(page)
         queue = []
-        cdp.on("Page.screencastFrame", queue.append)
+        cdp.on("Page.screencastFrame", lambda frame: queue.append(frame))
         cdp.send("Page.startScreencast", {"format": "jpeg", "quality": 85, "everyNthFrame": 2})
         n, start, stamps = 0, time.monotonic(), []
         while time.monotonic() - start < AFTER_LIVE:

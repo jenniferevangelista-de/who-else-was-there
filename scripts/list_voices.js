@@ -5,7 +5,7 @@ import { buildEvidence } from "../src/evidence.js";
 import { answer, reading, QUESTIONS } from "../src/spirit.js";
 import { sampleScans, SAMPLE_CASE } from "../src/sample.js";
 import { sampleMonth } from "../src/nights.js";
-import { L, setLang } from "../src/i18n.js";
+import { Lx, setLang } from "../src/i18n.js";
 
 const src = readFileSync("app/renderer/app.js", "utf8");
 const plain = (s) => s.replace(/<[^>]+>/g, "").replace(/\s+/g, " ").trim();
@@ -13,7 +13,7 @@ const lines = new Map();
 const add = (who, text) => {
   if (text.includes("${")) return;
   setLang("en"); const en = plain(text); if (en) lines.set(en, { who, lang: "en" });
-  setLang("pt"); const pt = plain(L(text)); setLang("en"); if (pt && pt !== en) lines.set(pt, { who, lang: "pt" });
+  setLang("pt"); const pt = plain(Lx(text)) === en ? plain(Lx(en)) : plain(Lx(text)); setLang("en"); if (pt && pt !== en) lines.set(pt, { who, lang: "pt" });
 };
 
 for (const m of src.matchAll(/say\("(luna|bigotes|xochi)",\s*"((?:[^"\\]|\\.)*)"/g)) add(m[1], m[2]);

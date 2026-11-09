@@ -22,12 +22,32 @@
  {
   "who": "bigotes",
   "lang": "en",
+  "text": "I'll watch every pulse in this video. Ghosts don't have one, people do."
+ },
+ {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Vou observar cada pulso deste vídeo. Fantasma não tem, gente tem."
+ },
+ {
+  "who": "bigotes",
+  "lang": "en",
   "text": "I'll watch her pulse. Ghosts don't have one, people do."
  },
  {
   "who": "bigotes",
   "lang": "pt",
   "text": "Vou observar o pulso dela. Fantasma não tem, gente tem."
+ },
+ {
+  "who": "luna",
+  "lang": "en",
+  "text": "Were you expecting anyone else in this video?"
+ },
+ {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Você esperava mais alguém neste vídeo?"
  },
  {
   "who": "luna",
@@ -100,9 +120,24 @@
   "text": "Uma respiração presa bem na linha dos 3 segundos só é percebida às vezes. Abaixo disso, nunca. Prefiro perder um suspiro a inventar um."
  },
  {
+  "who": "luna",
+  "lang": "en",
+  "text": "We have the answers for this case. I will get back to our client tonight: Marina can rest."
+ },
+ {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Já temos as respostas do caso. Vou retornar para a cliente hoje à noite: a Marina pode ficar tranquila."
+ },
+ {
   "who": "xochi",
   "lang": "en",
   "text": "Case closed. Odette stays in Marina's hallway, and we stay here."
+ },
+ {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "Caso encerrado. A Odette fica no corredor da Marina, e nós ficamos aqui."
  },
  {
   "who": "luna",
@@ -110,9 +145,19 @@
   "text": "Wait. The glass is warm."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Espera. O copo está quente."
+ },
+ {
   "who": "xochi",
   "lang": "en",
   "text": "She came with the video. We opened it. We let her in."
+ },
+ {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "Ela veio junto com o vídeo. A gente abriu. A gente deixou ela entrar."
  },
  {
   "who": "luna",
@@ -123,6 +168,16 @@
   "who": "luna",
   "lang": "pt",
   "text": "TODO MUNDO PRA FORA! Fora, fora, fora!"
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
+  "text": "Analysis done. Your report is ready."
+ },
+ {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "Análise feita. Seu relatório está pronto."
  },
  {
   "who": "luna",
@@ -250,9 +305,19 @@
   "text": "She lived here, in this same house, long ago. One night something told her to stay. She went out by that door anyway, and she never came home."
  },
  {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Ela morou aqui, nesta mesma casa, há muito tempo. Uma noite, algo disse para ela ficar. Ela saiu por aquela porta mesmo assim, e nunca mais voltou."
+ },
+ {
   "who": "bigotes",
   "lang": "en",
   "text": "A glass spelled two words. What I measured is a face with 0 beats per minute, and that face cannot tell me where it is from."
+ },
+ {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "Um copo soletrou duas palavras. O que eu medi foi um rosto com 0 batimentos por minuto, e esse rosto não me diz de onde veio."
  },
  {
   "who": "luna",
@@ -297,17 +362,22 @@
  {
   "who": "luna",
   "lang": "en",
-  "text": "She has stood at that door ever since, trying to warn whoever leaves. Everyone walked past her. Marina is the first one who stopped. She held her breath at second 21, and she stayed."
+  "text": "She has stood at that door ever since, trying to warn whoever leaves. Everyone walked past her. Marina is the first one who stopped. She held her breath at second 21, and she stayed. Now I know what she is: a guardian spirit. She was trying to protect Marina from something bad that was about to happen."
  },
  {
   "who": "luna",
   "lang": "pt",
-  "text": "Desde então ela fica naquela porta, tentando avisar quem sai. Todo mundo passou direto. A Marina foi a primeira que parou. Ela prendeu a respiração no segundo 21, e ficou."
+  "text": "Desde então ela fica naquela porta, tentando avisar quem sai. Todo mundo passou direto. A Marina foi a primeira que parou. Ela prendeu a respiração no segundo 21, e ficou. Agora eu sei o que ela é: um espírito guardião. Ela estava tentando proteger a Marina de algo ruim que ia acontecer."
  },
  {
   "who": "bigotes",
   "lang": "en",
   "text": "Marina stayed home. That part I can sign. Who asked her to is not something I can measure."
+ },
+ {
+  "who": "bigotes",
+  "lang": "pt",
+  "text": "A Marina ficou em casa. Isso eu assino. Quem pediu para ela ficar eu não consigo medir."
  },
  {
   "who": "luna",
@@ -333,6 +403,11 @@
   "who": "luna",
   "lang": "en",
   "text": "Here? Marina's house is across town. We are in our own office."
+ },
+ {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Aqui? A casa da Marina fica do outro lado da cidade. Nós estamos no nosso escritório."
  },
  {
   "who": "bigotes",

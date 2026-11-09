@@ -184,7 +184,7 @@ nav.story .where { text-align: center; font-size: 14px; color: #d8c6ea; margin-t
 .chips div { background: #ffffff0d; border: 1px solid #e8c27a2e; border-radius: 12px; padding: 7px 4px; }
 .chips b { display: block; font: 24px/1.1 var(--f-mono); color: var(--mint); text-transform: capitalize; }
 .chips span { font-size: 12px; color: #d8c6ea; }
-.blinker { display: flex; align-items: flex-end; gap: 12px; margin-top: 12px; color: var(--danger); font-style: italic; min-height: 70px; }
+.blinker { display: flex; align-items: flex-end; gap: 12px; margin-top: 12px; color: var(--danger); font-style: italic; min-height: 106px; }
 .blinker img { height: 60px; transform-origin: bottom left; transition: transform .12s; }
 #whatNow { position: fixed; left: 50%; bottom: 92px; transform: translateX(-50%); z-index: 19; display: flex; align-items: center; gap: 10px; background: #1a102cf2; border: 1px solid #e8c27a66; border-radius: 999px; padding: 7px 10px 7px 18px; box-shadow: 0 12px 30px -10px #000; white-space: nowrap; }
 #whatNow[hidden] { display: none; }
@@ -445,3 +445,11 @@ body.flash::after { content: ""; position: fixed; inset: 0; background: #fff; op
 .cliff:has(.stamp-closed) .your-turn { font-size: 50px; }
 .cliff:has(.stamp-closed) .kicker { margin-top: 10px !important; }
 .stamp-closed { font-size: 54px; padding: 8px 24px; margin-bottom: 10px; }
+
+.room-ev { grid-template-columns: repeat(3, 1fr); gap: 14px 10px; margin-top: 16px; }
+.room-ev .ev { padding: 9px 12px; cursor: default; }
+.room-ev .ev:hover { transform: none; }
+.room-ev .ev .kind { font-size: 16px; }
+.room-ev .ev .val { font-size: 26px; margin: 4px 0 2px; }
+.room-ev .ev .id { font-size: 14px; }
+.room-ev .ev .src { margin-top: 2px; }

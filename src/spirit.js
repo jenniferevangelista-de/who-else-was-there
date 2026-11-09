@@ -32,8 +32,8 @@ export function answer(qid, ev) {
       bigotes: `A glass spelled two words. What I measured is a face with 0 beats per minute, and that face cannot tell me where it is from.`,
     },
     protect: still && held && {
-      board: "SHE LISTENED", cites: [still.id, held.id],
-      luna: `She has stood at that door ever since, trying to warn whoever leaves. Everyone walked past her. Marina is the first one who stopped. She held her breath at second ${sec(held.t0)}, and she stayed.`,
+      board: "SOMETHING BAD", cites: [still.id, held.id],
+      luna: `She has stood at that door ever since, trying to warn whoever leaves. Everyone walked past her. Marina is the first one who stopped. She held her breath at second ${sec(held.t0)}, and she stayed. Now I know what she is: a guardian spirit. She was trying to protect Marina from something bad that was about to happen.`,
       bigotes: `Marina stayed home. That part I can sign. Who asked her to is not something I can measure.`,
     },
     alive: still ? {

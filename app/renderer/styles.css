@@ -437,7 +437,7 @@ body.flash::after { content: ""; position: fixed; inset: 0; background: #fff; op
 .board-name { position: absolute; left: 50%; top: 7%; transform: translate(-50%, -50%); font: 600 italic 26px/1 var(--f-title); color: #6d4019; letter-spacing: 1px; white-space: nowrap; }
 .planchette { width: 76px; height: 92px; }
 .stamp-closed { display: inline-block; font: 700 clamp(44px, 6vw, 76px)/1 var(--f-title); letter-spacing: 6px; color: var(--danger); border: 6px solid var(--danger); border-radius: 12px; padding: 12px 28px; margin-bottom: 18px; transform: rotate(-5deg); text-shadow: 0 0 22px #ff668066; animation: stampdown .35s cubic-bezier(.3,1.5,.5,1) both; }
-@keyframes stampdown { from { transform: rotate(-5deg) scale(2.4); opacity: 0; } to { transform: rotate(-5deg) scale(1); opacity: 1; } }
+@keyframes stampdown { from { transform: rotate(-5deg) scale(1.25); opacity: 0; } to { transform: rotate(-5deg) scale(1); opacity: 1; } }
 
 .cliff:has(.stamp-closed) { padding: 4px 10px; }
 .cliff:has(.stamp-closed) .line { font-size: 54px; }

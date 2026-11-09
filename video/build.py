@@ -62,16 +62,22 @@ narr = json.loads((HERE / "timeline.json").read_text(encoding="utf-8"))
 scenes = {s["key"]: s for s in json.loads((REC / "scenes.json").read_text(encoding="utf-8"))}
 LIVE = REC / "live.mp4"
 HAS_LIVE = LIVE.exists()
+TAPE = REC / "tape.mp4"      # the real SDK reading an uploaded video (record_tape.py), with the picture covered
+HAS_TAPE = TAPE.exists()
+CLIP = {"live": (LIVE, HAS_LIVE), "tape": (TAPE, HAS_TAPE)}
+SPIRITS = ["Guardian", "Haunter", "Watcher", "Intruder", "Shade", "Veiled", "Visitor"]
+REQUIRED = ["Working app on the SmartSpectra SDK", "Live Presage signals, shown on screen", "DEV post on the official template", "Public code with setup steps", "Demo video", "No login needed",
+            "Consent, storage, sharing", "Retention and deletion", "SDK telemetry off, no AI service", "No diagnosis or treatment claims", "No medical decisions", "Never covert: consent comes first"]
 TL, _t = [], 0.4
 for n in narr:
     d, it = n["dur"], {**n, "t0": _t}
     if n["kind"] == "card":
         seg_len = d + 1.4
     else:
-        if n["kind"] == "live" and HAS_LIVE:
-            v0, v1 = 0.0, _dur(LIVE)
+        if n["kind"] in CLIP and CLIP[n["kind"]][1]:
+            v0, v1 = 0.0, _dur(CLIP[n["kind"]][0])
         else:
-            s = scenes["room" if n["kind"] == "live" else n["id"]]
+            s = scenes[{"live": "room", "tape": "tape"}.get(n["kind"], n["id"])]     # no consented video: the analysis screen on the sample tape, tagged as sample
             v0, v1 = s["start"], max(s["start"] + .5, s["end"] - .35)   # never hold on the first frame of the next screen
         tail = 2.2 if n["id"] == "point" else 1.8 if n["id"] == "end" else 0.9
         speed = min(3.0, max(1.0, (v1 - v0) / (d + tail)))
@@ -169,12 +175,12 @@ def _extract_check():
 
 
 def rec_frame(it, t):
-    src = "live" if it["kind"] == "live" and HAS_LIVE else "tour"
+    src = it["kind"] if it["kind"] in CLIP and CLIP[it["kind"]][1] else "tour"
     sec = min(it["v1"], it["v0"] + (t - it["t0"]) * it["speed"])
     jpg = FRAMES / src / f"{int(sec * FPS) + 1:06d}.jpg"
     if jpg.exists():
         return Image.open(jpg).convert("RGB").resize((FW, FH), Image.LANCZOS)
-    tmp = OUT / f"_one_{os.getpid()}.jpg"; video = LIVE if src == "live" else REC / "tour.webm"
+    tmp = OUT / f"_one_{os.getpid()}.jpg"; video = CLIP[src][0] if src in CLIP else REC / "tour.webm"
     subprocess.run([FF, "-v", "error", "-y", "-ss", f"{sec:.3f}", "-i", str(video), "-frames:v", "1", "-q:v", "2", str(tmp)], check=True)
     im = Image.open(tmp).convert("RGB").resize((FW, FH), Image.LANCZOS); im.load(); tmp.unlink()
     return im
@@ -195,10 +201,20 @@ def render(t):
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     k = min(1.0, (t - it["t0"]) / 0.35)                 # the scene settles in
     if it["kind"] == "card":
-        wi = wisp(420, m, t)
-        img.alpha_composite(wi, (W // 2 - 210, int(420 + bob)))
+        wi = wisp(300 if it["id"] == "entry" else 420, m, t)
+        img.alpha_composite(wi, (1590, int(600 + bob)) if it["id"] == "entry" else (W // 2 - 210, int(420 + bob)))
         d = ImageDraw.Draw(img)
-        if it["id"] == "hello":
+        if it["id"] == "entry":
+            d.text((90, 66), "Entered in", font=font("Kalam-Bold.ttf", 46), fill=MINT, anchor="lm")
+            d.text((90, 150), "Most Creative or Delightful Use", font=font("Creepster-Regular.ttf", 104), fill=PINK, anchor="lm")
+            d.text((90, 252), "Every requirement, met", font=font("Kalam-Bold.ttf", 56), fill=CREAM, anchor="lm")
+            shown = int(max(0, t - it["t0"] - 3.2) / max(.1, it["dur"] - 3.6) * len(REQUIRED) + 1)     # they tick in while she speaks
+            for j, req in enumerate(REQUIRED[:shown]):
+                x, y = 100 + (j // 6) * 740, 350 + (j % 6) * 98
+                d.ellipse((x, y, x + 56, y + 56), fill=MINT)
+                d.line([(x + 14, y + 29), (x + 25, y + 41), (x + 44, y + 16)], fill=INK, width=7, joint="curve")
+                d.text((x + 76, y + 28), req, font=font("Kalam-Bold.ttf", 38), fill=CREAM, anchor="lm")
+        elif it["id"] == "hello":
             d.text((W / 2, 150), "GHOST HUNT", font=font("Creepster-Regular.ttf", 150), fill=PINK, anchor="mm")
             d.text((W / 2, 280), "Who Else Was There?", font=font("Kalam-Bold.ttf", 76), fill=CREAM, anchor="mm")
             d.text((W / 2, 362), "a heartbeat is the evidence  ·  built on Presage SmartSpectra", font=font("Kalam-Bold.ttf", 38), fill=MINT, anchor="mm")
@@ -214,14 +230,22 @@ def render(t):
         d = ImageDraw.Draw(img)
         y0 = int(52 - (1 - k) * 12)
         d.text((FX + 8, y0), it["title"], font=font("Kalam-Bold.ttf", 54), fill=CREAM, anchor="lm")
-        is_live = it["kind"] == "live"
-        if is_live and HAS_LIVE:
-            d.rounded_rectangle((FX + FW - 250, 26, FX + FW, 78), 26, fill=DANGER)
-            d.text((FX + FW - 125, 52), "LIVE SIGNAL", font=font("Kalam-Bold.ttf", 32), fill=(255, 255, 255), anchor="mm")
-        elif is_live:
+        is_live = it["kind"] in CLIP
+        if it["id"] == "kinds":                         # the seven kinds, large enough to read in a video
+            n_on = min(7, int(max(0, t - it["t0"]) / 0.45) + 1); cw, gap = 196, 12; x0 = FX + (FW - 7 * cw - 6 * gap) / 2; y1 = FY + FH - 26
+            d.rounded_rectangle((x0 - 18, y1 - 92, x0 + 7 * cw + 6 * gap + 18, y1 + 8), 20, fill=(26, 15, 43))
+            for j, name in enumerate(SPIRITS[:n_on]):
+                on = j == 0; x = x0 + j * (cw + gap)
+                d.rounded_rectangle((x, y1 - 76, x + cw, y1 - 8), 30, fill=PINK if on else (58, 42, 80))
+                d.text((x + cw / 2, y1 - 42), name, font=font("Kalam-Bold.ttf", 36), fill=INK if on else CREAM, anchor="mm")
+        if is_live and CLIP[it["kind"]][1]:
+            label = "LIVE SIGNAL" if it["kind"] == "live" else "REAL SDK READING"; pw = 250 if it["kind"] == "live" else 330
+            d.rounded_rectangle((FX + FW - pw, 26, FX + FW, 78), 26, fill=DANGER)
+            d.text((FX + FW - pw / 2, 52), label, font=font("Kalam-Bold.ttf", 32), fill=(255, 255, 255), anchor="mm")
+        elif it["kind"] == "live":
             d.rounded_rectangle((FX + 280, FY + 330, FX + FW - 280, FY + 530), 22, fill=(180, 20, 40, 235))
             d.text((FX + FW / 2, FY + 430), "NOT LIVE · placeholder", font=font("Creepster-Regular.ttf", 90), fill=(255, 255, 255), anchor="mm")
-        elif "SAMPLE" not in it["title"] and it["id"] in ("tape", "door", "point", "map", "case"):
+        elif "SAMPLE" not in it["title"] and it["id"] in ("tape", "door", "point", "map", "case", "yourtape"):
             d.rounded_rectangle((FX + FW - 250, 30, FX + FW, 76), 23, fill=GOLD)
             d.text((FX + FW - 125, 53), "SAMPLE DATA", font=font("Kalam-Bold.ttf", 28), fill=INK, anchor="mm")
         wi = wisp(300, m, t, gaze=-2.0)
@@ -299,7 +323,7 @@ def _frame(i):
 
 def full_render():
     OUT.mkdir(exist_ok=True); mix(); write_srt(); envelopes()
-    for src, v in (("tour", REC / "tour.webm"), ("live", LIVE)):
+    for src, v in (("tour", REC / "tour.webm"), ("live", LIVE), ("tape", TAPE)):
         if v.exists():
             (FRAMES / src).mkdir(parents=True, exist_ok=True)
             subprocess.run([FF, "-v", "error", "-y", "-i", str(v), "-vf", f"fps={FPS},scale={FW}:{FH}:flags=lanczos", "-q:v", "3", str(FRAMES / src / "%06d.jpg")], check=True)

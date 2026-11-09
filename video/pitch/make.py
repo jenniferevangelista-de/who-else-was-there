@@ -42,16 +42,23 @@ LINES = [
     ("board", ["Then you ask the spirit.", "The glass moves only when you breathe out.", "Start talking, and it waits."]),
     ("seven", ["And that is the difference: we use everything.", *[r[0] + "." for r in ROWS], "Seven signals, and every one has a job."]),
     ("live", ["And it's real.", "On a plain webcam, Presage SmartSpectra reads the numbers on this screen, live."]),
+    ("yours", ["Or upload a video of your own.", "Everyone in it has to agree first.", "Presage reads it, and you get a report and a verdict."]),
     ("cite", ["There is no language model.", "Every word the spirit says must cite a measured number, or it vanishes."]),
+    ("kinds", ["Seven kinds of spirit, picked from the evidence.", "Luna deciphers what it wants.", "Doctor Bigotes refuses to sign."]),
     ("scans", ["The computer vision belongs to Presage, so I tested my own layer.", "Nineteen thousand synthetic scans, each with a known answer.",
                "One thousand verdicts out of one thousand, correct.", "Living faces called a ghost: zero of four hundred."]),
     ("rules", ["A held breath is found from four seconds up.", "A steady pulse never fires. A jump of eight does."]),
     ("breaks", ["Then I pushed the noise until my rules broke.", "Here is exactly where.", "Because a detector you can't trust is just a ghost story."]),
     ("consent", ["The camera is yours, and consent comes first.", "No frame saved. No video recorded. SDK telemetry off.", "It's a game, never a medical device."]),
+    ("entry", ["Entered in Most Creative or Delightful Use.", "And every requirement is met."]),
     ("end", ["Ghost Hunt.", "Who else was there?"]),
 ]
+SPIRITS = ["Guardian", "Haunter", "Watcher", "Intruder", "Shade", "Veiled", "Visitor"]
+REQUIRED = ["Working app on the SmartSpectra SDK", "Live Presage signals, shown on screen", "DEV post on the official template", "Public code with setup steps", "Demo video", "No login needed",
+            "Consent, storage, sharing", "Retention and deletion", "SDK telemetry off, no AI service", "No diagnosis or treatment claims", "No medical decisions", "Never covert: consent comes first"]
 WISP_AT = {"hook": (70, 690, 1.25), "idea": (820, 770, 1.0), "tape": (1680, 800, .9), "board": (1680, 800, .9), "seven": (130, 780, 1.0), "live": (1680, 800, .9),
-           "cite": (1640, 720, 1.1), "scans": (90, 830, .8), "rules": (1740, 60, .55), "breaks": (1610, 790, .95), "consent": (40, 820, .8), "end": (810, 300, 1.25)}
+           "cite": (1640, 720, 1.1), "scans": (90, 830, .8), "rules": (1740, 60, .55), "breaks": (1610, 790, .95), "consent": (40, 820, .8), "end": (810, 300, 1.25),
+           "yours": (1680, 800, .9), "kinds": (1660, 40, .7), "entry": (1660, 40, .7)}
 
 
 # ------------------------------------------------------------------ audio
@@ -345,6 +352,43 @@ def consent(s):
     write(s, "", body, js)
 
 
+def yours(s):
+    st = s["st"]; b = st[2] - .1
+    real = (A / "clips" / "yours.mp4").exists()     # a reading of a video where everyone agreed; without one, the sample report, tagged
+    after = vid("yr-a", "yours.mp4", b, s["dur"] - b) if real else '<img id="yr-a" class="full" src="assets/img/report.jpg">'
+    last = ("#9af5c8", "Real SDK reading, then the verdict") if real else ("#e8c27a", "The report and the verdict (sample shown)")
+    body = '<img id="yr-i" class="full" src="assets/img/dare.jpg">' + after + f'''
+<div id="yr-1" class="a pill" style="left:70px;top:900px;font-size:58px">Upload a video</div>
+<div id="yr-2" class="a pill" style="left:70px;top:900px;font-size:58px;background:#e8c27a">Everyone in it has to agree</div>
+<div id="yr-3" class="a pill" style="left:70px;top:900px;font-size:58px;background:{last[0]}">{last[1]}</div>'''
+    js = ft("#yr-i", 0, "opacity:0", "opacity:1", .2) + ft("#yr-1", st[0]) + out_("#yr-1", st[1] - .15) + ft("#yr-2", st[1]) + out_("#yr-2", b - .15) + f'tl.set("#yr-i",{{opacity:0}},{b + .05:.2f});\n' + ("" if real else ft("#yr-a", b, "opacity:0", "opacity:1", .2)) + ft("#yr-3", b + .1)
+    write(s, "", body, js)
+
+
+def kinds(s):
+    st = s["st"]
+    chips = "".join(f'<div id="kd-c{i}" class="a" style="left:{90 + i * 250}px;top:250px;width:236px;height:104px;line-height:104px;text-align:center;border-radius:52px;font-size:44px;font-weight:600;background:#3a2a50;color:#f6f0ff">{n}</div>' for i, n in enumerate(SPIRITS))
+    body = f'''<div id="kd-t" class="a d" style="left:90px;top:70px;font-size:130px">Seven kinds of spirit</div>{chips}
+<div id="kd-l" class="a" style="left:90px;top:440px;width:1040px;background:#fff8f0;color:#2a1838;border-radius:18px;padding:34px 42px 34px 240px;height:330px"><img src="assets/img/luna.svg" class="a" style="left:30px;top:60px;width:190px"><div style="font-size:40px;font-weight:600;color:#c23a6d">Luna deciphers what it wants</div><div class="d" style="font-size:66px;margin-top:10px">To stop anyone else from leaving by that door.</div></div>
+<div id="kd-b" class="a" style="left:1170px;top:520px;width:680px;background:#241636;border-radius:18px;padding:30px 34px 30px 190px;height:250px"><img src="assets/img/bigotes.svg" class="a" style="left:18px;top:42px;width:160px"><div style="font-size:40px;font-weight:600;color:#9af5c8">Dr. Bigotes</div><div style="font-size:44px;margin-top:8px">"Who asked her to is not something I can measure."</div></div>
+<div id="kd-e" class="a s" style="left:90px;top:830px;font-size:62px;color:#9af5c8">Guardian = a face with no pulse + a held breath</div>'''
+    js = ft("#kd-t", st[0])
+    for i in range(7): js += ft(f"#kd-c{i}", st[0] + .25 + i * .22, "opacity:0,y:24", "opacity:1,y:0", .25)
+    js += f'tl.to("#kd-c0",{{backgroundColor:"#ff86b8",color:"#1a0f2b",scale:1.08,duration:.3,ease:"power2.out"}},{st[0] + 2.1:.2f});\n' + ft("#kd-e", st[0] + 2.3, "opacity:0", "opacity:1") + ft("#kd-l", st[1]) + ft("#kd-b", st[2])
+    write(s, "", body, js)
+
+
+def entry(s):
+    st = s["st"]
+    rows = "".join(f'<div id="et-r{i}" class="a" style="left:{90 + (i // 6) * 850}px;top:{410 + (i % 6) * 104}px;width:840px;height:90px;font-size:42px;line-height:90px"><span style="display:inline-block;width:62px;height:62px;line-height:62px;margin-right:22px;border-radius:31px;background:#9af5c8;color:#1a0f2b;text-align:center;font-size:44px;font-weight:700;vertical-align:middle">&#10003;</span>{r}</div>' for i, r in enumerate(REQUIRED))
+    body = f'''<div id="et-k" class="a" style="left:90px;top:60px;font-size:50px;color:#9af5c8">Entered in</div>
+<div id="et-t" class="a d" style="left:90px;top:120px;font-size:124px">Most Creative or Delightful Use</div>
+<div id="et-q" class="a" style="left:90px;top:300px;font-size:64px;font-weight:600;color:#ff86b8">Every requirement, met</div>{rows}'''
+    js = ft("#et-k", st[0]) + ft("#et-t", st[0] + .1) + ft("#et-q", st[1])
+    for i in range(len(REQUIRED)): js += ft(f"#et-r{i}", st[1] + .15 + i * .12, "opacity:0,x:30", "opacity:1,x:0", .22)
+    write(s, "", body, js)
+
+
 def end(s):
     st = s["st"]
     body = '''<div id="en-a" class="a" style="left:0;top:40px;width:1920px;text-align:center;font-size:210px;line-height:1;color:#ff86b8;font-weight:700">Ghost Hunt</div>
@@ -406,8 +450,10 @@ def assets():
     for src, dst in [("fredoka/files/fredoka-latin-400-normal.woff2", "fredoka-400.woff2"), ("fredoka/files/fredoka-latin-600-normal.woff2", "fredoka-600.woff2"), ("fredoka/files/fredoka-latin-700-normal.woff2", "fredoka-700.woff2"),
                      ("cormorant-garamond/files/cormorant-garamond-latin-600-italic.woff2", "cormorant-600i.woff2"), ("cormorant-garamond/files/cormorant-garamond-latin-700-italic.woff2", "cormorant-700i.woff2"), ("vt323/files/vt323-latin-400-normal.woff2", "vt323.woff2")]:
         shutil.copy(fs / src, A / "fonts" / dst)
-    for f in ("heart.svg", "heart-still.svg"): shutil.copy(ROOT / "app" / "renderer" / "img" / f, A / "img" / f)
-    shutil.copy(ROOT / "docs" / "screens" / "consent.jpg", A / "img" / "consent.jpg")
+    for f in ("heart.svg", "heart-still.svg", "luna.svg", "bigotes.svg"): shutil.copy(ROOT / "app" / "renderer" / "img" / f, A / "img" / f)
+    for f in ("consent.jpg", "dare.jpg", "report.jpg"): shutil.copy(ROOT / "docs" / "screens" / f, A / "img" / f)
+    if (ROOT / "video" / "recordings" / "tape.mp4").exists():
+        subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(ROOT / "video" / "recordings" / "tape.mp4"), "-vf", "scale=1920:1080:flags=lanczos,fps=30", "-an", "-c:v", "libx264", "-crf", "20", "-preset", "veryfast", "-pix_fmt", "yuv420p", str(A / "clips" / "yours.mp4")], check=True)
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-i", str(ROOT / "video" / "recordings" / "live.mp4"), "-vf", "crop=704:396:608:16,scale=1920:1080:flags=lanczos,fps=30",   # only the detector panel
                     "-an", "-c:v", "libx264", "-crf", "20", "-preset", "veryfast", "-pix_fmt", "yuv420p", str(A / "clips" / "live_scope.mp4")], check=True)
 

@@ -57,8 +57,10 @@ def main():
             page.click(f'.q[data-q="{q}"]'); wait(0.5); page.wait_for_selector(".q:not([disabled])", timeout=90000); wait(6)
         scene("board", lambda: (ask("who"), ask("from")))
         scene("reading", lambda: ask("protect"))
+        scene("kinds", lambda: wait(9))       # the spirit's file: the seven kinds, and what this one wants
         scene("end", lambda: (page.click('.q[data-q="bye"]'), page.wait_for_selector(".stamp-closed", timeout=120000), wait(6)))
         page.click("#whatNow .wn.main"); scene("dare", lambda: wait(6))
+        scene("upload", lambda: (wait(2.5), page.click("#tapeAgree"), wait(4.5)))     # the file picker unlocks only after consent
         page.click("#goRoom"); scene("consent", lambda: wait(7))
         nxt(); scene("room", lambda: (page.click("#roomOn"), wait(15)))
         page.click("#roomReport"); page.wait_for_selector("#reportBody"); scene("report", lambda: wait(9))

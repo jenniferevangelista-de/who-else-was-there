@@ -33,12 +33,16 @@ LINES = [
     ("live", "live", "wisp", "Now it reads you, live", "Now the detector reads you, live. Just a webcam. Presage SmartSpectra finds your pulse and your breathing, and the numbers on this screen are yours."),
     ("board", "rec", "wisp", "The board", "Then the spirit answers on the board. The glass only moves when you breathe out. Start talking, and it waits. Her name is Odette."),
     ("reading", "rec", "wisp", "The Guardian", "She lived in this house long ago. One night she left by that door and never came home. Now she stands there to warn whoever leaves, and Marina is the first who stopped. Luna calls her a guardian. Doctor Bigotes refuses to sign it."),
+    ("kinds", "rec", "wisp", "Seven kinds of spirit", "Every spirit gets a kind, picked from the evidence. A still face and a held breath make a Guardian. Six more kinds wait on other tapes. And Luna deciphers what it wants: to stop anyone else from leaving by that door."),
     ("end", "rec", "wisp", "Case closed", "The crew says goodbye and relaxes. Then the glass moves on its own. I am here. They are across town from Marina's house. She came with the video. Case closed."),
     ("dare", "rec", "wisp", "Do you dare?", "Do you dare? Bring a tape of your own, if everyone in it agreed. Or let the detector read you."),
+    ("upload", "rec", "wisp", "Bring your own video", "You can upload a video of your own. The button stays locked until you confirm that everyone in it agreed."),
+    ("yourtape", "tape", "wisp", "How a video gets analyzed", "Then Presage reads it as it plays, second by second, the same way it read this sample tape. Is there a spirit in it?"),
     ("room", "rec", "wisp", "The Room", "In the Room, it's your heart on the table. Turn your camera on, or bring a video, and the detector reads the pulse in it."),
-    ("report", "rec", "wisp", "The report", "When you are done, it writes the report. Your numbers, the technology that read them, and the result: no spirit detected. This time."),
+    ("report", "rec", "wisp", "The report", "Your camera or your video, it ends the same way: the report. Your numbers, the technology that read them, and the result: no spirit detected. This time."),
     ("tested", "rec", "wisp", "Planted ghosts", f"Doctor Bigotes insisted on testing it. {LIVING} planted living faces, and {GHOSTED} called a ghost. {R['unit_tests']} unit tests, {R['frames_saved']} frames saved, and {R['language_model_calls']} language model calls."),
     ("consent", "rec", "wisp", "The rules of the house", "The camera turns on only when you press a button. No video is recorded, and this is a game, never a medical device."),
+    ("entry", "card", "jennifer", "Every requirement, met", "I'm entering Most Creative or Delightful Use. And every requirement is met: a working SDK integration, live signals on screen, public code with setup steps, this demo, and full answers on consent and data. No login. No diagnosis. No covert monitoring."),
     ("bye", "card", "jennifer", "Who else was there?", "Thank you for watching. And tell me: who else was there?"),
 ]
 

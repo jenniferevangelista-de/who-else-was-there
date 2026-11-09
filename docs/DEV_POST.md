@@ -12,7 +12,9 @@ Most camera-vitals apps measure the pulse that is there. **Ghost Hunt** hunts fo
 
 Marina was about to go out. At the door, a feeling hit her so hard she couldn't breathe, and she stayed home. She lives alone and saw nothing, but the hallway camera was on. Three tiny ghost hunters point a new instrument at her tape, the Ghost Detector. Living faces beat. The face that does not is the case.
 
-Then the spirit answers on a board that moves only when **you** breathe out. Luna believes. Dr. Bigotes doubts. Xochi writes it all down. And then it is your turn: the detector reads you, live, or a video you bring.
+Then the spirit answers on a board that moves only when **you** breathe out. Each spirit gets one of seven kinds, picked from the evidence: Guardian, Haunter, Watcher, Intruder, Shade, Veiled or Visitor. Luna, the medium, deciphers what it wants. Dr. Bigotes refuses to sign it. Xochi writes it all down.
+
+And then it is your turn. The detector reads you, live. Or upload a video of your own, once everyone in it has agreed: Presage reads it as it plays, and you get a report with the measurements and a verdict on whether there is a spirit in it.
 
 ![Nine screens of the app](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/preview_sheet.jpg)
 
@@ -76,5 +78,19 @@ With 9 bpm or more of reading noise, the pulse-jump rule starts raising false al
 - **Deletion:** close the app and the readings are gone. Delete a saved report like any file.
 - **AI services:** none at run time.
 - **Not medical:** this is a game. It does not diagnose, treat or monitor anyone.
+
+## Every Requirement, Checked
+
+| The challenge asks for | Where it is |
+| --- | --- |
+| A functional app on the SmartSpectra SDK | `app/renderer/presage.js`, `@smartspectra/node-sdk` 3.4.0 |
+| At least one live Presage signal | Seven, listed above and shown live in the demo |
+| A DEV post on the template, with the tags | This post |
+| A public repository with setup instructions | The repository above, README |
+| A demo video | Linked in Demo |
+| Testing instructions if login is needed | No login is needed |
+| Consent, storage, sharing, retention, deletion, SDK telemetry and AI services | Consent and Data Handling, above |
+| No diagnosis or treatment claims, no medical decisions | It is a game, and says so on screen |
+| No covert monitoring | Consent comes first, and other people's videos stay locked until you confirm they agreed |
 
 Built with AI coding assistance. The story, design decisions and testing direction are mine.

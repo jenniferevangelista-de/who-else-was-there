@@ -1,0 +1,22 @@
+<template>
+<style>@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-400.woff2") format("woff2");font-weight:400;font-style:normal;}@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-600.woff2") format("woff2");font-weight:600;font-style:normal;}@font-face{font-family:"Fredoka";src:url("assets/fonts/fredoka-700.woff2") format("woff2");font-weight:700;font-style:normal;}@font-face{font-family:"Cormorant";src:url("assets/fonts/cormorant-600i.woff2") format("woff2");font-weight:600;font-style:italic;}@font-face{font-family:"Cormorant";src:url("assets/fonts/cormorant-700i.woff2") format("woff2");font-weight:700;font-style:italic;}@font-face{font-family:"VT323";src:url("assets/fonts/vt323.woff2") format("woff2");font-weight:400;font-style:normal;}*{box-sizing:border-box}#root{position:absolute;inset:0;overflow:hidden;background:#1a0f2b;color:#f6f0ff;font-family:Fredoka,sans-serif}.a{position:absolute}.d{font-family:Cormorant,serif;font-style:italic;font-weight:600;line-height:1.02}.s{font-family:VT323,monospace}.pill{background:#f6f0ff;color:#2a1838;padding:12px 26px;border-radius:14px;font-weight:600}.src{font-size:28px;color:#b7a6c9}.full{position:absolute;left:0;top:0;width:1920px;height:1080px;object-fit:cover}</style>
+<div id="root" data-composition-id="yours" data-start="0" data-duration="9.14" data-width="1920" data-height="1080">
+<img id="yr-i" class="full" src="assets/img/dare.jpg"><img id="yr-a" class="full" src="assets/img/report.jpg">
+<div id="yr-1" class="a pill" style="left:70px;top:900px;font-size:58px">Upload a video</div>
+<div id="yr-2" class="a pill" style="left:70px;top:900px;font-size:58px;background:#e8c27a">Everyone in it has to agree</div>
+<div id="yr-3" class="a pill" style="left:70px;top:900px;font-size:58px;background:#e8c27a">The report and the verdict (sample shown)</div>
+</div>
+<script>
+const tl = gsap.timeline({ paused: true });
+tl.fromTo("#yr-i",{opacity:0},{opacity:1,duration:0.2,ease:"power3.out"},0.00);
+tl.fromTo("#yr-1",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},0.30);
+tl.to("#yr-1",{opacity:0,duration:0.25,ease:"power2.in"},2.52);
+tl.fromTo("#yr-2",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},2.67);
+tl.to("#yr-2",{opacity:0,duration:0.25,ease:"power2.in"},4.81);
+tl.set("#yr-i",{opacity:0},5.01);
+tl.fromTo("#yr-a",{opacity:0},{opacity:1,duration:0.2,ease:"power3.out"},4.96);
+tl.fromTo("#yr-3",{opacity:0,y:34},{opacity:1,y:0,duration:0.42,ease:"power3.out"},5.06);
+tl.to({}, { duration: 9.09 }, 0);
+window.__timelines["yours"] = tl;
+</script>
+</template>

@@ -62,6 +62,8 @@ def main():
                 f = queue.pop(0)
                 cdp.send("Page.screencastFrameAck", {"sessionId": f["sessionId"]})
                 info = page.evaluate(STATE)
+                if not (info["cam"] and info["box"]):   # she left the Room: the clip ends there
+                    start = 0; queue.clear(); break
                 shot = Image.open(io.BytesIO(base64.b64decode(f["data"]))).convert("RGB")
                 if info["box"]:                     # cover the camera preview before anything is saved
                     k = shot.width / info["w"]      # the frame is in device pixels, the box in CSS pixels
@@ -75,7 +77,7 @@ def main():
         shutil.rmtree(TMP, ignore_errors=True); print("too few frames, nothing saved:", n); return 3
     fps = (n - 1) / max(0.1, stamps[-1] - stamps[0])
     subprocess.run(["ffmpeg", "-v", "error", "-y", "-framerate", f"{fps:.3f}", "-i", str(TMP / "%06d.jpg"),
-                    "-vf", "pad=ceil(iw/2)*2:ceil(ih/2)*2,pad=ih*16/9:ih:(ow-iw)/2:0:color=0x120a1f,format=yuv420p",
+                    "-vf", r"pad=ceil(max(iw\,ih*16/9)/2)*2:ceil(max(ih\,iw*9/16)/2)*2:(ow-iw)/2:(oh-ih)/2:color=0x120a1f,format=yuv420p",
                     "-c:v", "libx264", "-crf", "18", "-r", "30", str(OUT)], check=True)
     shutil.rmtree(TMP, ignore_errors=True)
     print("saved", OUT, "frames", n, "fps", round(fps, 1))

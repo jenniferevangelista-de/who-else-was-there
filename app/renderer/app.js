@@ -358,9 +358,10 @@ const SCREENS = [
       voice.say("Do you dare?");
       $("#goRoom", el).addEventListener("click", () => goTo("room"));
       $("#tapeAgree", el).addEventListener("change", (e) => { $("#ownTape", el).disabled = !e.target.checked; $("#ownTapeBtn", el).classList.toggle("locked-btn", !e.target.checked); });
-      $("#ownTape", el).addEventListener("change", (e) => {
+      $("#ownTape", el).addEventListener("change", async (e) => {
         const f = e.target.files[0]; if (!f) return;
         if (!state.liveSdk) return toast("Reading your own tape needs the Presage key on this computer. Add it and reopen the app.", 6000);
+        await cameraOff();                     // a camera left on from the Room would compete with the video for the SDK
         state.ownTape = URL.createObjectURL(f); state.mode = "live"; state.evidence = []; state.scans = null; $("#mode").hidden = true; toast(`Loaded ${f.name}. The detector is reading it.`);
         go(SCREENS.findIndex((s) => s.id === "tape"));
       });
@@ -671,7 +672,7 @@ const SCREENS = [
         <div class="kicker">Case 03 · The Room · your camera, live</div><h2>Now the detector reads you</h2>
         <p>Turn your camera on and sit still. The Ghost Detector finds your pulse and your breath, the same way it read Marina. Then ask the room's spirit a question and <b>stay still while it answers</b>.</p>
         <p class="muted">If your pulse jumps right after the answer, the game will notice. That is the only trick: it is your own heartbeat.</p>
-        <div class="row"><button class="btn-main mint" id="roomOn">Turn my camera on</button><button class="btn-soft" id="roomAsk" disabled>Is someone here?</button><button class="btn-soft" id="roomReport" disabled>Generate report</button></div>
+        <div class="row"><button class="btn-main mint" id="roomOn">Turn my camera on</button><button class="btn-soft" id="roomVideo">Analyze a video</button><button class="btn-soft" id="roomAsk" disabled>Is someone here?</button><button class="btn-soft" id="roomReport" disabled>Generate report</button></div>
         <div class="scanstat" id="liveStat" style="margin-top:14px" hidden><div class="msg" id="liveMsg"></div><div class="bar"><div class="fill"></div></div></div>
         <div id="roomNotes" style="margin-top:12px">${say("xochi", "I will write down what the detector sees. Nothing else.")}</div>
       </div><div class="locker room-ev" id="roomEv"></div></div>
@@ -680,11 +681,11 @@ const SCREENS = [
           <img id="mePh" src="img/wisp.svg" alt="" style="position:absolute;left:50%;top:50%;width:90px;transform:translate(-50%,-50%);opacity:.5">
           <div class="overlay" id="meOv"><div class="rec"><i></i>YOU · LIVE</div></div></div>
         ${liveChips()}
-        <div class="blinker" id="blinker" hidden><img src="img/stalker.svg" alt=""><span>It only moves when you blink.</span></div></div>
+        <div class="blinker" id="blinker" hidden><img src="img/stalker.svg" alt=""></div></div>
     </div>`,
     enter(el) {
       const scope = createScope($("#scopeRoom canvas", el));
-      nextUp([{ label: "Main menu →", do: () => goTo("menu") }, { label: "See how it was tested →", do: () => goTo("tested") }]);
+      nextUp([{ label: "Analyze a video", do: () => goTo("dare") }, { label: "Main menu →", do: () => goTo("menu") }, { label: "See how it was tested →", do: () => goTo("tested") }]);
       $("#roomOn", el).addEventListener("click", async () => {
         await startLive(el, scope, "#scopeRoom");
         $("#roomAsk", el).disabled = false;
@@ -704,14 +705,15 @@ const SCREENS = [
           }
         }, 1000);
       });
+      $("#roomVideo", el).addEventListener("click", () => goTo("dare"));
       $("#roomReport", el).addEventListener("click", makeReport);
       $("#roomAsk", el).addEventListener("click", async () => {
         $("#roomNotes", el).innerHTML = say("luna", "Spirit of this room… is someone here with us?");
         await sleep(2500);
         const now = (state.live?.scan ?? state.fakeScan)?.t1 ?? 0;
         state.glassStoppedAt = now; state.roomScared = false;
-        $("#roomNotes", el).innerHTML = say("luna", "Something answered: <b>YES</b>. There is someone here with you. Stay very still…");
       });
+      if (state.live) $("#roomOn", el).click();   // back in the Room with the camera still on: pick the picture and the readings up again
     } },
 
   { id: "report", chapter: "Your report", next: "Proof and tests →", act: () => openProof("report"),
@@ -864,7 +866,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
   // The camera may already be on from an earlier screen: point the readings at this screen's scope.
   state.view = { scope, sel };
   const st0 = document.querySelector(`${sel} [data-state]`);
-  if (state.live || state.fakeLive) { if (st0) st0.textContent = state.live ? "WARMING UP" : "SIMULATED"; return; }
+  if (state.live || state.fakeLive) { if (st0) st0.textContent = state.live ? "WARMING UP" : "SIMULATED"; const v = $("#me"); if (state.live && v && state.camStream) { v.srcObject = state.camStream; v.play(); $("#mePh")?.remove(); } return; }
   const say_ = (m, wait) => { const stat = $("#liveStat"), msg = $("#liveMsg"); if (!stat || !msg) return; stat.hidden = false; stat.classList.toggle("waiting", !!wait); msg.textContent = m; if (!wait) stat.querySelector(".fill").style.width = "100%"; };   // looked up each time: the person may have moved to another screen
   if (!state.liveSdk) {   // no key: a gentle simulated breath and pulse, clearly labelled
     camUI(false);
@@ -895,7 +897,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
     const skip = async () => { await cameraOff(); state.noCam = true; goTo(SCREENS[state.i].id === "board" ? "board" : "menu"); };
     const slow = setTimeout(() => { if (found || !document.body.contains(el)) return; say_("More light on your face helps a lot. You can keep waiting or go on without the camera.", true); nextUp([{ label: "↻ Try again", do: retry }, { label: "Continue without a camera →", do: skip }], "Taking longer than usual."); }, 40000);
     state.live = await presage.live({
-      onStream: (s, name) => { const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); } if (name) toast(`Using camera: ${name}`, 3500); say_("Camera on. Sit still and look at the screen: the detector is finding your pulse, usually 15 to 20 seconds.", true); },
+      onStream: (s, name) => { state.camStream = s; const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); } if (name) toast(`Using camera: ${name}`, 3500); say_("Camera on. Sit still and look at the screen: the detector is finding your pulse, usually 15 to 20 seconds.", true); },
       onSample: ({ pulse, weak, talking, breathing, blinks, expression }) => {
         chips({ breathing, blinks, expression });
         state.talking = talking; $("#talkFlag") && ($("#talkFlag").textContent = talking ? "you're talking · the glass waits" : "");

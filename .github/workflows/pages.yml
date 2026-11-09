@@ -1,0 +1,52 @@
+name: pages
+# Publishes the game to GitHub Pages as a web demo on sample numbers.
+# The live camera reading needs the desktop app, because the Presage SDK runs natively.
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+concurrency:
+  group: pages
+  cancel-in-progress: true
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: npm run build
+      - name: Assemble the site
+        run: |
+          mkdir -p _site/app _site/dist _site/node_modules/@fontsource
+          cp -r app/renderer _site/app/
+          cp dist/app.js _site/dist/
+          for f in fredoka cormorant-garamond vt323; do
+            mkdir -p _site/node_modules/@fontsource/$f
+            cp -r node_modules/@fontsource/$f/files _site/node_modules/@fontsource/$f/
+          done
+          touch _site/.nojekyll
+          cat > _site/index.html <<'EOF'
+          <!doctype html><meta charset="utf-8"><title>Ghost Hunt</title>
+          <meta http-equiv="refresh" content="0; url=app/renderer/index.html">
+          <a href="app/renderer/index.html">Open Ghost Hunt</a>
+          EOF
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: _site
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

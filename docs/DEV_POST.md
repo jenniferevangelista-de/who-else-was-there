@@ -6,11 +6,25 @@ tags: devchallenge, presagechallenge, webdev, javascript
 
 *This is a submission for the [Presage SmartSpectra SDK Challenge](https://dev.to/devteam/join-the-presage-smartspectra-sdk-challenge-3000-in-prizes-across-10-winners-1370).*
 
+| | |
+| --- | --- |
+| **Signals** | 7 live Presage SmartSpectra signals: pulse, chest movement, breathing rate, talking, blinks, expression, validation status |
+| **Platform** | Electron desktop app, English and Portuguese |
+| **Privacy** | Camera only after consent, no frames saved, no video recorded, SDK telemetry off |
+| **Tested** | 19,000 tests on fake data with a known answer |
+| **Code** | [github.com/jenniferevangelista-de/who-else-was-there](https://github.com/jenniferevangelista-de/who-else-was-there) (MIT) |
+
 ## What I Built
 
 Most camera-vitals apps measure the pulse that is there. **Ghost Hunt** is a cute, spooky game that hunts for the pulse that is **missing**.
 
+Plenty of people would play it for real. In a 2009 Pew Research Center survey, **18% of U.S. adults** said they had seen a ghost or been in the presence of one, and **29%** said they had felt in touch with someone who had already died ([Pew Research Center](https://www.pewresearch.org/short-reads/2015/10/30/18-of-americans-say-theyve-seen-a-ghost/)). Ghost Hunt gives that feeling an instrument, and a rule: nothing counts unless the camera measured it.
+
 Marina was about to go out. At the door, a feeling hit her so hard she couldn't breathe, and she stayed home. She lives alone and saw nothing, but the hallway camera was on. Three tiny ghost hunters point a new instrument at her tape, the Ghost Detector. Living faces have a heartbeat. The face that does not is the case.
+
+| Point | Ask | Report |
+| --- | --- | --- |
+| ![The detector locked on a second face that reads 0 beats per minute](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/screens/point.jpg) | ![The spirit board, where the glass moves only when you breathe out](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/screens/board.jpg) | ![The report with a verdict, built only from measured cards](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/screens/report.jpg) |
 
 **What you can do in it**
 
@@ -81,6 +95,13 @@ A living face was called a ghost **0 times in 400**. Then I pushed the noise up 
 *How to read it: each number is how many of 200 tests got the right answer. Green is right, pink is wrong. Going up, the reading gets more jittery. Real jumps are always caught, but from 9 bpm of jitter the alarm starts going off by itself.*
 
 The README explains every chart and lists every limit I found.
+
+## What the SDK Taught Me
+
+1. **Confidence is part of the signal.** A pulse under 50% confidence does not count. Without that rule, a shaky reading looks exactly like a ghost.
+2. **Bad light is not a spirit.** The SDK's validation status says when a face cannot be read, and the game turns that into "unreadable" instead of a scary verdict.
+3. **The SDK wants a real device.** I tried a reading on a cloud server (GitHub Actions) and Presage refused to pair it (HTTP 403). The live readings in the demo come from a real computer with a camera.
+4. **Windows can block it.** With Smart App Control on, Windows blocks the SDK's unsigned libraries. The app still opens on tagged sample numbers, so nobody gets a blank screen.
 
 ## Prize Categories
 

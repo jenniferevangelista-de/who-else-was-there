@@ -1,0 +1,41 @@
+name: tape
+# Reads a fully AI-generated person through the real SDK, inside the real app, and keeps the capture.
+on: workflow_dispatch
+jobs:
+  read:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Tools
+        run: |
+          sudo apt-get update -y
+          sudo apt-get install -y ffmpeg xvfb libvulkan1 mesa-vulkan-drivers libnss3 libgbm1 libgtk-3-0 libasound2t64 libxss1
+          pip install playwright pillow
+      - name: Install and build
+        run: |
+          npm install --no-audit --no-fund
+          npm run build
+      - name: Read the video
+        env:
+          PRESAGE_API_KEY: ${{ secrets.PRESAGE_API_KEY }}
+        run: |
+          test -n "$PRESAGE_API_KEY" || { echo "The PRESAGE_API_KEY secret is missing"; exit 1; }
+          xvfb-run -a -s "-screen 0 1600x900x24" npx electron . --no-sandbox --remote-debugging-port=9333 > app.log 2>&1 &
+          for i in $(seq 1 60); do curl -s http://127.0.0.1:9333/json | grep -q index.html && break; sleep 1; done
+          sleep 8
+          python video/record_tape.py video/ai_sample/generated_person.mp4 --show
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: ghost-hunt-tape
+          retention-days: 7
+          path: |
+            video/recordings/tape.mp4
+            app.log

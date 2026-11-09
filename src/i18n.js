@@ -88,7 +88,7 @@ const PHRASES = Object.entries({
   "<b>You will see yourself</b> on this screen. No frame or video is saved.": "<b>Você vai se ver</b> nesta tela. Nenhum quadro ou vídeo é salvo.",
   "<b>Only bring tapes where everyone agreed to be in them.</b> The detector reads the people in a video, so they get a say.": "<b>Só traga vídeos em que todos concordaram em aparecer.</b> O detector lê as pessoas do vídeo, então elas têm direito de opinar.",
   "<b>This is a game, not a medical device.</b> A pulse here is a story clue.": "<b>Isto é um jogo, não um aparelho médico.</b> Aqui o pulso é uma pista da história.",
-  "Presage's SDK runs on this computer; it contacts Presage only to check the app's key. Its usage telemetry is switched off.": "O SDK da Presage roda neste computador e usa o canal autenticado da Presage. A telemetria de uso dele está desligada.",
+  "Presage's SDK runs in this app and uses Presage's authenticated channel with the app's key. Its usage telemetry is switched off.": "O SDK da Presage roda neste computador e usa o canal autenticado da Presage. A telemetria de uso dele está desligada.",
   "The new instrument": "O novo instrumento", "Point it at a face in a recording. Presage SmartSpectra reads the tiny colour changes a heartbeat makes in the skin.": "Aponte para um rosto em uma gravação. O Presage SmartSpectra lê as mudanças mínimas de cor que o batimento causa na pele.",
   "Living faces make the line beat. Photos, masks and screens make it lie flat.": "Rostos vivos fazem a linha bater. Fotos, máscaras e telas deixam a linha reta.",
   // the case

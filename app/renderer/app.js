@@ -300,7 +300,7 @@ const SCREENS = [
           <li><b>You will see yourself</b> on this screen. No frame or video is saved.</li>
           <li><b>Only bring tapes where everyone agreed to be in them.</b> The detector reads the people in a video, so they get a say.</li>
           <li><b>This is a game, not a medical device.</b> A pulse here is a story clue.</li>
-          <li>Presage's SDK runs on this computer; it contacts Presage only to check the app's key. Its usage telemetry is switched off.</li>
+          <li>Presage's SDK runs in this app and uses Presage's authenticated channel with the app's key. Its usage telemetry is switched off.</li>
         </ul>
       </div>
       <div class="card dark">

@@ -1,0 +1,37 @@
+<!doctype html>
+<meta charset="utf-8">
+<title>Ghost Hunt architecture</title>
+<style>
+  :root { --bg:#1a0f2b; --panel:#241636; --ink:#f6f0ff; --muted:#b7a6c9; --line:#5b4777; --mint:#3fbf86; --pink:#e0609a; --gold:#e8c27a; }
+  * { box-sizing: border-box; }
+  body { margin:0; width:1600px; height:900px; background:var(--bg); color:var(--ink); font:18px/1.32 "Segoe UI", sans-serif; padding:54px 70px; }
+  h1 { font-size:42px; margin:0 0 6px; } .sub { color:var(--muted); font-size:20px; margin:0 0 40px; }
+  .row { display:grid; grid-template-columns:230px 44px 330px 44px 330px 44px 390px; align-items:stretch; }
+  .box { background:var(--panel); border:2px solid var(--line); border-radius:12px; padding:18px 20px; }
+  .box h2 { font-size:23px; margin:0 0 9px; } .box p { margin:6px 0; color:var(--muted); font-size:17px; } code { font:16px Consolas, monospace; color:var(--ink); }
+  .sdk { border-color:var(--mint); } .sdk h2 { color:#9af5c8; } .arrow { display:flex; align-items:center; justify-content:center; color:var(--muted); font-size:30px; }
+  .tag { display:inline-block; font-size:14px; color:var(--bg); background:var(--gold); padding:1px 8px; border-radius:4px; margin-bottom:9px; font-weight:600; }
+  .tag.m { background:#9af5c8; }
+  .band { display:grid; grid-template-columns:repeat(4,1fr); gap:18px; margin-top:34px; }
+  .band .box { padding:16px 20px; } .band b { display:block; font-size:21px; margin-bottom:4px; } .band span { color:var(--muted); font-size:17px; }
+  .wall { margin-top:30px; border:2px dashed var(--pink); border-radius:12px; padding:15px 22px; font-size:19px; }
+  .wall b { color:#ffb3cf; }
+</style>
+<h1>A missing pulse becomes evidence. Evidence is the only thing allowed to speak.</h1>
+<p class="sub">Electron app, @smartspectra/node-sdk 3.4.0. No server of our own, no language model.</p>
+<div class="row">
+  <div class="box"><h2>Camera or tape</h2><p>Live webcam, or a recording fed frame by frame through a canvas stream.</p><p>One spot of a tape can be cropped, enlarged and read alone.</p></div>
+  <div class="arrow">→</div>
+  <div class="box sdk"><span class="tag m">PRESAGE</span><h2>SmartSpectra SDK</h2><p>All vision and physiology models live here.</p><p><code>pulseRate · breathing.rate upperTrace · talking blinking · expression validationStatus</code></p></div>
+  <div class="arrow">→</div>
+  <div class="box"><span class="tag">OURS</span><h2>Signals + evidence</h2><p><code>src/signals.js</code> decodes the payload.</p><p><code>src/evidence.js</code> gates by confidence and turns readings into numbered cards: alive, no pulse, unreadable, held breath, pulse jump, second face.</p></div>
+  <div class="arrow">→</div>
+  <div class="box"><span class="tag">OURS</span><h2>Spirit + crew</h2><p><code>src/spirit.js</code> holds templates, and <code>citeOrVanish()</code> checks each one: it must cite a real card, and every number must match that card.</p><p>If not, the line vanishes.</p></div>
+</div>
+<div class="band">
+  <div class="box"><b>Live</b><span>Your exhale moves the glass. Talking pauses it.</span></div>
+  <div class="box"><b>Tape</b><span>Two faces, a held breath, a pulse jump, zero bpm.</span></div>
+  <div class="box"><b>Report</b><span>Numbers and words only, saved only if you press Save.</span></div>
+  <div class="box"><b>Benchmark</b><span>19,000 synthetic scans with a known answer. <code>npm run benchmark</code></span></div>
+</div>
+<div class="wall"><b>Consent wall.</b> Rules first. Camera only on a button press, video only, off at any time. No frame saved, no video recorded, SDK telemetry off. A game, never a medical device.</div>

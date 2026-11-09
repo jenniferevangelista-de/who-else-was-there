@@ -114,6 +114,502 @@
         "detected": 200,
         "should_detect": true
       }
+    },
+    "stress": {
+      "pulse_noise": [
+        {
+          "noise_bpm": 0,
+          "jump_bpm": 0,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "noise_bpm": 0,
+          "jump_bpm": 4,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "noise_bpm": 0,
+          "jump_bpm": 8,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 0,
+          "jump_bpm": 12,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 0,
+          "jump_bpm": 16,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 0,
+          "jump_bpm": 24,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 3,
+          "jump_bpm": 0,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "noise_bpm": 3,
+          "jump_bpm": 4,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "noise_bpm": 3,
+          "jump_bpm": 8,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 3,
+          "jump_bpm": 12,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 3,
+          "jump_bpm": 16,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 3,
+          "jump_bpm": 24,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 6,
+          "jump_bpm": 0,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "noise_bpm": 6,
+          "jump_bpm": 4,
+          "runs": 200,
+          "detected": 117
+        },
+        {
+          "noise_bpm": 6,
+          "jump_bpm": 8,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 6,
+          "jump_bpm": 12,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 6,
+          "jump_bpm": 16,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 6,
+          "jump_bpm": 24,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 9,
+          "jump_bpm": 0,
+          "runs": 200,
+          "detected": 154
+        },
+        {
+          "noise_bpm": 9,
+          "jump_bpm": 4,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 9,
+          "jump_bpm": 8,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 9,
+          "jump_bpm": 12,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 9,
+          "jump_bpm": 16,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 9,
+          "jump_bpm": 24,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 12,
+          "jump_bpm": 0,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 12,
+          "jump_bpm": 4,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 12,
+          "jump_bpm": 8,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 12,
+          "jump_bpm": 12,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 12,
+          "jump_bpm": 16,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 12,
+          "jump_bpm": 24,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 18,
+          "jump_bpm": 0,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 18,
+          "jump_bpm": 4,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 18,
+          "jump_bpm": 8,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 18,
+          "jump_bpm": 12,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 18,
+          "jump_bpm": 16,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "noise_bpm": 18,
+          "jump_bpm": 24,
+          "runs": 200,
+          "detected": 200
+        }
+      ],
+      "breath_noise": [
+        {
+          "flat_noise": 0.04,
+          "hold_sec": 1,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.04,
+          "hold_sec": 2,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.04,
+          "hold_sec": 3,
+          "runs": 200,
+          "detected": 74
+        },
+        {
+          "flat_noise": 0.04,
+          "hold_sec": 4,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "flat_noise": 0.04,
+          "hold_sec": 6,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "flat_noise": 0.04,
+          "hold_sec": 8,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "flat_noise": 0.1,
+          "hold_sec": 1,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.1,
+          "hold_sec": 2,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.1,
+          "hold_sec": 3,
+          "runs": 200,
+          "detected": 64
+        },
+        {
+          "flat_noise": 0.1,
+          "hold_sec": 4,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "flat_noise": 0.1,
+          "hold_sec": 6,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "flat_noise": 0.1,
+          "hold_sec": 8,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "flat_noise": 0.2,
+          "hold_sec": 1,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.2,
+          "hold_sec": 2,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.2,
+          "hold_sec": 3,
+          "runs": 200,
+          "detected": 47
+        },
+        {
+          "flat_noise": 0.2,
+          "hold_sec": 4,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "flat_noise": 0.2,
+          "hold_sec": 6,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "flat_noise": 0.2,
+          "hold_sec": 8,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "flat_noise": 0.3,
+          "hold_sec": 1,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.3,
+          "hold_sec": 2,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.3,
+          "hold_sec": 3,
+          "runs": 200,
+          "detected": 31
+        },
+        {
+          "flat_noise": 0.3,
+          "hold_sec": 4,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "flat_noise": 0.3,
+          "hold_sec": 6,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "flat_noise": 0.3,
+          "hold_sec": 8,
+          "runs": 200,
+          "detected": 200
+        },
+        {
+          "flat_noise": 0.45,
+          "hold_sec": 1,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.45,
+          "hold_sec": 2,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.45,
+          "hold_sec": 3,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.45,
+          "hold_sec": 4,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.45,
+          "hold_sec": 6,
+          "runs": 200,
+          "detected": 1
+        },
+        {
+          "flat_noise": 0.45,
+          "hold_sec": 8,
+          "runs": 200,
+          "detected": 1
+        },
+        {
+          "flat_noise": 0.7,
+          "hold_sec": 1,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.7,
+          "hold_sec": 2,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.7,
+          "hold_sec": 3,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.7,
+          "hold_sec": 4,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.7,
+          "hold_sec": 6,
+          "runs": 200,
+          "detected": 0
+        },
+        {
+          "flat_noise": 0.7,
+          "hold_sec": 8,
+          "runs": 200,
+          "detected": 0
+        }
+      ],
+      "bad_picture": [
+        {
+          "poor_share": 0,
+          "runs": 200,
+          "verdicts": {
+            "no_pulse": 200
+          }
+        },
+        {
+          "poor_share": 0.1,
+          "runs": 200,
+          "verdicts": {
+            "no_pulse": 200
+          }
+        },
+        {
+          "poor_share": 0.2,
+          "runs": 200,
+          "verdicts": {
+            "no_pulse": 200
+          }
+        },
+        {
+          "poor_share": 0.3,
+          "runs": 200,
+          "verdicts": {
+            "unreadable": 200
+          }
+        },
+        {
+          "poor_share": 0.4,
+          "runs": 200,
+          "verdicts": {
+            "unreadable": 200
+          }
+        },
+        {
+          "poor_share": 0.5,
+          "runs": 200,
+          "verdicts": {
+            "unreadable": 200
+          }
+        },
+        {
+          "poor_share": 0.6,
+          "runs": 200,
+          "verdicts": {
+            "unreadable": 200
+          }
+        },
+        {
+          "poor_share": 0.8,
+          "runs": 200,
+          "verdicts": {
+            "unreadable": 200
+          }
+        }
+      ]
     }
   },
   "receipts": {

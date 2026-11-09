@@ -18,7 +18,7 @@ A cute, spooky ghost hunt built on the [Presage SmartSpectra SDK](https://smarts
 | The tape, one spot | pulse rate on a cropped, enlarged region | a face with **no pulse** (a portrait, a mask, a screen) is the ghost |
 | The tape | chest trace (`breathing.upperTrace`) | *she held her breath* |
 | The séance, your camera, **live** | chest trace, talking | the glass moves only when you breathe out, and waits while you talk |
-| The Room, your camera, **live** | pulse rate, chest trace | your own evidence cards; if your pulse jumps right after the glass stops, the lights go out |
+| The Room, your camera, **live** | pulse rate, chest trace | your own evidence cards; if your pulse jumps right after the answer, the lights go out |
 
 ## Run it yourself (Windows, macOS Apple Silicon, Linux x64)
 

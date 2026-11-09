@@ -35,7 +35,7 @@ LINES = [
     ("reading", "rec", "wisp", "The Guardian", "She lived in this house long ago. One night she left by that door and never came home. Now she stands there to warn whoever leaves, and Marina is the first who stopped. Luna calls her a guardian. Doctor Bigotes refuses to sign it."),
     ("end", "rec", "wisp", "Case closed", "The crew says goodbye and relaxes. Then the glass moves on its own. I am here. They are across town from Marina's house. She came with the video. Case closed."),
     ("dare", "rec", "wisp", "Do you dare?", "Do you dare? Bring a tape of your own, if everyone in it agreed. Or let the detector read you."),
-    ("room", "rec", "wisp", "The Room", "In the Room, it's your heart on the table. Ask the spirit a question and stay still. If your pulse jumps right after the glass stops, the lights go out."),
+    ("room", "rec", "wisp", "The Room", "In the Room, it's your heart on the table. Ask the spirit a question and stay still. If your pulse jumps right after the answer, the lights go out."),
     ("tested", "rec", "wisp", "Planted ghosts", f"Doctor Bigotes insisted on testing it. {LIVING} planted living faces, and {GHOSTED} called a ghost. {R['unit_tests']} unit tests, {R['frames_saved']} frames saved, and {R['language_model_calls']} language model calls."),
     ("consent", "rec", "wisp", "The rules of the house", "The camera turns on only when you press a button. No video is recorded, the faces of the living are blurred, and this is a game, never a medical device."),
     ("bye", "card", "jennifer", "Who else was there?", "Thank you for watching. And tell me: who else was there?"),

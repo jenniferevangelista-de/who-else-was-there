@@ -669,8 +669,8 @@ const SCREENS = [
     <div class="grid2">
       <div><div class="card dark">
         <div class="kicker">Case 03 · The Room · your camera, live</div><h2>Now the detector reads you</h2>
-        <p>Turn your camera on and sit still. The Ghost Detector finds your pulse and your breath, the same way it read Marina. Then ask the room's spirit a question and <b>stay still while the glass stops</b>.</p>
-        <p class="muted">If your pulse jumps right after the glass stops, the game will notice. That is the only trick: it is your own heartbeat.</p>
+        <p>Turn your camera on and sit still. The Ghost Detector finds your pulse and your breath, the same way it read Marina. Then ask the room's spirit a question and <b>stay still while it answers</b>.</p>
+        <p class="muted">If your pulse jumps right after the answer, the game will notice. That is the only trick: it is your own heartbeat.</p>
         <div class="row"><button class="btn-main mint" id="roomOn">Turn my camera on</button><button class="btn-soft" id="roomAsk" disabled>Is someone here?</button><button class="btn-soft" id="roomReport" disabled>Generate report</button></div>
         <div class="scanstat" id="liveStat" style="margin-top:14px" hidden><div class="msg" id="liveMsg"></div><div class="bar"><div class="fill"></div></div></div>
         <div id="roomNotes" style="margin-top:12px">${say("xochi", "I will write down what the detector sees. Nothing else.")}</div>
@@ -699,7 +699,7 @@ const SCREENS = [
           const jump = ev.filter((e) => e.kind === "you_jumped").at(-1);
           if (jump && state.glassStoppedAt && jump.t0 >= state.glassStoppedAt && jump.t0 - state.glassStoppedAt < 8 && !state.roomScared) {
             state.roomScared = true; document.body.classList.add("lightsout");
-            $("#roomNotes", el).innerHTML = `<div class="cliff" style="padding:6px 0"><div class="line" style="font-size:44px"><em>That wasn't part of the game.</em></div></div>`.replace("That wasn't part of the game.", L("That wasn't part of the game.")) + say("bigotes", `Your pulse rose ${jump.value} bpm, ${Math.round(jump.t0 - state.glassStoppedAt)} seconds after the glass stopped. That was you.`, [jump.id]);
+            $("#roomNotes", el).innerHTML = `<div class="cliff" style="padding:6px 0"><div class="line" style="font-size:44px"><em>That wasn't part of the game.</em></div></div>`.replace("That wasn't part of the game.", L("That wasn't part of the game.")) + say("bigotes", `Your pulse rose ${jump.value} bpm, ${Math.round(jump.t0 - state.glassStoppedAt)} seconds after the answer. That was you.`, [jump.id]);
             setTimeout(() => document.body.classList.remove("lightsout"), 2500);
           }
         }, 1000);
@@ -710,7 +710,7 @@ const SCREENS = [
         await sleep(2500);
         const now = (state.live?.scan ?? state.fakeScan)?.t1 ?? 0;
         state.glassStoppedAt = now; state.roomScared = false;
-        $("#roomNotes", el).innerHTML = say("luna", "The glass went to <b>YES</b>, and stopped. Stay very still…");
+        $("#roomNotes", el).innerHTML = say("luna", "Something answered: <b>YES</b>. There is someone here with you. Stay very still…");
       });
     } },
 

@@ -50,7 +50,7 @@ def main():
         if not wait_for(page, LIVE_MAX, is_live):
             print("LIVE never reached, nothing saved"); return 2
         print("LIVE reached, recording", flush=True)
-        TMP.mkdir(parents=True)
+        TMP.mkdir(parents=True, exist_ok=True)      # on Windows the folder can outlive the rmtree above
         cdp = page.context.new_cdp_session(page)
         queue = []
         cdp.on("Page.screencastFrame", lambda frame: queue.append(frame))

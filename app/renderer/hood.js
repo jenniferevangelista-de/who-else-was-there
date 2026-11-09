@@ -37,7 +37,7 @@ const SCREEN = {
     [LIVE, T("Your own recording runs through the same SDK reading as Marina's. The picker stays locked until you confirm that everyone in it agreed.", "Sua própria gravação passa pela mesma leitura do SDK que a da Marina. O seletor fica travado até você confirmar que todos concordaram.")],
   ],
   room: [
-    [LIVE, T("Your live pulse, breath and pulse jumps become evidence cards. A jump right after the glass stops turns the lights out.", "Seu pulso, respiração e disparos ao vivo viram cartões de prova. Um disparo logo depois que o copo para apaga as luzes.")],
+    [LIVE, T("Your live pulse, breath and pulse jumps become evidence cards. A jump right after the answer turns the lights out.", "Seu pulso, respiração e disparos ao vivo viram cartões de prova. Um disparo logo depois da resposta apaga as luzes.")],
     [LIVE, T("Blinking: the figure moves only when the SDK sees you blink. Expression: your strongest stable expression becomes a card.", "Piscadas: a figura só se move quando o SDK vê você piscar. Expressão: sua expressão estável mais forte vira um cartão.")],
   ],
   tested: [[LIVE, T("After the Room or your own video, the counters on the proof tab come straight from the SDK. In Marina's case they are samples, and the tag above them says so.", "Depois da Sala ou do seu vídeo, os contadores da aba de prova vêm direto do SDK. No caso da Marina eles são de exemplo, e a etiqueta acima deles diz isso.")], [LOGIC, T("Synthetic scans with known answers test our logic. They do not measure Presage's accuracy, and the screen says so.", "Leituras sintéticas com resposta conhecida testam nossa lógica. Elas não medem a precisão da Presage, e a tela diz isso.")]],

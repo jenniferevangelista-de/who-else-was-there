@@ -1,0 +1,57 @@
+<!doctype html>
+<html><head><meta charset="utf-8">
+<style>
+@font-face { font-family: "Fredoka"; src: url("../node_modules/@fontsource/fredoka/files/fredoka-latin-600-normal.woff2") format("woff2"); font-weight: 600; }
+@font-face { font-family: "Fredoka"; src: url("../node_modules/@fontsource/fredoka/files/fredoka-latin-400-normal.woff2") format("woff2"); font-weight: 400; }
+@font-face { font-family: "Cormorant"; src: url("../node_modules/@fontsource/cormorant-garamond/files/cormorant-garamond-latin-600-italic.woff2") format("woff2"); font-weight: 600; font-style: italic; }
+@font-face { font-family: "VT323"; src: url("../node_modules/@fontsource/vt323/files/vt323-latin-400-normal.woff2") format("woff2"); }
+html, body { margin: 0; }
+body { width: 2000px; height: 840px; overflow: hidden; font-family: Fredoka, sans-serif; color: #fff8f0;
+  background: radial-gradient(1200px 700px at 78% 40%, #4a2466 0%, #2a1340 45%, #170a26 100%); position: relative; }
+.stars { position: absolute; inset: 0; background-image:
+  radial-gradient(2px 2px at 10% 20%, #fff8 50%, transparent 51%), radial-gradient(2px 2px at 30% 70%, #fff6 50%, transparent 51%),
+  radial-gradient(3px 3px at 52% 12%, #ffd6ea 50%, transparent 51%), radial-gradient(2px 2px at 64% 88%, #fff7 50%, transparent 51%),
+  radial-gradient(2px 2px at 86% 16%, #fff8 50%, transparent 51%), radial-gradient(3px 3px at 94% 62%, #c3a8ff 50%, transparent 51%),
+  radial-gradient(2px 2px at 20% 92%, #fff5 50%, transparent 51%), radial-gradient(2px 2px at 44% 40%, #fff4 50%, transparent 51%),
+  radial-gradient(2px 2px at 72% 30%, #fff6 50%, transparent 51%), radial-gradient(2px 2px at 6% 55%, #fff6 50%, transparent 51%); }
+.left { position: absolute; left: 110px; top: 120px; width: 1000px; }
+.kicker { font-weight: 600; letter-spacing: 14px; color: #e8c27a; font-size: 34px; }
+h1 { font-family: Cormorant, serif; font-style: italic; font-weight: 600; font-size: 168px; line-height: .95; margin: 22px 0 26px; }
+h1 .p { color: #ffb3cf; }
+.tag { font-size: 46px; line-height: 1.25; color: #f6ead9; }
+.tag b { color: #ff86b8; font-weight: 600; }
+.chip { display: inline-block; margin-top: 40px; padding: 14px 30px; border-radius: 999px; background: #e8c27a; color: #2a1838; font-weight: 600; font-size: 30px; letter-spacing: 1px; }
+.monitor { position: absolute; right: 90px; top: 90px; width: 780px; height: 300px; border-radius: 36px; background: #0c1f18;
+  border: 6px solid #9af5c8; box-shadow: 0 0 60px #3fbf8655; }
+.bpm { position: absolute; left: 34px; top: 18px; font-family: VT323, monospace; font-size: 64px; color: #9af5c8; }
+.bpm.dead { left: auto; right: 34px; color: #ff6680; }
+.monitor svg { position: absolute; left: 0; top: 0; }
+.crew { position: absolute; right: 120px; bottom: 50px; display: flex; gap: 40px; align-items: flex-end; }
+.crew .c { width: 200px; height: 200px; border-radius: 50%; background: #2a1840; border: 4px solid #e8c27a66; display: grid; place-items: center; }
+.crew img { width: 150px; }
+.crew .ghost { width: 230px; height: 260px; border: none; background: none; filter: drop-shadow(0 0 40px #c3a8ffaa); }
+.crew .ghost img { width: 210px; }
+</style></head>
+<body>
+<div class="stars"></div>
+<div class="left">
+  <div class="kicker">GHOST HUNT</div>
+  <h1>Who Else<br><span class="p">Was There?</span></h1>
+  <div class="tag">Every face has a heartbeat.<br><b>Except one.</b></div>
+  <div class="chip">Built on Presage SmartSpectra</div>
+</div>
+<div class="monitor">
+  <div class="bpm">83 BPM</div><div class="bpm dead">0 BPM</div>
+  <svg width="780" height="300" viewBox="0 0 780 300">
+    <polyline fill="none" stroke="#9af5c8" stroke-width="7" stroke-linejoin="round" stroke-linecap="round"
+      points="30,190 90,190 110,190 125,120 140,250 158,80 175,190 230,190 250,190 265,120 280,250 298,80 315,190 370,190 390,190 405,120 420,250 438,80 455,190 500,190"/>
+    <polyline fill="none" stroke="#ff6680" stroke-width="7" stroke-linecap="round" stroke-dasharray="2 18" points="500,190 750,190"/>
+  </svg>
+</div>
+<div class="crew">
+  <div class="c"><img src="../app/renderer/img/luna.svg"></div>
+  <div class="c"><img src="../app/renderer/img/bigotes.svg"></div>
+  <div class="c"><img src="../app/renderer/img/xochi.svg"></div>
+  <div class="c ghost"><img src="../app/renderer/img/wisp.svg"></div>
+</div>
+</body></html>

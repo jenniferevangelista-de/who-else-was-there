@@ -670,9 +670,9 @@ const SCREENS = [
     <div class="grid2">
       <div><div class="card dark">
         <div class="kicker">Case 03 · The Room · your camera, live</div><h2>Now the detector reads you</h2>
-        <p>Turn your camera on and sit still. The Ghost Detector finds your pulse and your breath, the same way it read Marina. Then ask the room's spirit a question and <b>stay still while it answers</b>.</p>
-        <p class="muted">If your pulse jumps right after the answer, the game will notice. That is the only trick: it is your own heartbeat.</p>
-        <div class="row"><button class="btn-main mint" id="roomOn">Turn my camera on</button><button class="btn-soft" id="roomVideo">Analyze a video</button><button class="btn-soft" id="roomAsk" disabled>Is someone here?</button><button class="btn-soft" id="roomReport" disabled>Generate report</button></div>
+        <p>Turn your camera on and sit still. The Ghost Detector finds your pulse and your breath, the same way it read Marina. <b>When it has your heartbeat, generate your report.</b></p>
+        <p class="muted">Prefer a recording? Analyze a video instead: the path is the same.</p>
+        <div class="row"><button class="btn-main mint" id="roomOn">Turn my camera on</button><button class="btn-soft" id="roomVideo">Analyze a video</button><button class="btn-soft" id="roomReport" disabled>Generate report</button></div>
         <div class="scanstat" id="liveStat" style="margin-top:14px" hidden><div class="msg" id="liveMsg"></div><div class="bar"><div class="fill"></div></div></div>
         <div id="roomNotes" style="margin-top:12px">${say("xochi", "I will write down what the detector sees. Nothing else.")}</div>
       </div><div class="locker room-ev" id="roomEv"></div></div>
@@ -688,7 +688,6 @@ const SCREENS = [
       nextUp([{ label: "Analyze a video", do: () => goTo("dare") }, { label: "Main menu →", do: () => goTo("menu") }, { label: "See how it was tested →", do: () => goTo("tested") }]);
       $("#roomOn", el).addEventListener("click", async () => {
         await startLive(el, scope, "#scopeRoom");
-        $("#roomAsk", el).disabled = false;
         state.roomTimer = setInterval(() => {
           if (!document.body.contains(el)) return clearInterval(state.roomTimer);
           const src = state.live?.scan ?? state.fakeScan; if (!src) return;
@@ -697,22 +696,10 @@ const SCREENS = [
           $("#roomReport", el).disabled = !src.pulse?.some((p) => p.conf >= 50);
           const newest = (kind) => ev.filter((e) => e.kind === kind).slice(-1);   // the full list goes in the report
           $("#roomEv", el).innerHTML = ["you_alive", "you_blinked", "you_held_breath", "you_jumped", "you_showed"].flatMap(newest).map((e) => `<div class="ev"><span class="id">${e.id}</span><div class="kind">${{ you_alive: "You, alive", you_held_breath: "You held your breath", you_jumped: "Your pulse jumped", you_blinked: "You blinked", you_showed: "Your face said" }[e.kind]}</div><div class="val">${e.value}<small style="font-size:20px"> ${e.unit}</small></div><div class="src">${state.liveSdk ? "" : "SIMULATED · "}${e.measuredBy}</div></div>`).join("");
-          const jump = ev.filter((e) => e.kind === "you_jumped").at(-1);
-          if (jump && state.glassStoppedAt && jump.t0 >= state.glassStoppedAt && jump.t0 - state.glassStoppedAt < 8 && !state.roomScared) {
-            state.roomScared = true; document.body.classList.add("lightsout");
-            $("#roomNotes", el).innerHTML = `<div class="cliff" style="padding:6px 0"><div class="line" style="font-size:44px"><em>That wasn't part of the game.</em></div></div>`.replace("That wasn't part of the game.", L("That wasn't part of the game.")) + say("bigotes", `Your pulse rose ${jump.value} bpm, ${Math.round(jump.t0 - state.glassStoppedAt)} seconds after the answer. That was you.`, [jump.id]);
-            setTimeout(() => document.body.classList.remove("lightsout"), 2500);
-          }
         }, 1000);
       });
       $("#roomVideo", el).addEventListener("click", () => goTo("dare"));
       $("#roomReport", el).addEventListener("click", makeReport);
-      $("#roomAsk", el).addEventListener("click", async () => {
-        $("#roomNotes", el).innerHTML = say("luna", "Spirit of this room… is someone here with us?");
-        await sleep(2500);
-        const now = (state.live?.scan ?? state.fakeScan)?.t1 ?? 0;
-        state.glassStoppedAt = now; state.roomScared = false;
-      });
       if (state.live) $("#roomOn", el).click();   // back in the Room with the camera still on: pick the picture and the readings up again
     } },
 
@@ -904,7 +891,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
         const { scope: sc, sel: at } = state.view;
         if (pulse && !found) {
           found = true; clearTimeout(slow); sound.chime(); say_("Got you. That heartbeat is yours.");
-          if (SCREENS[state.i].id === "room") nextUp([{ label: "Is someone here?", main: true, do: () => $("#roomAsk")?.click() }, { label: "Generate report", do: makeReport }, { label: "Main menu", do: () => goTo("menu") }], "It has your heartbeat. Next:");
+          if (SCREENS[state.i].id === "room") nextUp([{ label: "Generate report", main: true, do: makeReport }, { label: "Analyze a video", do: () => goTo("dare") }, { label: "Main menu", do: () => goTo("menu") }], "It has your heartbeat. Next:");
         }
         if (pulse) { sc.set(pulse); const b = document.querySelector(`${at} [data-bpm]`); if (b) b.textContent = Math.round(pulse); }
         const st = document.querySelector(`${at} [data-state]`); if (st) st.textContent = pulse ? "LIVE" : weak ? "WEAK SIGNAL" : "WARMING UP";

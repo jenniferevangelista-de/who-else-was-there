@@ -108,7 +108,12 @@ The README explains every chart and lists every limit I found.
 
 ## Prize Categories
 
-**Most Creative or Delightful Use.** The discovery here is a heartbeat that never comes, your own breath moves the glass on the board, and the blink is a jump scare with rules.
+**Most Creative or Delightful Use.**
+
+- **Inspiration:** camera-vitals apps measure the pulse that is there. This game hunts for the one that is missing.
+- **What's different:** the clue is a heartbeat that never comes. Your own breath moves the glass on the board, a blink is a jump scare with rules, and the skeptic refuses to sign any verdict the SDK marks as unreadable.
+- **Who it's for:** friends at a party or on a stream, in English or Portuguese. The web demo opens in one click, with no install and no account.
+- **Delight with care:** the scare never turns into a health claim. Bad light says "unreadable", never "ghost".
 
 ## Consent and Data Handling
 
@@ -135,5 +140,11 @@ The README explains every chart and lists every limit I found.
 | Consent, storage, sharing, retention, deletion, SDK telemetry and AI services | Consent and Data Handling, above |
 | No diagnosis or treatment claims, no medical decisions | It is a game, and says so on screen |
 | No covert monitoring | Consent comes first, and other people's videos stay locked until you confirm they agreed |
+
+## Credits
+
+- Presage SmartSpectra (`@smartspectra/node-sdk` 3.4.0), used under Presage's terms.
+- Luna, Dr. Bigotes and Xochi come from my earlier project [Witching Hour](https://github.com/jenniferevangelista-de/witching-hour).
+- Fonts: Fredoka, Cormorant Garamond and VT323 (SIL Open Font License). Music and voices are original.
 
 Built with AI coding assistance. The story, design decisions and testing direction are mine.

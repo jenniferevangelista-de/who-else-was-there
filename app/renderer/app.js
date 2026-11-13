@@ -1071,6 +1071,7 @@ const screenZoom = (node) => parseFloat(node.closest(".screen")?.style.zoom) || 
 /** No scrollbars: a screen taller or wider than the window is scaled down until all of it fits. `again` starts over from full size. */
 function fitScreen(again) {
   const s = document.querySelector("#stage .screen"); if (!s) return;
+  if (matchMedia("(max-width: 760px)").matches) { s.style.zoom = ""; return; }   // phones scroll instead of shrinking
   if (again) s.style.zoom = "";
   for (let i = 0; i < 5; i++) {
     const r = Math.min(s.clientHeight / s.scrollHeight, s.clientWidth / s.scrollWidth);

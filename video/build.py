@@ -200,7 +200,8 @@ def subtitle(d, t):
 
 
 def render(t):
-    it = at(t); m = mouth(t); bob = math.sin(t * 2.2) * 7
+    it = at(t); bob = math.sin(t * 2.2) * 7
+    m = mouth(t) if it.get("who", "wisp") == "wisp" else 0.0     # Wisp only moves its mouth on its own lines, never on Jennifer's
     img = backdrop().copy()
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     k = min(1.0, (t - it["t0"]) / 0.35)                 # the scene settles in

@@ -83,6 +83,8 @@ for n in narr:
             v0, v1 = s["start"], max(s["start"] + .5, s["end"] - .35)   # never hold on the first frame of the next screen
         tail = 2.2 if n["id"] == "point" else 1.8 if n["id"] == "end" else 1.4 if n["id"] == "cold" else 0.9
         speed = 1.0 if live_clip else min(3.0, max(1.0, (v1 - v0) / (d + tail)))     # a live reading always plays at real speed
+        if not live_clip and (v1 - v0) / (d + tail) > 3.0:
+            v0 = v1 - 3.0 * (d + tail)                 # a long screen keeps its ending instead of leaving the voice in dead air
         it.update(v0=v0, v1=v1, speed=speed)
         seg_len = max(d + tail, (v1 - v0) / speed)
     it["t1"] = _t + seg_len

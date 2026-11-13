@@ -15,7 +15,7 @@ Its pulse reads **0 beats per minute**.
 
 *(In the game, "0 BPM" means the detector got no reliable pulse from that face. It is a clue, never a health result: a living person with bad light or a turned head can get it too.)*
 
-**▶ [Play it now in your browser](https://jenniferevangelista-de.github.io/who-else-was-there/)**: no install, no account, on tagged sample numbers. The live reading of *you* runs in the desktop app with a free Presage API key (setup in the README).
+**▶ [Play it now in your browser](https://jenniferevangelista-de.github.io/who-else-was-there/)**: no install, no account, on tagged sample numbers. The live reading of *you* runs in the desktop app with a Presage API key (setup in the README).
 
 ![The Ghost Detector reading a real person live through Presage SmartSpectra: 83 beats per minute](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/img/live_pulse.gif)
 

@@ -96,7 +96,7 @@ def at(t):
     for it in TL:
         if it["t0"] <= t < it["t1"]:
             return it
-    return TL[-1]
+    return TL[0] if t < TL[0]["t0"] else TL[-1]     # before the first line the film opens on the live reading, not on the closing card
 
 
 @lru_cache(maxsize=1)

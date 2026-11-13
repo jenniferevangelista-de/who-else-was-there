@@ -1,6 +1,6 @@
 """Narration of the Ghost Hunt film and its voices (edge-tts, Ava).
 
-Jennifer opens as herself, Wisp (the app's own small ghost) tells the case. Every number comes from
+Wisp (the app's own small ghost) opens over the live Presage reading and tells one case; Jennifer names the game and closes. Every number comes from
 demo/measured.json or from the app's labelled sample case.
   python video/script.py   -> video/voice/*.mp3, video/timeline.json, video/SCRIPT.md
 """
@@ -20,30 +20,26 @@ GHOSTED = P["faces"]["living"]["called_a_ghost"] + P["faces"]["dim_living"]["cal
 VOICE = "en-US-AvaNeural"
 STYLE = {"jennifer": dict(rate="-4%", pitch="+0Hz"), "wisp": dict(rate="+4%", pitch="+16Hz")}
 
-# key, kind (rec = the real app, live = the real app with a live camera, card = drawn), who, title, line
+# key, kind (rec = the real app, live = the real app with a live camera, card = drawn), who, title, line, extras
+# extras: "clip" = the window of recordings/live.mp4 a live scene plays, "scene" = the tour scene a rec line plays over
+URL = "jenniferevangelista-de.github.io/who-else-was-there"
 LINES = [
-    ("cold", "rec", "wisp", "Except one", "Every face in this video has a heartbeat. Except one."),
-    ("hello", "card", "jennifer", "Ghost Hunt", "Hi, I'm Jennifer Evangelista. This is Ghost Hunt: Who Else Was There? A spooky little game where the evidence is a heartbeat, read from a plain camera by Presage SmartSpectra."),
+    ("cold", "live", "wisp", "Read live, right now", "This is a heartbeat, read live from a plain webcam by Presage SmartSpectra. Every face has one. Except one.", {"clip": [0.0, 9.0]}),
+    ("hello", "card", "jennifer", "Ghost Hunt", "I'm Jennifer Evangelista. This is Ghost Hunt."),
     ("crew", "rec", "wisp", "The crew", "I'm Wisp. I work with three tiny ghost hunters. Luna believes. Doctor Bigotes doubts. Xochi writes it all down."),
-    ("case", "rec", "wisp", "Something told me to stay", "Marina was about to go out. Bag ready, keys in her hand, everything fine. Then, at the door, a feeling hit her so hard she couldn't breathe. Stay home. She lives alone, and she saw nothing. But the hallway camera was on."),
-    ("map", "rec", "wisp", "Thirty nights", "Thirty nights of hallway tape. One face, one pulse, night after night. And something, getting closer."),
+    ("case", "rec", "wisp", "Something told her to stay", "Marina was about to go out, keys in her hand. At the door, a feeling hit her so hard she couldn't breathe. Stay home. She lives alone, and she saw nothing. But the hallway camera was on."),
     ("tape", "rec", "wisp", "The second face", "Watch the dark stairs behind her. Second eight. The detector reports two faces in the frame. Marina never turns around."),
-    ("door", "rec", "wisp", "She stopped at the door", "At the door the lamp flickers. She holds her breath for almost four seconds, and her pulse climbs. Something told her to stay."),
-    ("point", "rec", "wisp", "Zero beats per minute", "The detector finds the second face by itself and locks on, right behind her. A face. Zero beats per minute. It never breathed. On this drawn tape the numbers are samples. On a real tape, the SDK reads every face."),
-    ("live", "live", "wisp", "Now it reads you, live", "Now the detector reads you, live. Just a webcam. Presage SmartSpectra finds your pulse and your breathing, and the numbers on this screen are yours."),
+    ("door", "rec", "wisp", "She stopped at the door", "At the door the lamp flickers. She holds her breath for almost four seconds, and her pulse climbs."),
+    ("point", "rec", "wisp", "Zero beats per minute", "The detector finds the second face by itself and locks on, right behind her. A face. Zero beats per minute. It never breathed. This tape is drawn, so its numbers are samples. On a real tape, the SDK reads every face."),
     ("board", "rec", "wisp", "The board", "Then the spirit answers on the board. The glass only moves when you breathe out. Start talking, and it waits. Her name is Odette."),
-    ("reading", "rec", "wisp", "The Guardian", "She lived in this house long ago. One night she left by that door and never came home. Now she stands there to warn whoever leaves, and Marina is the first who stopped. Luna calls her a guardian. Doctor Bigotes refuses to sign it."),
-    ("kinds", "rec", "wisp", "Seven kinds of spirit", "Every spirit gets a kind, picked from the evidence. A still face and a held breath make a Guardian. Six more kinds wait on other tapes. And Luna deciphers what it wants: to stop anyone else from leaving by that door."),
-    ("end", "rec", "wisp", "Case closed", "The crew says goodbye and relaxes. Then the glass moves on its own. I am here. They are across town from Marina's house. She came with the video. Case closed."),
-    ("dare", "rec", "wisp", "Do you dare?", "Do you dare? Bring a tape of your own, if everyone in it agreed. Or let the detector read you."),
-    ("upload", "rec", "wisp", "Bring your own video", "You can upload a video of your own. The button stays locked until you confirm that everyone in it agreed."),
-    ("yourtape", "tape", "wisp", "How a video gets analyzed", "Then Presage reads it as it plays, second by second, the same way it read this sample tape. Is there a spirit in it?"),
-    ("room", "rec", "wisp", "The Room", "In the Room, it's your heart on the table. Turn your camera on, or bring a video, and the detector reads the pulse in it."),
-    ("report", "rec", "wisp", "The report", "Your camera or your video, it ends the same way: the report. Your numbers, the technology that read them, and the result: no spirit detected. This time."),
-    ("tested", "rec", "wisp", "Planted ghosts", f"Doctor Bigotes insisted on testing it. {LIVING} planted living faces, and {GHOSTED} called a ghost. {R['unit_tests']} unit tests, {R['frames_saved']} frames saved, and {R['language_model_calls']} language model calls."),
+    ("reading", "rec", "wisp", "The Guardian", "She left by that door long ago and never came home. Now she warns whoever leaves, and Marina is the first who stopped. Luna calls her a guardian. Doctor Bigotes refuses to sign it."),
+    ("end", "rec", "wisp", "Case closed", "The crew says goodbye. Then the glass moves on its own. I am here. Case closed."),
+    ("room", "live", "wisp", "The Room, live", "Now it's your turn. In the Room, Presage SmartSpectra reads your pulse and your breathing live from the webcam, and the numbers on screen are yours.", {"clip": [4.0, 14.5]}),
+    ("upload", "rec", "wisp", "Bring your own video", "Or bring a video of your own. The button stays locked until you confirm that everyone in it agreed."),
+    ("report", "rec", "wisp", "The report", "Camera or video, it ends the same way: the report. The numbers, the technology that read them, and the result: no spirit detected. This time."),
+    ("tested", "rec", "wisp", "Cite or vanish", f"One rule keeps it honest: cite or vanish. Every line the spirit says must cite a measured number, and an unreadable face is never a ghost. Doctor Bigotes tested it: a living face was called a ghost {GHOSTED} times in {LIVING}."),
     ("consent", "rec", "wisp", "The rules of the house", "The camera turns on only when you press a button. No video is recorded, and this is a game, never a medical device."),
-    ("entry", "card", "jennifer", "Every requirement, met", "I'm entering Most Creative or Delightful Use. And every requirement is met: a working SDK integration, live signals on screen, public code with setup steps, this demo, and full answers on consent and data. No login. No diagnosis. No covert monitoring."),
-    ("bye", "card", "jennifer", "Who else was there?", "Thank you for watching. And tell me: who else was there?"),
+    ("bye", "card", "jennifer", "Play it now", "Ghost Hunt: Who Else Was There? A heartbeat is the evidence. Play it now in your browser, at the link on screen."),
 ]
 
 
@@ -55,7 +51,7 @@ def dur(p):
 async def main():
     vd = HERE / "voice"; vd.mkdir(exist_ok=True)
     out = []
-    for key, kind, who, title, line in LINES:
+    for key, kind, who, title, line, *extra in LINES:
         p = vd / f"{key}.mp3"
         for i in range(5):        # the TTS service drops a request now and then
             try:
@@ -63,7 +59,7 @@ async def main():
             except Exception:     # noqa: BLE001
                 if i == 4: raise
                 await asyncio.sleep(3 * (i + 1))
-        out.append({"id": key, "kind": kind, "who": who, "title": title, "line": line, "voice": f"voice/{key}.mp3", "dur": round(dur(p), 2)})
+        out.append({"id": key, "kind": kind, "who": who, "title": title, "line": line, "voice": f"voice/{key}.mp3", "dur": round(dur(p), 2), **(extra[0] if extra else {})})
         print(key, who, out[-1]["dur"], "s")
     (HERE / "timeline.json").write_text(json.dumps(out, indent=1), encoding="utf-8")
     md = ["# Ghost Hunt film: script", ""] + [f"**{o['title']}** ({o['kind']}, {o['who']}, {o['dur']} s)\n\n{o['line']}\n" for o in out]

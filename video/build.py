@@ -65,6 +65,7 @@ HAS_LIVE = LIVE.exists()
 TAPE = REC / "tape.mp4"      # the real SDK reading an uploaded video (record_tape.py), with the picture covered
 HAS_TAPE = TAPE.exists()
 CLIP = {"live": (LIVE, HAS_LIVE), "tape": (TAPE, HAS_TAPE)}
+URL = "jenniferevangelista-de.github.io/who-else-was-there"
 SPIRITS = ["Guardian", "Haunter", "Watcher", "Intruder", "Shade", "Veiled", "Visitor"]
 REQUIRED = ["Working app on the SmartSpectra SDK", "Live Presage signals, shown on screen", "DEV post on the official template", "Public code with setup steps", "Demo video", "No login needed",
             "Consent, storage, sharing", "Retention and deletion", "SDK telemetry off, no AI service", "No diagnosis or treatment claims", "No medical decisions", "Never covert: consent comes first"]
@@ -72,15 +73,16 @@ TL, _t = [], 0.4
 for n in narr:
     d, it = n["dur"], {**n, "t0": _t}
     if n["kind"] == "card":
-        seg_len = d + 1.4
+        seg_len = d + {"hello": 0.2, "bye": 3.4}.get(n["id"], 1.4)     # the intro stays short, the close holds on the link
     else:
-        if n["kind"] in CLIP and CLIP[n["kind"]][1]:
-            v0, v1 = 0.0, _dur(CLIP[n["kind"]][0])
+        live_clip = n["kind"] in CLIP and CLIP[n["kind"]][1]
+        if live_clip:
+            full = _dur(CLIP[n["kind"]][0]); v0, v1 = n.get("clip", [0.0, full]); v1 = min(v1, full)
         else:
-            s = scenes[{"live": "room", "tape": "tape"}.get(n["kind"], n["id"])]     # no consented video: the analysis screen on the sample tape, tagged as sample
+            s = scenes[n.get("scene") or {"live": "room", "tape": "tape"}.get(n["kind"], n["id"])]     # no consented video: the analysis screen on the sample tape, tagged as sample
             v0, v1 = s["start"], max(s["start"] + .5, s["end"] - .35)   # never hold on the first frame of the next screen
-        tail = 2.2 if n["id"] == "point" else 1.8 if n["id"] == "end" else 0.9
-        speed = min(3.0, max(1.0, (v1 - v0) / (d + tail)))
+        tail = 2.2 if n["id"] == "point" else 1.8 if n["id"] == "end" else 1.4 if n["id"] == "cold" else 0.9
+        speed = 1.0 if live_clip else min(3.0, max(1.0, (v1 - v0) / (d + tail)))     # a live reading always plays at real speed
         it.update(v0=v0, v1=v1, speed=speed)
         seg_len = max(d + tail, (v1 - v0) / speed)
     it["t1"] = _t + seg_len
@@ -201,8 +203,8 @@ def render(t):
     glow = Image.new("RGBA", (W, H), (0, 0, 0, 0))
     k = min(1.0, (t - it["t0"]) / 0.35)                 # the scene settles in
     if it["kind"] == "card":
-        wi = wisp(300 if it["id"] == "entry" else 420, m, t)
-        img.alpha_composite(wi, (1590, int(600 + bob)) if it["id"] == "entry" else (W // 2 - 210, int(420 + bob)))
+        size, pos = {"entry": (300, (1590, 600)), "bye": (300, (W // 2 - 150, 600))}.get(it["id"], (420, (W // 2 - 210, 420)))
+        img.alpha_composite(wisp(size, m, t), (pos[0], int(pos[1] + bob)))
         d = ImageDraw.Draw(img)
         if it["id"] == "entry":
             d.text((90, 66), "Entered in", font=font("Kalam-Bold.ttf", 46), fill=MINT, anchor="lm")
@@ -218,9 +220,14 @@ def render(t):
             d.text((W / 2, 150), "GHOST HUNT", font=font("Creepster-Regular.ttf", 150), fill=PINK, anchor="mm")
             d.text((W / 2, 280), "Who Else Was There?", font=font("Kalam-Bold.ttf", 76), fill=CREAM, anchor="mm")
             d.text((W / 2, 362), "a heartbeat is the evidence  ·  built on Presage SmartSpectra", font=font("Kalam-Bold.ttf", 38), fill=MINT, anchor="mm")
-        else:
-            d.text((W / 2, 170), "WHO ELSE WAS THERE?", font=font("Creepster-Regular.ttf", 130), fill=DANGER, anchor="mm")
-            d.text((W / 2, 320), "Case 02 is already on the tape.", font=font("Kalam-Bold.ttf", 54), fill=CREAM, anchor="mm")
+        else:                                           # the close: the name, the line, and where to play it
+            d.text((W / 2, 120), "GHOST HUNT", font=font("Creepster-Regular.ttf", 140), fill=PINK, anchor="mm")
+            d.text((W / 2, 236), "Who Else Was There?", font=font("Kalam-Bold.ttf", 70), fill=CREAM, anchor="mm")
+            d.text((W / 2, 312), "a heartbeat is the evidence", font=font("Kalam-Bold.ttf", 40), fill=MINT, anchor="mm")
+            f = font("Kalam-Bold.ttf", 48); txt = "Play it now in your browser"; w = d.textlength(txt, font=f)
+            d.rounded_rectangle((W / 2 - w / 2 - 34, 360, W / 2 + w / 2 + 34, 436), 38, fill=DANGER)
+            d.text((W / 2, 398), txt, font=f, fill=(255, 255, 255), anchor="mm")
+            d.text((W / 2, 500), URL, font=font("Kalam-Bold.ttf", 52), fill=GOLD, anchor="mm")
     else:
         frame = rec_frame(it, t)
         ImageDraw.Draw(glow).rounded_rectangle((FX - 8, FY - 8, FX + FW + 8, FY + FH + 8), 26, fill=PINK + (70,))
@@ -245,7 +252,7 @@ def render(t):
         elif it["kind"] == "live":
             d.rounded_rectangle((FX + 280, FY + 330, FX + FW - 280, FY + 530), 22, fill=(180, 20, 40, 235))
             d.text((FX + FW / 2, FY + 430), "NOT LIVE · placeholder", font=font("Creepster-Regular.ttf", 90), fill=(255, 255, 255), anchor="mm")
-        elif "SAMPLE" not in it["title"] and it["id"] in ("tape", "door", "point", "map", "case", "yourtape"):
+        elif "SAMPLE" not in it["title"] and it["id"] in ("tape", "door", "point", "map", "case", "yourtape", "report"):
             d.rounded_rectangle((FX + FW - 250, 30, FX + FW, 76), 23, fill=GOLD)
             d.text((FX + FW - 125, 53), "SAMPLE DATA", font=font("Kalam-Bold.ttf", 28), fill=INK, anchor="mm")
         wi = wisp(300, m, t, gaze=-2.0)
@@ -296,10 +303,11 @@ def mix():
     for k, it in enumerate(TL):
         put(voice, decode(HERE / it["voice"]), it["t0"] + .2)
         if k: put(fx, SFX["swap"]().astype(np.float32), it["t0"] - .12)
+        if it["id"] == "cold": put(fx, SFX["tick"]().astype(np.float32), it["t1"] - 2.0)
         if it["id"] == "point": put(fx, SFX["flat"]().astype(np.float32), it["t0"] + it["dur"] * .5)
         if it["id"] == "map":
             for j in range(1, 5): put(fx, SFX["low"]().astype(np.float32), it["t0"] + j * 1.6)
-        if it["id"] in ("end", "cold"): put(fx, SFX["chime"]().astype(np.float32), it["t1"] - 1.2)
+        if it["id"] in ("end", "bye"): put(fx, SFX["chime"]().astype(np.float32), it["t1"] - 1.2)
     for name, fn in SFX.items():
         SFXD.mkdir(exist_ok=True); sf.write(SFXD / f"{name}.wav", fn(), SR)
     a = np.abs(voice).astype(np.float64); k = int(SR * .25); c = np.concatenate([[0.0], np.cumsum(a)])

@@ -107,7 +107,8 @@ function tapeHTML(tools = false) {
   return `<div class="tape" id="tape">
     ${state.mode === "replay" ? `<canvas class="scene" width="1280" height="720"></canvas>` : `<video playsinline muted></video>`}
     <div class="overlay"><div class="rec"><i></i>${state.ownTape ? "REC · YOUR VIDEO" : "REC · HALLWAY"}</div><div class="stamp" id="stamp" ${state.ownTape ? "hidden" : ""}>NOV 02 · 21:43:00</div>
-    </div></div>
+    <div class="flashlight" hidden></div></div>
+    <button class="torch" title="Flashlight">🔦</button></div>
     <div class="timeline ${tools ? "scrubs" : ""}" id="timeline"><div class="head" id="head"></div></div>
     ${tools ? `<div class="tape-tools" id="tapeTools" hidden><span class="drag-hint">⟷ Drag the marker to move through the recording</span><button class="btn-soft" id="watchAgain">↺ Watch again</button></div>
     <div class="tl-legend" id="tlLegend" hidden></div>` : ""}`;
@@ -137,8 +138,8 @@ function playTape({ until, onTime, rate = 1 }) {
 function wireTape(el) {
   const tape = $("#tape", el); if (!tape) return;
   const beam = tape.querySelector(".flashlight"), btn = tape.querySelector(".torch");
-  if (btn) btn.addEventListener("click", (e) => { e.stopPropagation(); beam.hidden = !beam.hidden; btn.classList.toggle("on", !beam.hidden); sound.beep(300, 40); });
-  if (beam) tape.addEventListener("mousemove", (e) => {
+  btn.addEventListener("click", (e) => { e.stopPropagation(); beam.hidden = !beam.hidden; btn.classList.toggle("on", !beam.hidden); sound.beep(300, 40); });
+  tape.addEventListener("mousemove", (e) => {
     const b = tape.getBoundingClientRect();
     const k = screenZoom(tape); beam.style.setProperty("--x", (e.clientX - b.left) / k + "px"); beam.style.setProperty("--y", (e.clientY - b.top) / k + "px");
   });
@@ -452,7 +453,7 @@ const SCREENS = [
 
   { id: "tape", chapter: "The tape", next: () => state.ownTape ? "See the report →" : "Point the detector →", to: () => state.ownTape ? "report" : null, canNext: () => state.tapeDone, html: () => `
     <div class="grid2">
-      <div><div class="an-head"><span class="kicker">${state.ownTape ? "Your video" : "Marina's video · November 2 · hallway camera"}</span><b id="anStatus">${state.ownTape ? "Analyzing your video…" : "Analyzing the video Marina sent…"}</b></div>${tapeHTML(false)}</div>
+      <div><div class="an-head"><span class="kicker">${state.ownTape ? "Your video" : "Marina's video · November 2 · hallway camera"}</span><b id="anStatus">${state.ownTape ? "Analyzing your video…" : "Analyzing the video Marina sent…"}</b></div>${tapeHTML(true)}</div>
       <div>${scopeHTML("scopeTape", "GHOST DETECTOR · WHOLE FRAME")}
         <div class="card" style="margin-top:16px" id="tapeNotes">${state.ownTape ? say("bigotes", "I'll watch every pulse in this video. Ghosts don't have one, people do.") : say("bigotes", "I'll watch her pulse. Ghosts don't have one, people do.")}</div></div>
     </div>`,
@@ -493,14 +494,16 @@ const SCREENS = [
       state.tapeDone = true; updateNav();
       markTimeline(buildEvidence(state.scans));
       beatAt(el, state.tapeT, false);
+      $("#tapeTools", el).hidden = false;
       $("#anStatus", el).textContent = "Analysis finished: two faces in the frame, one pulse so far.";
       const replay = async () => {
         state.tapeT = 0;
         await playTape({ until: state.duration, rate: state.mode === "replay" ? 1.5 : 1, onTime: (t) => beatAt(el, t, true) });
         if (document.body.contains(el) && !$("#timeline", el).classList.contains("grabbed")) beatAt(el, state.tapeT, false);
       };
+      $("#watchAgain", el).addEventListener("click", replay);
       nextUp([{ label: "↺ Watch the tape again", do: replay }, { label: "Read the second face →", main: true, do: forward }]);
-      setTimeout(() => { if (document.body.contains(el)) forward(); }, 2600);     // the video is found: go straight on to the next step
+      toast("Tip: drag the marker to look at any second. 🔦 turns on the flashlight.", 4500);
       $("#tapeNotes", el).insertAdjacentHTML("beforeend", L(`<p class="cliff" style="padding:10px 0"><span class="line" style="font-size:34px">Who is the <em>second face</em>?</span></p>`));
     } },
 
@@ -616,6 +619,7 @@ const SCREENS = [
       <div class="card dark">
         <div class="kicker">Ask the spirit</div>
         <p class="muted" style="margin-top:0">It speaks only through the glass, three words at most. Every answer must point at a measured moment, or the glass stays still.</p>
+        ${state.live ? "" : `<button class="btn-soft" id="useBreath" style="color:var(--cream);margin-bottom:10px">Move it with my breath (camera)</button>`}
         <div class="scanstat" id="liveStat" style="margin-bottom:10px" hidden><div class="msg" id="liveMsg"></div><div class="bar"><div class="fill"></div></div></div>
         <div class="breath-meter" style="margin-bottom:10px">breath <div class="bar"><div class="fill" id="breathFill"></div></div><span id="talkFlag"></span></div>
         <div class="questions" id="qs" style="margin-top:12px">${QUESTIONS.map((q) => `<button class="q" data-q="${q.id}">${q.text}</button>`).join("")}</div>
@@ -856,8 +860,17 @@ async function startLive(el, scope, sel = "#scopeMe") {
   if (state.live || state.fakeLive) { if (st0) st0.textContent = state.live ? "WARMING UP" : "SIMULATED"; const v = $("#me"); const s0 = state.live ? state.camStream : state.webCam; if (v && s0) { v.srcObject = s0; v.play(); $("#mePh")?.remove(); } return; }
   const say_ = (m, wait) => { const stat = $("#liveStat"), msg = $("#liveMsg"); if (!stat || !msg) return; stat.hidden = false; stat.classList.toggle("waiting", !!wait); msg.textContent = m; if (!wait) stat.querySelector(".fill").style.width = "100%"; };   // looked up each time: the person may have moved to another screen
   if (!state.liveSdk) {   // no key: a gentle simulated breath and pulse, clearly labelled
-    camUI(false);
-    say_("This copy has no Presage key, so your camera stays off and these readings are simulated.");
+    if (state.web && navigator.mediaDevices?.getUserMedia) {   // web demo: show the person, keep every number labelled simulated
+      try {
+        const s = await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+        state.webCam = s; const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); }
+        camUI(true);
+        say_("Web demo: you see yourself, but Presage runs only in the desktop app, so these readings are simulated. Your image stays in this browser.");
+      } catch { camUI(false); say_("Web demo: the camera was not allowed, so these readings are simulated."); }
+    } else {
+      camUI(false);
+      say_("This copy has no Presage key, so your camera stays off and these readings are simulated.");
+    }
     const t0 = performance.now(), fake = { t0: 0, t1: 0, pulse: [], trace: [] };
     state.fakeScan = fake;
     let lastP = -1;

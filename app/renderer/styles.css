@@ -454,30 +454,3 @@ body.flash::after { content: ""; position: fixed; inset: 0; background: #fff; op
 .room-ev .ev .val { font-size: 26px; margin: 4px 0 2px; }
 .room-ev .ev .id { font-size: 14px; }
 .room-ev .ev .src { margin-top: 2px; }
-
-/* ---------- phones: one column, the page scrolls, the bars stay small ---------- */
-@media (max-width: 760px) {
-  body { overflow-y: auto; font-size: 16px; }
-  header.top { flex-wrap: wrap; gap: 6px; padding: 8px 12px; background: #120a1ff2; }
-  .brand b { font-size: 17px; white-space: nowrap; }
-  .brand .beat { width: 18px; height: 18px; }
-  .mode { font-size: 10px; padding: 3px 8px; letter-spacing: 1px; }
-  #privacy { display: none; }
-  .pill { font-size: 12px; padding: 4px 9px; gap: 5px; }
-  .lang button { font-size: 11px; padding: 5px 8px; }
-  main#stage { height: auto; min-height: 100%; display: block; padding: 92px 10px 150px; }
-  body.has-next main#stage { padding-bottom: 170px; }
-  section.screen { width: 100%; max-height: none; overflow: visible; padding: 6px 2px; zoom: 1 !important; }
-  .grid2, .row { grid-template-columns: 1fr; }
-  .card { padding: 18px 16px; }
-  h1 { font-size: 40px; }
-  h2 { font-size: 28px; }
-  .lead { font-size: 17px; }
-  nav.story { grid-template-columns: 1fr 1fr; gap: 6px 8px; padding: 8px 10px 10px; background: #0e0718f5; }
-  nav.story > div { grid-column: 1 / -1; order: -1; min-width: 0; }
-  nav.story .chapters { flex-wrap: nowrap; justify-content: flex-start; overflow-x: auto; gap: 6px; padding-bottom: 2px; }
-  nav.story .chapters > * { flex: 0 0 auto; white-space: nowrap; font-size: 12px; }
-  nav.story .where { font-size: 12px; margin-top: 2px; }
-  nav.story .btn-main, nav.story .btn-soft { font-size: 15px; padding: 9px 12px; }
-  #hoodPill { left: 10px; bottom: 132px; }
-}

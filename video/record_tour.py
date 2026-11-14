@@ -43,13 +43,7 @@ def main():
         page.click("#whatNow .wn.main"); scene("case", lambda: wait(9))
         nxt(); scene("tape", lambda: (ready(), wait(1.5)))
 
-        def door():
-            box = page.locator("#timeline").bounding_box()
-            for i in range(0, 120):
-                sec = 13 + i * 0.125
-                page.mouse.click(box["x"] + box["width"] * sec / 45, box["y"] + box["height"] / 2); wait(0.05)
-        scene("door", door)
-        nxt(); wait(0.4)
+        page.wait_for_selector("#scopePoint", timeout=30000); wait(0.3)   # the app moves on to the next screen by itself
         scene("point", lambda: (ready(), wait(3)))
         nxt(); scene("locker", lambda: (wait(1), page.click('[data-ev="E3"]'), wait(3)))
         nxt(); wait(0.6)

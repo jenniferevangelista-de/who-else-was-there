@@ -7,7 +7,7 @@ export const music = {
   start() {
     const c = sound.on && audioCtx();
     if (!c || mus) return;
-    const g = c.createGain(); g.gain.value = 0.0001; g.gain.setTargetAtTime(0.32, c.currentTime, 2.2); g.connect(c.destination);
+    const g = c.createGain(); g.gain.value = 0.0001; g.gain.setTargetAtTime(0.13, c.currentTime, 2.2); g.connect(c.destination);
     const lp = c.createBiquadFilter(); lp.type = "lowpass"; lp.frequency.value = 520; lp.Q.value = 2;
     const padG = c.createGain(); padG.gain.value = 0.34; lp.connect(padG); padG.connect(g);
     const lfo = c.createOscillator(), lfoG = c.createGain(); lfo.frequency.value = 0.07; lfoG.gain.value = 260; lfo.connect(lfoG); lfoG.connect(lp.frequency); lfo.start();
@@ -41,7 +41,7 @@ export const music = {
   tense() {
     if (!mus) return;
     const { c, g } = mus;
-    g.gain.setTargetAtTime(0.62, c.currentTime, 1.6);
+    g.gain.setTargetAtTime(0.24, c.currentTime, 1.6);
   },
   stop(really = true) {
     if (!mus || !really) return;

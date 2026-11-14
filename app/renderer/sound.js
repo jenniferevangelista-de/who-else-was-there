@@ -4,6 +4,8 @@ let ctx = null, on = true, flat = null;
 const ensure = () => { if (!ctx) ctx = new (window.AudioContext || window.webkitAudioContext)(); if (ctx.state === "suspended") ctx.resume(); return ctx; };
 
 export const audioCtx = () => { if (on) ensure(); return ctx; };
+let master = null;   // every beep goes through one gain, so the whole game stays soft
+const out = () => { if (!master) { master = ctx.createGain(); master.gain.value = 0.45; master.connect(ctx.destination); } return master; };
 
 export const sound = {
   get on() { return on; },
@@ -20,7 +22,7 @@ export const sound = {
       const o = ctx.createOscillator(), g = ctx.createGain(), t = ctx.currentTime;
       o.type = type; o.frequency.setValueAtTime(f0, t); o.frequency.exponentialRampToValueAtTime(f1, t + 0.95);
       g.gain.setValueAtTime(vol, t); g.gain.exponentialRampToValueAtTime(0.0001, t + 1.25);
-      o.connect(g).connect(ctx.destination); o.start(t); o.stop(t + 1.3);
+      o.connect(g).connect(out()); o.start(t); o.stop(t + 1.3);
     }
     this.beep(58, 800, 0.16);
   },
@@ -29,15 +31,15 @@ export const sound = {
     const o = ctx.createOscillator(), g = ctx.createGain();
     o.type = "sine"; o.frequency.value = freq;
     g.gain.setValueAtTime(vol, ctx.currentTime); g.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + ms / 1000);
-    o.connect(g).connect(ctx.destination); o.start(); o.stop(ctx.currentTime + ms / 1000 + 0.02);
+    o.connect(g).connect(out()); o.start(); o.stop(ctx.currentTime + ms / 1000 + 0.02);
   },
   chime() { this.beep(660, 260, 0.04); setTimeout(() => this.beep(990, 380, 0.03), 120); },
   flat() {
     if (!on || flat) return; ensure();
     const o = ctx.createOscillator(), g = ctx.createGain();
-    o.type = "sine"; o.frequency.value = 880; g.gain.value = 0.035;
-    o.connect(g).connect(ctx.destination); o.start(); flat = { o, g };
-    setTimeout(() => this.stopFlat(), 2600);
+    o.type = "sine"; o.frequency.value = 660; g.gain.value = 0.014;
+    o.connect(g).connect(out()); o.start(); flat = { o, g };
+    setTimeout(() => this.stopFlat(), 1500);
   },
   // glass breaking: tonal only, a run of high pings over a low hit (no noise, no hiss)
   crash() {

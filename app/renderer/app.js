@@ -9,9 +9,10 @@ import { voice } from "./voice.js";
 import { music } from "./music.js";
 import { boardHTML, spell } from "./board.js";
 import * as presage from "./presage.js";
-import { sound } from "./sound.js";
+import { sound, audioCtx } from "./sound.js";
 import { L, Lx, getLang, setLang } from "../../src/i18n.js";
 import { hoodHTML } from "./hood.js";
+import { fx } from "./fx.js";
 import { buildReport } from "../../src/report.js";
 import { reportHTML, bindReport, reportFile } from "./report.js";
 import MEASURED from "../../demo/measured.json";
@@ -68,7 +69,7 @@ async function cameraOff() {
 const say = (who, text, cites = []) => L(`
   <div class="say ${who}"><img src="img/${who === "xochi" ? "xochi" : who === "bigotes" ? "bigotes" : "luna"}.svg" alt="">
   <div class="bubble"><span class="who">${{ luna: "Luna · the medium", bigotes: "Dr. Bigotes · the skeptic", xochi: "Xochi · the night watch" }[who]}</span>${text}
-  ${cites.length ? `<span class="muted" style="font-size:13px"> · cites ${cites.join(", ")}</span>` : ""}</div></div>`);
+  ${cites.length ? `<span class="muted cite"> · cites ${cites.join(", ")}</span>` : ""}</div></div>`);
 
 // "What now?": every step says what can be done next
 function nextUp(options, title = "What now?") {
@@ -472,7 +473,7 @@ const SCREENS = [
           state.tapeSrc = src; beatAt(el, t, true);
           const two = state.ownTape ? src.validation.filter((v) => v.code === 2 && Math.abs(v.t - t) < 2).length >= 5 : src.validation.find((v) => Math.abs(v.t - t) < 0.5)?.code === 2;
           if (two && !warned) {
-            warned = true; sound.sting();
+            warned = true; sound.sting(); fx.dread(3200); fx.shake(6, 520); $("#tape", el)?.classList.add("push");
             $("#tapeNotes", el).innerHTML = say("bigotes", `Wait. Presage just reported <b>two faces</b> in the frame. At ${fmt(t)}.`) + (state.ownTape ? say("luna", "Were you expecting anyone else in this video?") : say("luna", "Marina said she lives alone."));
           }
         },
@@ -546,7 +547,7 @@ const SCREENS = [
         } else {
           $("#pointNotes", el).innerHTML = say("bigotes", verdict ? `The detector says: ${KIND[verdict.kind].name.toLowerCase()}.` : "Too short to say anything. Try a spot with a face.");
         }
-        state.flat = true; updateNav();
+        state.flat = true; updateNav(); fx.flash("#d3112e", 520, 0.5); fx.shake(7, 600); fx.dread(3000);
       });
     } },
 
@@ -783,14 +784,19 @@ async function finale(el) {
   $("#spell", el).classList.add("blood");
   await spell($(".board", el), L(a.board), { onChar: (t) => { $("#spell", el).textContent = t; sound.beep(300 - t.length * 12, 160, 0.04); } });
   $("#hush", el).textContent = "";
-  await sleep(600);
+  music.stop(true);
+  $(".planchette", el)?.classList.add("tremble"); fx.riser(1500);
+  await sleep(1500);
+  await fx.hold(380);                                                            // the held breath before the hit
   // the glass breaks
   const board = $(".board", el), glass = $(".planchette", el);
   const r = glass.getBoundingClientRect(), b = board.getBoundingClientRect();
   const cx = r.left - b.left + r.width / 2, cy = r.top - b.top + r.height / 2;
   glass.style.visibility = "hidden";
   sound.crash(); music.stop(true); sound.sting();
-  document.body.classList.add("shake", "flash", "redflash");
+  document.body.classList.add("redflash");
+  fx.flash("#fff", 520); fx.thud(); fx.shake(26, 1500); fx.aberrate(900);
+  setTimeout(() => fx.flicker(3), 650);
   board.insertAdjacentHTML("beforeend", `<svg class="cracks" viewBox="0 0 100 100" preserveAspectRatio="none" style="--cx:${(cx / b.width) * 100}%;--cy:${(cy / b.height) * 100}%">
     ${[...Array(9)].map((_, i) => { const ang = (i / 9) * Math.PI * 2 + Math.random() * 0.4, len = 20 + Math.random() * 35; const x0 = (cx / b.width) * 100, y0 = (cy / b.height) * 100;
       const mx = x0 + Math.cos(ang) * len * 0.5 + (Math.random() - 0.5) * 6, my = y0 + Math.sin(ang) * len * 0.5 + (Math.random() - 0.5) * 6;
@@ -802,8 +808,6 @@ async function finale(el) {
     board.append(sh);
   }
   $("#spell", el).classList.add("broken");
-  setTimeout(() => document.body.classList.remove("flash"), 260);
-  setTimeout(() => document.body.classList.remove("shake"), 700);
   await sleep(900);
   $("#answers", el).innerHTML = say("luna", a.luna, a.cites);                    // it followed them
   await heard(3400);
@@ -812,7 +816,7 @@ async function finale(el) {
   $("#answers", el).insertAdjacentHTML("beforeend", say("bigotes", a.bigotes, a.cites));
   await heard(2600);
   $("#answers", el).insertAdjacentHTML("beforeend", `<div class="scream">RUN! RUN! RUN!</div>`);
-  sound.beep(180, 120, 0.06);
+  sound.beep(180, 120, 0.06); fx.shake(12, 700); fx.flash("#d3112e", 380, 0.45);
   await sleep(500);
   $("#answers", el).insertAdjacentHTML("beforeend", say("luna", "<b>EVERYBODY OUT!</b> Out, out, out!"));
   el.querySelector(".crew-left")?.classList.add("flee-left");
@@ -1114,6 +1118,8 @@ function go(i, isBack) {
   const sec = document.createElement("section"); sec.className = "screen on"; sec.innerHTML = L(SCREENS[i].html());
   stage.append(sec);
   updateNav();
+  const act = { case: ["Case 01", "The Door"], board: ["The séance", "Ask the spirit"], room: ["Case 03", "The Room"], end: ["Case 01", "Case closed"] }[SCREENS[i].id];
+  if (act && !isBack && state.cardFor !== SCREENS[i].id) { state.cardFor = SCREENS[i].id; fx.card(Lx(act[0]), Lx(act[1])); }
   SCREENS[i].enter?.(sec);
   fitScreen(true); fitWatch.disconnect(); fitWatch.observe(sec);
   if (!$("#hood").hidden) $("#hood").innerHTML = hoodHTML(SCREENS[i].id);
@@ -1155,6 +1161,14 @@ async function boot() {
   $("#back").addEventListener("click", () => { if (state.hist.length) go(state.hist.pop(), true); });
   document.addEventListener("keydown", (e) => { if (e.key === "ArrowRight" && !$("#next").disabled) forward(); if (e.key === "ArrowLeft" && state.hist.length) go(state.hist.pop(), true); });
   const start = new URLSearchParams(location.search).get("screen");
-  go(start ? Math.max(0, SCREENS.findIndex((s) => s.id === start)) : 0);
+  const open = () => go(start ? Math.max(0, SCREENS.findIndex((s) => s.id === start)) : 0);
+  // In a browser, sound may only start after a tap: one title card asks for it, so the first line is never lost.
+  if (!state.web || start || new URLSearchParams(location.search).has("auto")) return open();
+  const gate = document.createElement("div"); gate.id = "gate";
+  gate.innerHTML = L(`<div class="gate-in"><img src="img/heart.svg" alt="" class="beat"><div class="gate-k">A ghost hunt where the evidence is a pulse</div>
+    <div class="gate-t">Ghost Hunt</div><div class="gate-s">Who Else Was There?</div>
+    <button class="btn-main" id="gateGo">▶ Start the hunt</button><div class="gate-n">With sound. Headphones make it better.</div></div>`);
+  document.body.append(gate);
+  $("#gateGo").addEventListener("click", () => { audioCtx(); gate.classList.add("out"); setTimeout(() => gate.remove(), 600); open(); });
 }
 boot();

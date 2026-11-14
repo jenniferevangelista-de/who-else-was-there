@@ -23,22 +23,22 @@ export function answer(qid, ev) {
   const pick = {
     who: face2 && {
       board: "ODETTE", cites: [face2.id],
-      luna: `Her name is Odette. Presage counted her from second ${sec(face2.t0)}, standing behind Marina, and Marina never turned around.`,
+      luna: `Her name is Odette. She was standing right behind Marina, and Marina never turned around.`,
       bigotes: `Two faces in the frame is what the SDK reported. It does not say whose. A reflection counts too.`,
     },
     from: still && {
       board: "THIS HOUSE", cites: [still.id],
-      luna: `She lived here, in this same house. Odette was Marina's mother. Years ago something told her to stay. She went out by that door anyway, and she never came home.`,
+      luna: `She lived in that house. Odette is Marina's mother.`,
       bigotes: `A glass spelled two words. What I measured is a face with 0 beats per minute, and that face cannot tell me where it is from.`,
     },
     protect: still && held && {
-      board: "SOMETHING BAD", cites: [still.id, held.id],
-      luna: `She has stood at that door ever since. That night a car was waiting for her daughter. Marina held her breath at second ${sec(held.t0)}, and she stayed. Twenty minutes later that car crashed. Now I know what she is: a guardian spirit. A mother who would not let her daughter leave by that door too.`,
+      board: "THE CAR", cites: [still.id, held.id],
+      luna: `The car. Marina cancelled it, and twenty minutes later it crashed on the avenue. Odette could not save herself at that door. So she saved her daughter.`,
       bigotes: `Marina stayed home, and the car crashed. Those two I can sign. Who asked her to stay is not something I can measure.`,
     },
     alive: still ? {
       board: "NO", cites: [still.id],
-      luna: `No. That face gave 0 beats while the detector watched it. Nothing alive holds that still.`,
+      luna: `No. Years ago something told her to stay home. She went out by that door anyway, and she never came back.`,
       bigotes: `A face with no pulse is a photo, a mask or a screen. Ordinary. I just cannot tell you who put it there.`,
     } : shadow && {
       board: "NO FACE", cites: [shadow.id],
@@ -46,8 +46,8 @@ export function answer(qid, ev) {
       bigotes: `The SDK found no face in that spot. A coat, a curtain, a shadow.`,
     },
     why: (held || jump) && {
-      board: "DANGER", cites: [held?.id, jump?.id].filter(Boolean),
-      luna: held ? `She held her breath at second ${sec(held.t0)}. She saw nothing, but something stopped her at that door. The spirit wanted to protect her from the danger that was coming.` : `Her pulse jumped at the door. The spirit wanted to protect her from the danger that was coming.`,
+      board: "I HELD HER", cites: [held?.id, jump?.id].filter(Boolean),
+      luna: held ? `That weight on Marina's shoulder was a hand. She held her breath, and she stayed.` : `Her pulse jumped at the door. Someone was holding her back.`,
       bigotes: jump ? `Her pulse rose ${Math.round(jump.value)} bpm in a few seconds. A startle does that. So does a flickering lamp. A bad feeling is not a ghost.` : `Holding your breath is what people do when they listen.`,
     },
     bye: { board: "GOODBYE", cites: ev.slice(0, 1).map((e) => e.id), luna: `It said goodbye.`, bigotes: `Session closed.` },

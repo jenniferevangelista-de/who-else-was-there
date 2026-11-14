@@ -553,3 +553,66 @@ body.fx-hold * { animation-play-state: paused !important; }
 @keyframes slam { from { transform: scale(2.6); opacity: 0; filter: blur(6px); } }
 @media (prefers-reduced-motion: reduce) { #sky::after { animation: none; } .tape.push { transform: none; } }
 .bubble .cite { display: block; margin-top: 6px; font-size: 12px; letter-spacing: .5px; opacity: .75; text-indent: -0.7em; }
+
+/* ---------- phones, second pass: nothing may be wider than the screen ---------- */
+@media (max-width: 760px) {
+  .grid2, .board-grid, .peek, .locker { grid-template-columns: minmax(0, 1fr) !important; }
+  .grid2 > *, .board-grid > * { min-width: 0; }
+  section.screen [style*="repeat(4"] { grid-template-columns: repeat(2, minmax(0, 1fr)) !important; }
+  section.screen img, section.screen video, section.screen svg { max-width: 100%; }
+  /* main menu: one card per line, picture on the left */
+  .menu-grid { grid-template-columns: 1fr; gap: 10px; }
+  .menu-card { display: grid; grid-template-columns: 54px minmax(0, 1fr); column-gap: 14px; row-gap: 2px; text-align: left; align-items: center; padding: 14px 16px; }
+  .menu-card img { grid-row: 1 / span 3; width: 54px; height: 58px; }
+  .menu-card b { font-size: 25px; }
+  .menu-card span { font-size: 15px; }
+  /* the crew: three across, small enough to fit */
+  .crew { gap: 6px; }
+  .crew > * { flex: 1 1 0; min-width: 0; }
+  .crew img, .crew .face { width: 100% !important; height: auto !important; max-width: 110px; }
+  /* calendar */
+  .cal { gap: 3px; }
+  .cal .dow { font-size: 10px; letter-spacing: 0; }
+  .night { height: 62px; padding: 4px 2px; min-width: 0; overflow: hidden; }
+  .night .d { font-size: 17px; }
+  .night .d small { display: none; }
+  .night .faces img { width: 13px; height: 13px; }
+  .night .tag { font-size: 8px; letter-spacing: 0; }
+  .legend { display: grid; grid-template-columns: 1fr 1fr; gap: 6px 10px; font-size: 13px; }
+  /* tables read as cards: one fact per line */
+  .tbl, .tbl tbody, .tbl tr, .tbl td { display: block; width: 100%; box-sizing: border-box; }
+  .tbl thead { display: none; }
+  .tbl tr { padding: 9px 0; border-bottom: 1px solid #ffffff1f; }
+  .tbl td { border: 0; padding: 1px 0; font-size: 15px; overflow-wrap: anywhere; }
+  .tbl td:first-child { font-weight: 600; color: var(--cream); }
+  .proof .tbl td { padding: 1px 0; }
+  .proof { padding: 16px 14px; }
+  .proof-cat h2 { font-size: 30px; line-height: 1.05; }
+  .proof-count { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+  .proof-count .stat b { font-size: 30px; }
+  .proof-count .stat span { font-size: 11px; }
+  .proof-status { grid-column: 1 / -1; text-align: center; }
+  .proof code, .proof-code { overflow-wrap: anywhere; }
+  .tabs { flex-wrap: wrap; }
+  .tab { font-size: 14px; padding: 7px 14px; }
+  .stat span { font-size: 12px; }
+  /* messages and the small tools button */
+  #toast { border-radius: 16px; top: 96px; width: max-content; max-width: 90vw; padding: 10px 16px; font-size: 14px; text-align: center; }
+  #hoodPill { left: auto; right: 10px; top: 46px; bottom: auto; z-index: 22; }
+  .cliff .line { font-size: 38px; }
+  .cliff .sub { font-size: 18px; }
+  .your-turn { font-size: 44px; }
+  .stamp-closed { font-size: 36px; letter-spacing: 3px; padding: 8px 14px; }
+  .room-ev { grid-template-columns: 1fr 1fr; }
+  .night-res { grid-template-columns: repeat(2, 1fr); }
+  .chips { grid-template-columns: 1fr; }
+  /* lines that have not been spoken yet take no room, so a card never looks empty */
+  .say.pending { display: none; }
+  .member { width: auto; }
+  .member .halo { width: min(100%, 112px); height: auto; aspect-ratio: 1; }
+  .member .halo img { width: 82% !important; }
+  .member b { font-size: 21px; }
+  .member span { font-size: 12.5px; display: block; }
+  .board-name { font-size: 15px; top: 9%; }
+  .board-grid .seance-stage { padding: 84px 46px 0; }
+}

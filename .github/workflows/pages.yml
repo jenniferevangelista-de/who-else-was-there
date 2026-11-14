@@ -34,9 +34,16 @@ jobs:
           done
           touch _site/.nojekyll
           cat > _site/index.html <<'EOF'
-          <!doctype html><meta charset="utf-8"><title>Ghost Hunt</title>
+          <!doctype html><html lang="en"><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+          <title>Ghost Hunt · Who Else Was There?</title>
+          <meta name="description" content="Ghost Hunt is a cute, spooky game built on the Presage SmartSpectra SDK. Living faces have a heartbeat. The face that reads 0 beats per minute is the case. Play it in your browser, no install.">
           <meta http-equiv="refresh" content="0; url=app/renderer/index.html">
-          <a href="app/renderer/index.html">Open Ghost Hunt</a>
+          <body style="background:#0e0718;color:#f4ecff;font:17px/1.6 system-ui,sans-serif;max-width:720px;margin:24px auto;padding:0 16px">
+          <h1>Ghost Hunt · Who Else Was There?</h1>
+          <p><a href="app/renderer/index.html" style="color:#ffd27a">Play it now in your browser, no install</a></p>
+          <p>A cute, spooky game built on the Presage SmartSpectra SDK. Living faces have a heartbeat. The face that reads 0 beats per minute is the case. Seven SmartSpectra signals drive the game: pulse, chest movement, breathing rate, talking, blinks, expression and validation status.</p>
+          <p>This web demo runs on tagged sample numbers. The live camera reading runs in the desktop app, because the Presage SDK is native. No frames are saved and no video is recorded. It is a game, not a medical device.</p>
+          <p>Code and setup: <a href="https://github.com/jenniferevangelista-de/who-else-was-there" style="color:#ffd27a">github.com/jenniferevangelista-de/who-else-was-there</a></p>
           EOF
       # A test copy of the `next` branch at /next/, so a change can be tried on a phone before it replaces the game above.
       - uses: actions/checkout@v4

@@ -5,9 +5,37 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; img-src 'self' data: blob:; media-src 'self' blob: file:; style-src 'self' 'unsafe-inline'; font-src 'self'; worker-src 'self' blob:;">
   <title>Ghost Hunt: Who Else Was There?</title>
+  <meta name="description" content="Ghost Hunt is a cute, spooky game built on the Presage SmartSpectra SDK. Living faces have a heartbeat. The face that reads 0 beats per minute is the case. Play it in your browser, no install.">
+  <meta property="og:title" content="Ghost Hunt · Who Else Was There?">
+  <meta property="og:description" content="Ghost Hunt is a cute, spooky game built on the Presage SmartSpectra SDK. Living faces have a heartbeat. The face that reads 0 beats per minute is the case. Play it in your browser, no install.">
+  <meta property="og:type" content="website">
   <link rel="stylesheet" href="styles.css">
 </head>
 <body>
+  <noscript>
+    <article style="max-width:720px;margin:24px auto;padding:0 16px;font:17px/1.6 system-ui,sans-serif;color:#f4ecff">
+      <h1>Ghost Hunt · Who Else Was There?</h1>
+      <p><b>Every face in this video has a heartbeat. Except one.</b> A cute, spooky game built on the Presage SmartSpectra SDK, for the DEV Presage SmartSpectra SDK Challenge, category Most Creative or Delightful Use. This page is the playable game and needs JavaScript. Here is what it does, in plain text.</p>
+      <h2>The story</h2>
+      <p>Marina had her bag ready and a car waiting. At the door it felt like a hand on her shoulder: stay home. When she was nine, her mother Odette went out by that same door and never came back. Marina stayed. Twenty minutes later that car crashed. Her hallway camera was on, and at second 8 there is a second face on the stairs. Its pulse reads 0 beats per minute. Three tiny ghost hunters read the tape with the Ghost Detector, and you ask the spirit on a board where the glass moves only when you breathe out.</p>
+      <h2>How it uses Presage SmartSpectra</h2>
+      <ul>
+        <li>Pulse (cardio.pulseRate): the detector line and the heart. Readings under 50% confidence do not count.</li>
+        <li>Chest movement (breathing.upperTrace): moves the glass on the spirit board when you breathe out.</li>
+        <li>Talking (face.talking): the glass waits while you speak.</li>
+        <li>Blinks (face.blinking): the only thing that moves the figure in The Room.</li>
+        <li>Breathing rate and expression: your numbers and your evidence cards.</li>
+        <li>Validation status: turns "multiple faces" into a second face, and bad light into "unreadable", never into a ghost.</li>
+      </ul>
+      <h2>What is real and what is sample</h2>
+      <p>This web demo runs on sample numbers, and every sample screen is tagged. The Presage SDK is native (Node.js and Electron), so the live camera reading runs in the desktop app with a Presage key. Marina is a character and her tape is drawn.</p>
+      <h2>Tested</h2>
+      <p>19,000 synthetic-signal tests with known answers, reproducible with npm run benchmark. They test the game's rules, not Presage's accuracy. A living face was called a ghost 0 times in 400.</p>
+      <h2>Consent and data</h2>
+      <p>The camera turns on only after a rules screen and a button. No frames are saved, no video is recorded, the microphone is never requested, SDK telemetry is off, and no AI service runs at run time. It is a game, not a medical device.</p>
+      <p>Code and setup: <a href="https://github.com/jenniferevangelista-de/who-else-was-there" style="color:#ffd27a">github.com/jenniferevangelista-de/who-else-was-there</a> (MIT).</p>
+    </article>
+  </noscript>
   <div id="sky" aria-hidden="true"></div>
 
   <header class="top">

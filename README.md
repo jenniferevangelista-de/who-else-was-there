@@ -16,7 +16,7 @@ Entry for the DEV Presage SmartSpectra SDK Challenge, category **Most Creative o
 
 ## The game in one minute
 
-1. **A case arrives.** Marina was about to go out when a feeling at the door made her stay. She lives alone and saw nothing, but her hallway camera was on.
+1. **A case arrives.** Marina was about to go out when it felt like a hand on her shoulder at the door: *stay home*. When she was nine, her mother went out by that same door and never came back. So she stayed, and twenty minutes later the car she had cancelled crashed. She lives alone and saw nothing, but her hallway camera was on.
 2. **Three tiny ghost hunters read the tape** with a new instrument, the Ghost Detector. Living faces have a heartbeat. A face with no heartbeat is the case.
 3. **You ask the spirit.** The glass on the spirit board moves only when **you** breathe out, read from your camera.
 4. **Then it is your turn.** The detector reads you, live, or a video you upload, and gives you a report with a verdict.

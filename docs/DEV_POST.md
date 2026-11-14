@@ -6,7 +6,7 @@ tags: devchallenge, presagechallenge, webdev, javascript
 
 *This is a submission for the [Presage SmartSpectra SDK Challenge](https://dev.to/devteam/join-the-presage-smartspectra-sdk-challenge-3000-in-prizes-across-10-winners-1370).*
 
-Marina had her bag on her shoulder, her keys in her hand and a car waiting outside. At the door it felt like a hand on her shoulder, so heavy she couldn't breathe. *Stay home.* She cancelled the car and stayed. Twenty minutes later, that same car crashed on the avenue.
+Marina had her bag on her shoulder, her keys in her hand and a car waiting outside. At the door it felt like a hand on her shoulder, so heavy she couldn't breathe. *Stay home.* When she was nine, her mother went out by that same door and never came back. So Marina cancelled the car and stayed. Twenty minutes later, that same car crashed on the avenue.
 
 She lives alone, and she saw nothing. But the hallway camera was on. And at second 8 of that tape, on the dark stairs behind her, there is a second face.
 

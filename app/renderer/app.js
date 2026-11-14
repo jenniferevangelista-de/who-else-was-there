@@ -844,11 +844,34 @@ function chips({ breathing, blinks, expression }) {
   if (g && blinks > lastBlinks) { g.style.transform = `scale(${Math.min(1.7, 1 + blinks * 0.03)})`; sound.beep(70, 240, 0.08); }
   lastBlinks = blinks ?? lastBlinks;
 }
+// The Room on sample numbers: ten seconds of sitting still, then the report writes itself.
+// Runs every time the person starts a reading here, in either language, also on a second visit.
+function armAutoReport(el) {
+  const stat = $("#liveStat"), notes = $("#roomNotes");
+  if (stat) { stat.hidden = false; stat.classList.remove("count10"); void stat.offsetWidth; stat.classList.add("count10"); const f = stat.querySelector(".fill"); if (f) f.style.width = ""; }
+  const msg0 = $("#liveMsg"); if (msg0 && !msg0.textContent) msg0.textContent = "These readings are simulated.";
+  if (notes) notes.innerHTML = say("xochi", "Stay still for 10 seconds. I am writing your report.");
+  clearTimeout(state.autoReport);
+  state.autoReport = setTimeout(async () => {
+    const here = () => state.fakeLive && SCREENS[state.i].id === "room" && document.body.contains(el);
+    if (!here()) return;
+    state.report = buildReport(state.fakeScan, { stats: null, simulated: true, glassAt: state.glassStoppedAt ?? null, when: new Date().toISOString() });
+    state.glassStoppedAt = null;
+    sound.chime(); toast("Report generated successfully.", 3200);
+    if (stat) { stat.classList.remove("count10"); stat.querySelector(".fill").style.width = "100%"; }
+    const msg = $("#liveMsg"); if (msg) msg.textContent = "Report generated successfully.";
+    if (notes && document.body.contains(notes)) notes.innerHTML = say("xochi", "Report generated successfully. Come and read it.");
+    nextUp([{ label: "See my report →", main: true, do: () => goTo("report") }, { label: "Main menu", do: () => goTo("menu") }], "Your report is ready.");
+    await Promise.all([sleep(2600), voice.idle(15000)]);   // never cut Xochi off mid-sentence
+    await sleep(700);
+    if (here()) goTo("report");
+  }, 10000);
+}
 async function startLive(el, scope, sel = "#scopeMe") {
   // The camera may already be on from an earlier screen: point the readings at this screen's scope.
   state.view = { scope, sel };
   const st0 = document.querySelector(`${sel} [data-state]`);
-  if (state.live || state.fakeLive) { if (st0) st0.textContent = state.live ? "WARMING UP" : "SIMULATED"; const v = $("#me"); const s0 = state.live ? state.camStream : state.webCam; if (v && s0) { v.srcObject = s0; v.play(); $("#mePh")?.remove(); } return; }
+  if (state.live || state.fakeLive) { if (st0) st0.textContent = state.live ? "WARMING UP" : "SIMULATED"; const v = $("#me"); const s0 = state.live ? state.camStream : state.webCam; if (v && s0) { v.srcObject = s0; v.play(); $("#mePh")?.remove(); } if (!state.live && sel === "#scopeRoom") armAutoReport(el); return; }
   const say_ = (m, wait) => { const stat = $("#liveStat"), msg = $("#liveMsg"); if (!stat || !msg) return; stat.hidden = false; stat.classList.toggle("waiting", !!wait); msg.textContent = m; if (!wait) stat.querySelector(".fill").style.width = "100%"; };   // looked up each time: the person may have moved to another screen
   if (!state.liveSdk) {   // no key: a gentle simulated breath and pulse, clearly labelled
     if (state.web && navigator.mediaDevices?.getUserMedia) {   // web demo: show the person, keep every number labelled simulated
@@ -878,23 +901,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
       if (v < 0.05) state.lastExhale = performance.now();
     }, 50);
     const st = document.querySelector(`${sel} [data-state]`); if (st) st.textContent = "SIMULATED";
-    if (sel === "#scopeRoom") {
-      const stat = $("#liveStat"); if (stat) { stat.hidden = false; stat.classList.add("count10"); }
-      const notes = $("#roomNotes"); if (notes) notes.innerHTML = say("xochi", "Stay still for 10 seconds. I am writing your report.");
-      clearTimeout(state.autoReport);
-      state.autoReport = setTimeout(async () => {
-        if (!state.fakeLive || SCREENS[state.i].id !== "room" || !document.body.contains(el)) return;
-        state.report = buildReport(fake, { stats: null, simulated: true, glassAt: state.glassStoppedAt ?? null, when: new Date().toISOString() });
-        state.glassStoppedAt = null;
-        sound.chime(); toast("Report generated successfully.", 3200);
-        if (stat) { stat.classList.remove("count10"); stat.querySelector(".fill").style.width = "100%"; }
-        const msg = $("#liveMsg"); if (msg) msg.textContent = "Report generated successfully.";
-        if (notes && document.body.contains(notes)) notes.innerHTML = say("xochi", "Report generated successfully. Come and read it.");
-        nextUp([{ label: "See my report →", main: true, do: () => goTo("report") }, { label: "Main menu", do: () => goTo("menu") }], "Your report is ready.");
-        await sleep(2600);
-        if (state.fakeLive && SCREENS[state.i].id === "room" && document.body.contains(el)) goTo("report");
-      }, 10000);
-    }
+    if (sel === "#scopeRoom") armAutoReport(el);
     return;
   }
   try {

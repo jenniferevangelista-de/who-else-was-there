@@ -26,8 +26,14 @@ def main():
             g.screenshot(path=str(OUT / f"{name}.jpg"), type="jpeg", quality=82)
             g.close()
             print(name)
+        g = b.new_page(viewport={"width": W, "height": H})     # the ending: the whole screen says I AM HERE (drawn here the way fx.scream draws it)
+        g.goto(f"{PAGE}?screen=board"); g.wait_for_timeout(2500)
+        g.evaluate("""() => { const d = document.createElement('div'); d.className = 'fx fx-scream all';
+          d.innerHTML = '<img src="img/stalker.svg" alt=""><div style="font-size:min(52vw,35vh);animation:none"><b style="animation:none">I</b><b style="animation:none">AM</b><b style="animation:none">HERE</b></div>'; document.body.append(d); }""")
+        g.wait_for_timeout(2600)
+        g.screenshot(path=str(OUT / "scare.jpg"), type="jpeg", quality=82); g.close(); print("scare")
         b.close()
-    keep = ["title", "calendar", "tape", "point", "board", "room", "dossier", "tested", "consent"]
+    keep = ["title", "calendar", "tape", "point", "board", "room", "menu", "tested", "consent"]
     t = (640, 360)
     sheet = Image.new("RGB", (t[0] * 3 + 16, t[1] * 3 + 16), (18, 10, 31))
     for i, n in enumerate(keep):

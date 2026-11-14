@@ -27,7 +27,7 @@ def main():
         page = ctx.new_page()
         t0 = time.monotonic()
         now = lambda: round(time.monotonic() - t0, 2)
-        page.goto(PAGE); page.wait_for_selector("#next")
+        page.goto(PAGE + "?auto"); page.wait_for_selector("#next")     # ?auto skips the "start the hunt" gate of the web demo
 
         def scene(key, fn):
             s = now(); fn(); scenes.append({"key": key, "start": s, "end": now()}); print(key, scenes[-1]["end"] - s, "s")

@@ -38,6 +38,24 @@ jobs:
           <meta http-equiv="refresh" content="0; url=app/renderer/index.html">
           <a href="app/renderer/index.html">Open Ghost Hunt</a>
           EOF
+      # A test copy of the `next` branch at /next/, so a change can be tried on a phone before it replaces the game above.
+      - uses: actions/checkout@v4
+        with:
+          ref: next
+          path: next-src
+        continue-on-error: true
+      - name: Assemble the test copy
+        run: |
+          [ -d next-src/app ] || exit 0
+          cd next-src && npm ci && npm run build && cd ..
+          mkdir -p _site/next/app _site/next/dist _site/next/node_modules/@fontsource
+          cp -r next-src/app/renderer _site/next/app/
+          cp next-src/dist/app.js _site/next/dist/
+          for f in fredoka cormorant-garamond vt323; do
+            mkdir -p _site/next/node_modules/@fontsource/$f
+            cp -r next-src/node_modules/@fontsource/$f/files _site/next/node_modules/@fontsource/$f/
+          done
+          printf '<!doctype html><meta charset="utf-8"><meta name="robots" content="noindex"><title>Ghost Hunt (test)</title><meta http-equiv="refresh" content="0; url=app/renderer/index.html">' > _site/next/index.html
       - uses: actions/upload-pages-artifact@v3
         with:
           path: _site

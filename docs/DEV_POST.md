@@ -71,11 +71,11 @@ It is a desktop app in Electron, in English and Portuguese, with original music 
 
 **Demo, with the live signal:**
 
-{% embed https://youtu.be/OwtlWGyNFdw %}
+{% embed https://youtu.be/_erHqEuyfW0 %}
 
 **Pitch:**
 
-{% embed https://youtu.be/AibgwE4xLh4 %}
+{% embed https://youtu.be/Uq_3nqf3R5w %}
 
 **Play it in your browser, no install:** https://jenniferevangelista-de.github.io/who-else-was-there/ (sample numbers).
 

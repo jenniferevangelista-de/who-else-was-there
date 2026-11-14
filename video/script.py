@@ -24,8 +24,8 @@ STYLE = {"jennifer": dict(rate="+4%", pitch="+0Hz"), "wisp": dict(rate="+12%", p
 # extras: "clip" = the window of recordings/live.mp4 a live scene plays, "scene" = the tour scene a rec line plays over
 URL = "jenniferevangelista-de.github.io/who-else-was-there"
 LINES = [
-    ("cold", "live", "wisp", "Read live, right now", "This is a heartbeat, read live from a plain webcam by Presage SmartSpectra. Every face has one. Except one.", {"clip": [0.0, 9.0]}),
-    ("hello", "card", "jennifer", "Ghost Hunt", "I'm Jennifer Evangelista. This is Ghost Hunt."),
+    ("cold", "live", "wisp", "Read live, right now", "Marina lives alone. Her hallway camera caught a second face, with no heartbeat. This is a heartbeat, read live by Presage SmartSpectra.", {"clip": [0.0, 9.0]}),
+    ("hello", "card", "jennifer", "Ghost Hunt", "I'm Jennifer Evangelista. Most camera apps measure the pulse that is there. Ghost Hunt hunts for the one that is missing."),
     ("crew", "rec", "wisp", "The crew", "I'm Wisp. Three tiny ghost hunters work this case. Luna believes. Doctor Bigotes doubts. Xochi writes it all down."),
     ("case", "rec", "wisp", "Something told her to stay", "Marina had her keys in her hand and a car waiting. At the door it felt like a hand on her shoulder. Stay home. When she was nine, her mother went out by that same door and never came back. So she stayed. Twenty minutes later, that car crashed."),
     ("tape", "rec", "wisp", "The second face", "Her hallway camera was on. Second eight, on the dark stairs behind her: the detector reports two faces. Marina never turns around. At the door she holds her breath for almost four seconds, and her pulse climbs."),

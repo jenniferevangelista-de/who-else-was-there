@@ -1,17 +1,25 @@
 ---
 title: "Ghost Hunt · Who Else Was There? Every face has a heartbeat. Except one."
-published: false
+published: true
 tags: devchallenge, presagechallenge, webdev, javascript
 ---
 
 *This is a submission for the [Presage SmartSpectra SDK Challenge](https://dev.to/devteam/join-the-presage-smartspectra-sdk-challenge-3000-in-prizes-across-10-winners-1370).*
+
+Marina had her bag on her shoulder, her keys in her hand and a car waiting outside. At the door it felt like a hand on her shoulder, so heavy she couldn't breathe. *Stay home.* She cancelled the car and stayed. Twenty minutes later, that same car crashed on the avenue.
+
+She lives alone, and she saw nothing. But the hallway camera was on. And at second 8 of that tape, on the dark stairs behind her, there is a second face.
+
+Its pulse reads **0 beats per minute**.
+
+*(Marina is a character, and her tape is drawn. In the game, "0 BPM" means the detector got no reliable pulse from that face. It is a story clue, never a health result: a living person in bad light can get it too.)*
 
 | | |
 | --- | --- |
 | **Signals** | 7 live Presage SmartSpectra signals: pulse, chest movement, breathing rate, talking, blinks, expression, validation status |
 | **Platform** | Electron desktop app, English and Portuguese |
 | **Privacy** | Camera only after consent, no frames saved, no video recorded, SDK telemetry off |
-| **Tested** | 19,000 tests on fake data with a known answer |
+| **Tested** | 19,000 synthetic-signal tests with known answers (my rules, not Presage's accuracy). A living face was called a ghost **0 times in 400** |
 | **Play it now** | [Web demo in your browser](https://jenniferevangelista-de.github.io/who-else-was-there/), on sample numbers. The live camera reading runs in the desktop app, because the Presage SDK is native (Node.js/Electron) |
 | **Code** | [github.com/jenniferevangelista-de/who-else-was-there](https://github.com/jenniferevangelista-de/who-else-was-there) (MIT) |
 
@@ -21,7 +29,7 @@ Most camera-vitals apps measure the pulse that is there. **Ghost Hunt** is a cut
 
 Plenty of people would play it for real. In a 2009 Pew Research Center survey, **18% of U.S. adults** said they had seen a ghost or been in the presence of one, and **29%** said they had felt in touch with someone who had already died ([Pew Research Center](https://www.pewresearch.org/short-reads/2015/10/30/18-of-americans-say-theyve-seen-a-ghost/)). Ghost Hunt gives that feeling an instrument, and a rule: nothing counts unless the camera measured it.
 
-Marina was about to go out. At the door, a feeling hit her so hard she couldn't breathe, and she stayed home. She lives alone and saw nothing, but the hallway camera was on. Three tiny ghost hunters point a new instrument at her tape, the Ghost Detector. Living faces have a heartbeat. The face that does not is the case.
+Three tiny ghost hunters point a new instrument at Marina's tape, the Ghost Detector. Living faces have a heartbeat. The face that does not is the case.
 
 | Point | Ask | Report |
 | --- | --- | --- |
@@ -30,12 +38,12 @@ Marina was about to go out. At the door, a feeling hit her so hard she couldn't 
 **What you can do in it**
 
 - **Browse 30 nights of tape** on a haunted calendar, and let the detector analyze any night.
-- **Analyze the tape:** drag to any second, or search the hallway with a flashlight.
+- **Analyze the tape:** the detector watches the whole hallway and reports the moment a second face appears.
 - **Point the detector at one spot:** it finds the second face and locks on. 0 beats per minute.
 - **Collect evidence cards** that jump to the exact moment on the tape.
 - **Ask the spirit** on a board that moves only when **you** breathe out, and waits if you talk.
 - **Learn what it is.** Each spirit gets one of seven kinds, picked from the evidence: Guardian, Haunter, Watcher, Intruder, Shade, Veiled or Visitor. Luna, the medium, deciphers what it wants. Dr. Bigotes, the skeptic, refuses to sign it. Xochi writes it all down.
-- **Get read yourself in The Room:** your real pulse, breathing and expression, live from your camera. A figure moves only when you blink.
+- **Get read yourself in The Room:** your real pulse, breathing and expression, live from your camera. A figure moves only when you blink. On your report, a small spirit board keeps listening: breathe out and the glass slides to YES.
 - **Upload your own video,** once you confirm everyone in it agreed. Presage reads it as it plays, and you get a report with a verdict: is there a spirit in it?
 
 ![Nine screens of the app. From top left: the crew, the 30 nights, the tape, one spot, the spirit board, The Room, the dossier, the proof tab and the rules.](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/preview_sheet.jpg)
@@ -85,7 +93,7 @@ One rule keeps the spirit honest: **cite or vanish**. There is no language model
 
 ### How I tested it, including where it breaks
 
-The computer vision belongs to Presage, and I treat it as an instrument. What is mine is the logic that decides what the numbers mean, so I tested that. It works like hiding a fake ghost to see if the detector finds it: **19,000 tests on fake data where I already know the answer**, reproducible with `npm run benchmark`. They test my rules, not Presage's accuracy, and no real person is in them.
+The computer vision belongs to Presage, and I treat it as an instrument. What is mine is the logic that decides what the numbers mean, so I tested that. It works like hiding a fake ghost to see if the detector finds it: **19,000 synthetic-signal tests where I already know the answer**, reproducible with `npm run benchmark`. They test my rules, not Presage's accuracy, and no real person is in them.
 
 ![1,000 right answers out of 1,000](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/charts/01_verdicts.png)
 
@@ -110,10 +118,11 @@ The README explains every chart and lists every limit I found.
 
 **Most Creative or Delightful Use.**
 
-- **Inspiration:** camera-vitals apps measure the pulse that is there. This game hunts for the one that is missing.
-- **What's different:** the clue is a heartbeat that never comes. Your own breath moves the glass on the board, a blink is a jump scare with rules, and the skeptic refuses to sign any verdict the SDK marks as unreadable.
-- **Who it's for:** friends at a party or on a stream, in English or Portuguese. The web demo opens in one click, with no install and no account.
-- **Delight with care:** the scare never turns into a health claim. Bad light says "unreadable", never "ghost".
+- **What inspired it:** almost one in five U.S. adults says they have been in the presence of a ghost. I wanted to give that feeling an instrument, and one rule: nothing counts unless the camera measured it.
+- **Unexpected:** most vitals apps look for the pulse that is there. This one hunts for the pulse that is missing, and a face with no heartbeat becomes the whole mystery.
+- **Playful:** your own breath is the only thing that moves the glass, and it waits while you talk. A blink is a jump scare with rules. A skeptic cat refuses to sign anything the numbers can't prove.
+- **Delight with care:** the scare never becomes a health claim. Bad light says *unreadable*, never *ghost*.
+- **One click to play:** the web demo opens in the browser, on a computer or a phone.
 
 ## Consent and Data Handling
 
@@ -141,10 +150,5 @@ The README explains every chart and lists every limit I found.
 | No diagnosis or treatment claims, no medical decisions | It is a game, and says so on screen |
 | No covert monitoring | Consent comes first, and other people's videos stay locked until you confirm they agreed |
 
-## Credits
-
-- Presage SmartSpectra (`@smartspectra/node-sdk` 3.4.0), used under Presage's terms.
-- Luna, Dr. Bigotes and Xochi come from my earlier project [Witching Hour](https://github.com/jenniferevangelista-de/witching-hour).
-- Fonts: Fredoka, Cormorant Garamond and VT323 (SIL Open Font License). Music and voices are original.
-
 Built with AI coding assistance. The story, design decisions and testing direction are mine.
+

@@ -314,7 +314,7 @@ const SCREENS = [
       <div class="card">
         <div class="kicker">Case 01 · The Door · a message from Marina</div>
         <h2>"Something told me to stay."</h2>
-        <p class="lead">"It was the night of November 2nd. Bag ready, keys in my hand, coat on, a car waiting outside. Then I got to the door and it felt like a hand on my shoulder, so heavy I couldn't breathe. <b>Stay home.</b> I cancelled the car, took my coat off and stayed. Twenty minutes later that same car crashed on the avenue. I live alone, and I saw nothing. But the hallway camera was on. Can you look?"</p>
+        <p class="lead">"It was the night of November 2nd. Bag ready, keys in my hand, a car waiting outside. At the door it felt like a hand on my shoulder, so heavy I couldn't breathe. <b>Stay home.</b> When I was nine, my mother went out by that same door and never came back. So I stayed. Twenty minutes later, that same car crashed on the avenue. I live alone, and I saw nothing. But the hallway camera was on. Can you look?"</p>
         <p class="muted">Marina is a character. ${state.mode === "replay" ? "Her tape is drawn for this demo and the readings on the next screens are <b>sample numbers</b>" : "Her tape is staged for this demo with everyone's consent and the readings are measured from it by Presage SmartSpectra"}.</p>
         ${say("luna", "A woman alone, a door she couldn't open. Let's see who else was in that hallway.")}
       </div>
@@ -743,7 +743,8 @@ const SCREENS = [
     <div class="cliff">
       <div class="stamp-closed">CASE CLOSED</div>
       <div class="line">Odette. <em>The Guardian.</em></div>
-      <p class="sub">Marina's mother stood at that door so her daughter would not go out that night. The car Marina cancelled crashed twenty minutes later. Marina stayed home, and she is safe.</p>
+      <p class="sub">One night Odette went out by that door and never came back. She has kept it ever since, so the same road would not take her daughter. The car Marina cancelled crashed twenty minutes later. Marina stayed home, and she is safe.</p>
+      <p class="sub">But Odette was standing between Marina and something. It was on the tape too. The crew opened it, and now it is in their office.</p>
       <p class="sub">The crew ran. Nobody has gone back for the glass.</p>
       <p class="sub" style="font-size:15px">Marina and Odette are fiction. The numbers in this case are samples.</p>
       <div class="kicker" style="margin-top:22px;color:var(--gold)">The séance is over</div>
@@ -755,17 +756,18 @@ SCREENS.push({ id: "menu", chapter: "Main menu", next: "Start with the 30 nights
     <div class="menu-wrap">
       <div class="kicker" style="text-align:center;color:var(--gold);letter-spacing:5px">MAIN MENU</div>
       <h2 style="text-align:center;margin:4px 0 16px">Where do you want to start?</h2>
+      <button class="hot-banner" data-go="tested"><i></i>See the proof that it runs on Presage →</button>
       <div class="menu-grid">
         ${[["calendar", "img/heart.svg", "The 30 nights", "Marina's camera, night by night. Click a night and the detector analyzes it.", "Pulse · faces in frame"],
            ["case", "img/heart-still.svg", "Marina's video", "The night of November 2. The video she sent us, analyzed, then the board.", "Pulse · two faces · held breath · one spot"],
            ["room", "img/wisp.svg", "The Room", "Your own camera, live. It reads your heart, your breath and your blinks.", "Live pulse · breathing · blinking · expression"],
            ["dare", "img/stalker.svg", "Bring your own video", "Do you dare? Everyone in it has to agree first.", "The same reading, on your tape"],
            ["tested", "img/bigotes.svg", "Proof and tests", "Proof that this runs on Presage SmartSpectra, and the tests Dr. Bigotes insisted on.", "Live counters · our logic, measured"]]
-          .map(([id, img, t, d, tag]) => `<button class="menu-card" data-go="${id}"><img src="${img}" alt=""><b>${t}</b><span>${d}</span><small>${tag}</small></button>`).join("")}
+          .map(([id, img, t, d, tag]) => `<button class="menu-card ${id === "tested" ? "hot" : ""}" data-go="${id}"><img src="${img}" alt=""><b>${t}</b><span>${d}</span><small>${tag}</small>${id === "tested" ? `<em class="hot-tag">Do not miss this</em>` : ""}</button>`).join("")}
       </div>
     </div>` });
 SCREENS.sort((a, b) => ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
-const MARINA_LINE = "It was the night of November 2nd. Bag ready, keys in my hand, coat on, a car waiting outside. Then I got to the door and it felt like a hand on my shoulder, so heavy I couldn't breathe. Stay home. I cancelled the car, took my coat off and stayed. Twenty minutes later that same car crashed on the avenue. I live alone, and I saw nothing. But the hallway camera was on. Can you look?";
+const MARINA_LINE = "It was the night of November 2nd. Bag ready, keys in my hand, a car waiting outside. At the door it felt like a hand on my shoulder, so heavy I couldn't breathe. Stay home. When I was nine, my mother went out by that same door and never came back. So I stayed. Twenty minutes later, that same car crashed on the avenue. I live alone, and I saw nothing. But the hallway camera was on. Can you look?";
 
 // ------------------------------------------------------------------ the end of the séance: I AM HERE, and the glass breaks
 async function finale(el) {
@@ -776,7 +778,7 @@ async function finale(el) {
   await heard(2200);
   $("#answers", el).innerHTML = say("luna", "We have the answers for this case. I will get back to our client tonight: Marina can rest.");                  // the case is solved, and they relax
   await heard(4600);
-  $("#answers", el).insertAdjacentHTML("beforeend", say("xochi", "Case closed. Odette stays in Marina's hallway, and we stay here."));
+  $("#answers", el).insertAdjacentHTML("beforeend", say("xochi", "Case closed. A mother who never left her daughter's door. I like this one."));
   await heard(3000);
   document.body.classList.add("closing"); music.tense();                       // the lights start to close
   $("#answers", el).innerHTML = say("luna", "Wait. The glass is warm.");
@@ -813,7 +815,9 @@ async function finale(el) {
   await sleep(900);
   $("#answers", el).innerHTML = say("luna", a.luna, a.cites);                    // it followed them
   await heard(3400);
-  $("#answers", el).insertAdjacentHTML("beforeend", say("xochi", "She came with the video. We opened it. We let her in."));
+  $("#answers", el).insertAdjacentHTML("beforeend", say("xochi", "Odette was standing between Marina and that door. Between Marina and something."));
+  await heard(3400);
+  $("#answers", el).innerHTML = say("luna", "It lost Marina that night. It came with the video. We opened it. We let it in.");
   await heard(3400);
   $("#answers", el).insertAdjacentHTML("beforeend", say("bigotes", a.bigotes, a.cites));
   await heard(2600);

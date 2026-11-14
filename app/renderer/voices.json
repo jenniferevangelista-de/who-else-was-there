@@ -103,12 +103,12 @@
 "id": "2123c2c336",
 "who": "luna"
 },
-"Case closed. Odette stays in Marina's hallway, and we stay here.": {
-"id": "36fb5ba106",
+"Case closed. A mother who never left her daughter's door. I like this one.": {
+"id": "05936a93af",
 "who": "xochi"
 },
-"Caso encerrado. A Odette fica no corredor da Marina, e nós ficamos aqui.": {
-"id": "a0d236ee69",
+"Caso encerrado. Uma mãe que nunca saiu da porta da filha. Gostei deste.": {
+"id": "0225be5717",
 "who": "xochi"
 },
 "Wait. The glass is warm.": {
@@ -119,13 +119,21 @@
 "id": "7b9add88a2",
 "who": "luna"
 },
-"She came with the video. We opened it. We let her in.": {
-"id": "f5f8e4dc94",
+"Odette was standing between Marina and that door. Between Marina and something.": {
+"id": "a0dda372c1",
 "who": "xochi"
 },
-"Ela veio junto com o vídeo. A gente abriu. A gente deixou ela entrar.": {
-"id": "74c285563d",
+"A Odette estava entre a Marina e aquela porta. Entre a Marina e alguma coisa.": {
+"id": "84b47951e5",
 "who": "xochi"
+},
+"It lost Marina that night. It came with the video. We opened it. We let it in.": {
+"id": "5a448b23da",
+"who": "luna"
+},
+"Aquilo perdeu a Marina naquela noite. Veio com o vídeo. Nós abrimos. Nós deixamos entrar.": {
+"id": "4a8df77900",
+"who": "luna"
 },
 "EVERYBODY OUT! Out, out, out!": {
 "id": "cb56a726bc",
@@ -134,6 +142,22 @@
 "TODO MUNDO PRA FORA! Fora, fora, fora!": {
 "id": "032a0f9190",
 "who": "luna"
+},
+"Stay still for 10 seconds. I am writing your report.": {
+"id": "ef7b043304",
+"who": "xochi"
+},
+"Fique parada por 10 segundos. Estou escrevendo o seu relatório.": {
+"id": "7a0f88e29a",
+"who": "xochi"
+},
+"Report generated successfully. Come and read it.": {
+"id": "586d36fb3f",
+"who": "xochi"
+},
+"Relatório gerado com sucesso. Venha ler.": {
+"id": "e37cd3890d",
+"who": "xochi"
 },
 "Analysis done. Your report is ready.": {
 "id": "30bbc398a9",
@@ -239,12 +263,12 @@
 "id": "707020ec8d",
 "who": "bigotes"
 },
-"She lived in that house. Odette is Marina's mother.": {
-"id": "5efb2e0615",
+"She lived in that house. Odette is Marina's mother. The one who never came back.": {
+"id": "ded412c657",
 "who": "luna"
 },
-"Ela morou naquela casa. A Odette é a mãe da Marina.": {
-"id": "c55dc5eb5c",
+"Ela morou naquela casa. A Odette é a mãe da Marina. A que nunca mais voltou.": {
+"id": "c5052b70a8",
 "who": "luna"
 },
 "A glass spelled two words. What I measured is a face with 0 beats per minute, and that face cannot tell me where it is from.": {
@@ -255,12 +279,12 @@
 "id": "301189811d",
 "who": "bigotes"
 },
-"No. Years ago something told her to stay home. She went out by that door anyway, and she never came back.": {
-"id": "9b2f05af5d",
+"No. One night, years ago, she went out by that door and never came back. Marina was a little girl. She waited at the window until morning.": {
+"id": "ae53b8067e",
 "who": "luna"
 },
-"Não. Anos atrás, algo disse para ela ficar em casa. Ela saiu por aquela porta mesmo assim, e nunca mais voltou.": {
-"id": "19cf48c36b",
+"Não. Uma noite, anos atrás, ela saiu por aquela porta e nunca mais voltou. A Marina era uma menina. Ficou esperando na janela até amanhecer.": {
+"id": "553d2d990f",
 "who": "luna"
 },
 "A face with no pulse is a photo, a mask or a screen. Ordinary. I just cannot tell you who put it there.": {
@@ -271,12 +295,12 @@
 "id": "4ca1e9a8ed",
 "who": "bigotes"
 },
-"That weight on Marina's shoulder was a hand. She held her breath, and she stayed.": {
-"id": "421864c734",
+"That weight on Marina's shoulder was her mother's hand. She held her breath, and she stayed.": {
+"id": "749aca3df6",
 "who": "luna"
 },
-"Aquele peso no ombro da Marina era uma mão. Ela prendeu a respiração, e ficou.": {
-"id": "6755f3c896",
+"Aquele peso no ombro da Marina era a mão da mãe dela. Ela prendeu a respiração, e ficou.": {
+"id": "b3365cafc2",
 "who": "luna"
 },
 "Her pulse rose 9 bpm in a few seconds. A startle does that. So does a flickering lamp. A bad feeling is not a ghost.": {
@@ -287,12 +311,12 @@
 "id": "a5f39744cf",
 "who": "bigotes"
 },
-"The car. Marina cancelled it, and twenty minutes later it crashed on the avenue. Odette could not save herself at that door. So she saved her daughter.": {
-"id": "4861aafeec",
+"Whatever took Odette on that road came back for her daughter that night. The car Marina cancelled crashed twenty minutes later. Odette could not save herself. So she stood at that door and saved her little girl.": {
+"id": "63c6a17ee4",
 "who": "luna"
 },
-"O carro. A Marina cancelou, e vinte minutos depois ele bateu na avenida. A Odette não conseguiu se salvar naquela porta. Então ela salvou a filha.": {
-"id": "4e593e3089",
+"O que levou a Odette naquela estrada voltou para buscar a filha dela naquela noite. O carro que a Marina cancelou bateu vinte minutos depois. A Odette não conseguiu se salvar. Então ficou naquela porta e salvou a menina dela.": {
+"id": "96168b6e2c",
 "who": "luna"
 },
 "Marina stayed home, and the car crashed. Those two I can sign. Who asked her to stay is not something I can measure.": {
@@ -319,12 +343,12 @@
 "id": "d5053ae8cc",
 "who": "bigotes"
 },
-"Here? Marina's house is across town. We are in our own office.": {
-"id": "a42935c89f",
+"Odette? No. Odette already said goodbye. This is not her.": {
+"id": "97c26d2b41",
 "who": "luna"
 },
-"Aqui? A casa da Marina fica do outro lado da cidade. Nós estamos no nosso escritório.": {
-"id": "386f3282e4",
+"Odette? Não. A Odette já deu adeus. Não é ela.": {
+"id": "8323656353",
 "who": "luna"
 },
 "Okay. I have no explanation for that. Yet.": {
@@ -491,12 +515,12 @@
 "id": "a24d266440",
 "who": "luna"
 },
-"It was the night of November 2nd. Bag ready, keys in my hand, coat on, a car waiting outside. Then I got to the door and it felt like a hand on my shoulder, so heavy I couldn't breathe. Stay home. I cancelled the car, took my coat off and stayed. Twenty minutes later that same car crashed on the avenue. I live alone, and I saw nothing. But the hallway camera was on. Can you look?": {
-"id": "27926c6323",
+"It was the night of November 2nd. Bag ready, keys in my hand, a car waiting outside. At the door it felt like a hand on my shoulder, so heavy I couldn't breathe. Stay home. When I was nine, my mother went out by that same door and never came back. So I stayed. Twenty minutes later, that same car crashed on the avenue. I live alone, and I saw nothing. But the hallway camera was on. Can you look?": {
+"id": "338627f0df",
 "who": "marina"
 },
-"Foi na noite de 2 de novembro. Bolsa pronta, chaves na mão, casaco vestido, um carro me esperando lá fora. Aí cheguei na porta e senti como se uma mão segurasse o meu ombro, tão pesada que eu não conseguia respirar. Fique em casa. Cancelei o carro, tirei o casaco e fiquei. Vinte minutos depois, aquele mesmo carro bateu na avenida. Moro sozinha e não vi nada. Mas a câmera do corredor estava ligada. Vocês podem olhar?": {
-"id": "0c99a53e46",
+"Foi na noite de 2 de novembro. Bolsa pronta, chaves na mão, um carro me esperando lá fora. Na porta, senti como se uma mão segurasse o meu ombro, tão pesada que eu não conseguia respirar. Fique em casa. Quando eu tinha nove anos, a minha mãe saiu por aquela mesma porta e nunca mais voltou. Então eu fiquei. Vinte minutos depois, aquele mesmo carro bateu na avenida. Moro sozinha e não vi nada. Mas a câmera do corredor estava ligada. Vocês podem olhar?": {
+"id": "b8a9010f68",
 "who": "marina"
 },
 "Do you dare?": {

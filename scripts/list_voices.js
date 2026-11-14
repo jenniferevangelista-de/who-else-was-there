@@ -38,7 +38,7 @@ add("xochi", "These numbers are samples. The spirit is fiction. What you felt is
 add("xochi", "The measurements are real. The spirit is fiction. What you felt is yours.");
 add("luna", "Every face in this video has a heartbeat.");
 add("luna", "Except one.");
-add("marina", "It was the night of November 2nd. Bag ready, keys in my hand, coat on, a car waiting outside. Then I got to the door and it felt like a hand on my shoulder, so heavy I couldn't breathe. Stay home. I cancelled the car, took my coat off and stayed. Twenty minutes later that same car crashed on the avenue. I live alone, and I saw nothing. But the hallway camera was on. Can you look?");
+add("marina", "It was the night of November 2nd. Bag ready, keys in my hand, a car waiting outside. At the door it felt like a hand on my shoulder, so heavy I couldn't breathe. Stay home. When I was nine, my mother went out by that same door and never came back. So I stayed. Twenty minutes later, that same car crashed on the avenue. I live alone, and I saw nothing. But the hallway camera was on. Can you look?");
 add("luna", "Do you dare?");
 
 writeFileSync("demo/voice_lines.json", JSON.stringify([...lines].map(([text, v]) => ({ ...v, text })), null, 1));

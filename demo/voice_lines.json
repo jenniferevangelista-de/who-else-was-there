@@ -132,12 +132,12 @@
  {
   "who": "xochi",
   "lang": "en",
-  "text": "Case closed. Odette stays in Marina's hallway, and we stay here."
+  "text": "Case closed. A mother who never left her daughter's door. I like this one."
  },
  {
   "who": "xochi",
   "lang": "pt",
-  "text": "Caso encerrado. A Odette fica no corredor da Marina, e nós ficamos aqui."
+  "text": "Caso encerrado. Uma mãe que nunca saiu da porta da filha. Gostei deste."
  },
  {
   "who": "luna",
@@ -152,12 +152,22 @@
  {
   "who": "xochi",
   "lang": "en",
-  "text": "She came with the video. We opened it. We let her in."
+  "text": "Odette was standing between Marina and that door. Between Marina and something."
  },
  {
   "who": "xochi",
   "lang": "pt",
-  "text": "Ela veio junto com o vídeo. A gente abriu. A gente deixou ela entrar."
+  "text": "A Odette estava entre a Marina e aquela porta. Entre a Marina e alguma coisa."
+ },
+ {
+  "who": "luna",
+  "lang": "en",
+  "text": "It lost Marina that night. It came with the video. We opened it. We let it in."
+ },
+ {
+  "who": "luna",
+  "lang": "pt",
+  "text": "Aquilo perdeu a Marina naquela noite. Veio com o vídeo. Nós abrimos. Nós deixamos entrar."
  },
  {
   "who": "luna",
@@ -168,6 +178,26 @@
   "who": "luna",
   "lang": "pt",
   "text": "TODO MUNDO PRA FORA! Fora, fora, fora!"
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
+  "text": "Stay still for 10 seconds. I am writing your report."
+ },
+ {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "Fique parada por 10 segundos. Estou escrevendo o seu relatório."
+ },
+ {
+  "who": "xochi",
+  "lang": "en",
+  "text": "Report generated successfully. Come and read it."
+ },
+ {
+  "who": "xochi",
+  "lang": "pt",
+  "text": "Relatório gerado com sucesso. Venha ler."
  },
  {
   "who": "xochi",
@@ -302,12 +332,12 @@
  {
   "who": "luna",
   "lang": "en",
-  "text": "She lived in that house. Odette is Marina's mother."
+  "text": "She lived in that house. Odette is Marina's mother. The one who never came back."
  },
  {
   "who": "luna",
   "lang": "pt",
-  "text": "Ela morou naquela casa. A Odette é a mãe da Marina."
+  "text": "Ela morou naquela casa. A Odette é a mãe da Marina. A que nunca mais voltou."
  },
  {
   "who": "bigotes",
@@ -322,12 +352,12 @@
  {
   "who": "luna",
   "lang": "en",
-  "text": "No. Years ago something told her to stay home. She went out by that door anyway, and she never came back."
+  "text": "No. One night, years ago, she went out by that door and never came back. Marina was a little girl. She waited at the window until morning."
  },
  {
   "who": "luna",
   "lang": "pt",
-  "text": "Não. Anos atrás, algo disse para ela ficar em casa. Ela saiu por aquela porta mesmo assim, e nunca mais voltou."
+  "text": "Não. Uma noite, anos atrás, ela saiu por aquela porta e nunca mais voltou. A Marina era uma menina. Ficou esperando na janela até amanhecer."
  },
  {
   "who": "bigotes",
@@ -342,12 +372,12 @@
  {
   "who": "luna",
   "lang": "en",
-  "text": "That weight on Marina's shoulder was a hand. She held her breath, and she stayed."
+  "text": "That weight on Marina's shoulder was her mother's hand. She held her breath, and she stayed."
  },
  {
   "who": "luna",
   "lang": "pt",
-  "text": "Aquele peso no ombro da Marina era uma mão. Ela prendeu a respiração, e ficou."
+  "text": "Aquele peso no ombro da Marina era a mão da mãe dela. Ela prendeu a respiração, e ficou."
  },
  {
   "who": "bigotes",
@@ -362,12 +392,12 @@
  {
   "who": "luna",
   "lang": "en",
-  "text": "The car. Marina cancelled it, and twenty minutes later it crashed on the avenue. Odette could not save herself at that door. So she saved her daughter."
+  "text": "Whatever took Odette on that road came back for her daughter that night. The car Marina cancelled crashed twenty minutes later. Odette could not save herself. So she stood at that door and saved her little girl."
  },
  {
   "who": "luna",
   "lang": "pt",
-  "text": "O carro. A Marina cancelou, e vinte minutos depois ele bateu na avenida. A Odette não conseguiu se salvar naquela porta. Então ela salvou a filha."
+  "text": "O que levou a Odette naquela estrada voltou para buscar a filha dela naquela noite. O carro que a Marina cancelou bateu vinte minutos depois. A Odette não conseguiu se salvar. Então ficou naquela porta e salvou a menina dela."
  },
  {
   "who": "bigotes",
@@ -402,12 +432,12 @@
  {
   "who": "luna",
   "lang": "en",
-  "text": "Here? Marina's house is across town. We are in our own office."
+  "text": "Odette? No. Odette already said goodbye. This is not her."
  },
  {
   "who": "luna",
   "lang": "pt",
-  "text": "Aqui? A casa da Marina fica do outro lado da cidade. Nós estamos no nosso escritório."
+  "text": "Odette? Não. A Odette já deu adeus. Não é ela."
  },
  {
   "who": "bigotes",
@@ -617,12 +647,12 @@
  {
   "who": "marina",
   "lang": "en",
-  "text": "It was the night of November 2nd. Bag ready, keys in my hand, coat on, a car waiting outside. Then I got to the door and it felt like a hand on my shoulder, so heavy I couldn't breathe. Stay home. I cancelled the car, took my coat off and stayed. Twenty minutes later that same car crashed on the avenue. I live alone, and I saw nothing. But the hallway camera was on. Can you look?"
+  "text": "It was the night of November 2nd. Bag ready, keys in my hand, a car waiting outside. At the door it felt like a hand on my shoulder, so heavy I couldn't breathe. Stay home. When I was nine, my mother went out by that same door and never came back. So I stayed. Twenty minutes later, that same car crashed on the avenue. I live alone, and I saw nothing. But the hallway camera was on. Can you look?"
  },
  {
   "who": "marina",
   "lang": "pt",
-  "text": "Foi na noite de 2 de novembro. Bolsa pronta, chaves na mão, casaco vestido, um carro me esperando lá fora. Aí cheguei na porta e senti como se uma mão segurasse o meu ombro, tão pesada que eu não conseguia respirar. Fique em casa. Cancelei o carro, tirei o casaco e fiquei. Vinte minutos depois, aquele mesmo carro bateu na avenida. Moro sozinha e não vi nada. Mas a câmera do corredor estava ligada. Vocês podem olhar?"
+  "text": "Foi na noite de 2 de novembro. Bolsa pronta, chaves na mão, um carro me esperando lá fora. Na porta, senti como se uma mão segurasse o meu ombro, tão pesada que eu não conseguia respirar. Fique em casa. Quando eu tinha nove anos, a minha mãe saiu por aquela mesma porta e nunca mais voltou. Então eu fiquei. Vinte minutos depois, aquele mesmo carro bateu na avenida. Moro sozinha e não vi nada. Mas a câmera do corredor estava ligada. Vocês podem olhar?"
  },
  {
   "who": "luna",

@@ -620,3 +620,34 @@ body.fx-hold * { animation-play-state: paused !important; }
 
 /* the simulated Room counts 10 seconds, then the report is ready */
 .scanstat.count10 .fill { animation: warm 10s linear forwards; }
+
+/* ---------- the menu, in order, with the proof card calling for attention ---------- */
+.menu-grid { counter-reset: step; }
+.menu-card b::before { counter-increment: step; content: counter(step) ". "; color: var(--gold); font-style: normal; font-size: .8em; }
+.menu-card.hot { position: relative; border-color: var(--mint); animation: hotcard 1.6s ease-in-out infinite; }
+.menu-card .hot-tag { display: inline-block; justify-self: start; background: var(--mint); color: #17202a; font: 700 11px/1 var(--f-body, inherit); font-style: normal; letter-spacing: 1px; text-transform: uppercase; border-radius: 999px; padding: 5px 10px; animation: hottag 1.6s ease-in-out infinite; }
+@keyframes hotcard { 0%, 100% { box-shadow: 0 0 0 0 #86efc400; border-color: #86efc466; } 50% { box-shadow: 0 0 22px 2px #86efc477; border-color: var(--mint); } }
+@keyframes hottag { 0%, 100% { opacity: 1; } 50% { opacity: .55; } }
+@media (prefers-reduced-motion: reduce) { .menu-card.hot, .menu-card .hot-tag { animation: none; } }
+
+/* ---------- phones, third pass: the report's second tab, and a solid top bar ---------- */
+@media (max-width: 760px) {
+  header.top { background: #0e0718; }
+  .menu-card .hot-tag { grid-column: 2; }
+  section.screen .rp-cols { grid-template-columns: minmax(0, 1fr) !important; }
+  section.screen .rp-cols > * { min-width: 0; }
+  section.screen .rp-card { padding: 14px; }
+  section.screen .rp-cat { display: block; }
+  section.screen .rp-cat h2 { font-size: 25px; line-height: 1.1; margin-bottom: 4px; }
+  section.screen [data-pane="made"] table, section.screen [data-pane="made"] tbody, section.screen [data-pane="made"] tr, section.screen [data-pane="made"] td { display: block; width: 100%; }
+  section.screen [data-pane="made"] thead { display: none; }
+  section.screen [data-pane="made"] tr { padding: 8px 0; border-bottom: 1px solid #ffffff1f; }
+  section.screen [data-pane="made"] td { border: 0; padding: 1px 0; font-size: 14.5px; overflow-wrap: anywhere; }
+  section.screen [data-pane="made"] td:first-child { font-weight: 700; }
+  section.screen [data-pane="made"] td.n::before { content: "× "; color: var(--rp-muted, #c8b7dc); }
+  section.screen .rp code { overflow-wrap: anywhere; }
+  section.screen .rp-result { font-size: 25px; letter-spacing: 1.5px; padding: 6px 12px; }
+}
+.hot-banner { display: flex; align-items: center; justify-content: center; gap: 10px; width: fit-content; max-width: 100%; margin: 0 auto 14px; background: #86efc41a; color: var(--mint); border: 1px solid var(--mint); border-radius: 999px; padding: 9px 18px; font: 700 15px/1.2 var(--f-body, inherit); cursor: pointer; animation: hotcard 1.6s ease-in-out infinite; }
+.hot-banner i { flex: none; width: 9px; height: 9px; border-radius: 50%; background: var(--mint); animation: hottag 1.6s ease-in-out infinite; }
+@media (prefers-reduced-motion: reduce) { .hot-banner, .hot-banner i { animation: none; } }

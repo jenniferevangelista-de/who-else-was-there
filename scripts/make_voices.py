@@ -14,13 +14,15 @@ ROOT = Path(__file__).resolve().parents[1]
 AUDIO = ROOT / "app" / "renderer" / "audio"
 VOICE = {"en": {"luna": ("en-US-AvaNeural", 0), "bigotes": ("en-GB-RyanNeural", 0), "xochi": ("en-US-EmmaNeural", 10), "marina": ("en-US-AriaNeural", -4)},
          "pt": {"luna": ("pt-BR-FranciscaNeural", -2), "bigotes": ("pt-BR-AntonioNeural", 0), "xochi": ("pt-BR-FranciscaNeural", 24), "marina": ("pt-BR-FranciscaNeural", -12)}}
-SCARED = re.compile(r"RUN|CORRE|EVERYBODY OUT|TODO MUNDO|Wait|Espera|before you go|antes de ir|no explanation|Não tenho explicação|That was not|Except one|Menos um")
+SCARED = re.compile(r"RUN|CORRE|EVERYBODY OUT|TODO MUNDO|Wait|Espera|before you go|antes de ir|no explanation|Não tenho explicação|That was not|Except one|Menos um|This is not her|Não é ela|We let it in|deixamos entrar")
+TENDER = re.compile(r"mother|never came back|little girl|never left her|mãe|nunca mais voltou|menina|nunca saiu da porta")
 MOCKING = re.compile(r"Ghosts don|Fantasma não|ordinary|Comum|a bad feeling|mau pressentimento|A tired|boring|sign|assino|I believe in data|acredito em dados")
 
 
 def delivery(who, text):
     """Rate and pitch offsets for how the line is meant: frightened, mocking, hushed, trembling or bright."""
     if SCARED.search(text): return 16, 26
+    if TENDER.search(text) and who != "bigotes": return (-18, -4) if who != "marina" else (-14, 2)
     if who == "bigotes": return (-12, -8) if MOCKING.search(text) else (-6, -2)
     if who == "marina": return -12, 6
     if who == "luna": return -14, -2

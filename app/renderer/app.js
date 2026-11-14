@@ -885,7 +885,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
       camUI(false);
       say_("This copy has no Presage key, so your camera stays off and these readings are simulated.");
     }
-    const t0 = performance.now(), fake = { t0: 0, t1: 0, pulse: [], trace: [] };
+    const t0 = performance.now(), fake = { t0: 0, t1: 0, pulse: [], breathing: [], trace: [] };
     state.fakeScan = fake;
     let lastP = -1;
     state.fakeLive = setInterval(() => {
@@ -895,6 +895,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
         lastP = Math.floor(t);
         const scare = state.glassStoppedAt != null && t > state.glassStoppedAt + 3 ? 12 : 0;
         fake.pulse.push({ t, v: 70 + scare + Math.sin(t) * 0.8, conf: 85 });
+        fake.breathing.push({ t, v: 60 / 4.5 + Math.sin(t / 3) * 0.6, conf: 85 });   // the sample breath is one cycle every 4.5 s, so the report says so
         state.view.scope.set(fake.pulse.at(-1).v); const bpm = document.querySelector(`${state.view.sel} [data-bpm]`); if (bpm) bpm.textContent = Math.round(fake.pulse.at(-1).v);
       }
       breathLevel(v);

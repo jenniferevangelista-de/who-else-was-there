@@ -57,10 +57,12 @@ function toast(msg, ms = 2600) { const t = $("#toast"); t.textContent = msg; t.c
 function camUI(on) {
   $("#camPill").classList.toggle("cam-on", on);
   $("#camText").textContent = on ? "Camera on · turn off" : "Camera off";
+  const b = $("#roomOn"); if (b) b.hidden = on;   // no "turn on" button while it is already on
 }
 async function cameraOff() {
   if (state.live) { await state.live.stop(); state.live = null; }
   if (state.fakeLive) { clearInterval(state.fakeLive); state.fakeLive = null; }
+  clearTimeout(state.autoReport);
   if (state.webCam) { state.webCam.getTracks().forEach((t) => t.stop()); state.webCam = null; const v = $("#me"); if (v) v.srcObject = null; }
   camUI(false);
 }
@@ -667,7 +669,7 @@ const SCREENS = [
     </div>`,
     enter(el) {
       const scope = createScope($("#scopeRoom canvas", el));
-      nextUp([{ label: "Analyze a video", do: () => goTo("dare") }, { label: "Main menu →", do: () => goTo("menu") }, { label: "See how it was tested →", do: () => goTo("tested") }]);
+      nextUp([...(state.report && state.report.source !== "video" ? [{ label: "See my report →", main: true, do: () => goTo("report") }] : []), { label: "Analyze a video", do: () => goTo("dare") }, { label: "Main menu →", do: () => goTo("menu") }, { label: "See how it was tested →", do: () => goTo("tested") }]);
       $("#roomOn", el).addEventListener("click", async () => {
         await startLive(el, scope, "#scopeRoom");
         state.roomTimer = setInterval(() => {
@@ -872,6 +874,23 @@ async function startLive(el, scope, sel = "#scopeMe") {
       if (v < 0.05) state.lastExhale = performance.now();
     }, 50);
     const st = document.querySelector(`${sel} [data-state]`); if (st) st.textContent = "SIMULATED";
+    if (sel === "#scopeRoom") {
+      const stat = $("#liveStat"); if (stat) { stat.hidden = false; stat.classList.add("count10"); }
+      const notes = $("#roomNotes"); if (notes) notes.innerHTML = say("xochi", "Stay still for 10 seconds. I am writing your report.");
+      clearTimeout(state.autoReport);
+      state.autoReport = setTimeout(async () => {
+        if (!state.fakeLive || SCREENS[state.i].id !== "room" || !document.body.contains(el)) return;
+        state.report = buildReport(fake, { stats: null, simulated: true, glassAt: state.glassStoppedAt ?? null, when: new Date().toISOString() });
+        state.glassStoppedAt = null;
+        sound.chime(); toast("Report generated successfully.", 3200);
+        if (stat) { stat.classList.remove("count10"); stat.querySelector(".fill").style.width = "100%"; }
+        const msg = $("#liveMsg"); if (msg) msg.textContent = "Report generated successfully.";
+        if (notes && document.body.contains(notes)) notes.innerHTML = say("xochi", "Report generated successfully. Come and read it.");
+        nextUp([{ label: "See my report →", main: true, do: () => goTo("report") }, { label: "Main menu", do: () => goTo("menu") }], "Your report is ready.");
+        await sleep(2600);
+        if (state.fakeLive && SCREENS[state.i].id === "room" && document.body.contains(el)) goTo("report");
+      }, 10000);
+    }
     return;
   }
   try {

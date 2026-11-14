@@ -598,7 +598,8 @@ body.fx-hold * { animation-play-state: paused !important; }
   .stat span { font-size: 12px; }
   /* messages and the small tools button */
   #toast { border-radius: 16px; top: 96px; width: max-content; max-width: 90vw; padding: 10px 16px; font-size: 14px; text-align: center; }
-  #hoodPill { left: auto; right: 10px; top: 46px; bottom: auto; z-index: 22; }
+  #hoodPill { left: auto; right: 10px; top: 78px; bottom: auto; z-index: 22; }
+  nav.story { background: #0e0718; }
   .cliff .line { font-size: 38px; }
   .cliff .sub { font-size: 18px; }
   .your-turn { font-size: 44px; }
@@ -616,3 +617,6 @@ body.fx-hold * { animation-play-state: paused !important; }
   .board-name { font-size: 15px; top: 9%; }
   .board-grid .seance-stage { padding: 84px 46px 0; }
 }
+
+/* the simulated Room counts 10 seconds, then the report is ready */
+.scanstat.count10 .fill { animation: warm 10s linear forwards; }

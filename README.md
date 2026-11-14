@@ -10,7 +10,7 @@ Entry for the DEV Presage SmartSpectra SDK Challenge, category **Most Creative o
 
 **Play it in your browser:** [jenniferevangelista-de.github.io/who-else-was-there](https://jenniferevangelista-de.github.io/who-else-was-there/) (sample numbers; the live camera reading needs the desktop app)
 
-**Videos:** [Demo with the live signal (2:33)](https://youtu.be/_erHqEuyfW0) · [Pitch (2:23)](https://youtu.be/Uq_3nqf3R5w)
+**Videos:** [Demo with the live signal (2:38)](https://youtu.be/Z8e7KSFJ59o) · [Pitch (2:23)](https://youtu.be/Uq_3nqf3R5w)
 
 **Contents:** [The game in one minute](#the-game-in-one-minute) · [Everything you can do](#everything-you-can-do) · [The challenge's questions, answered](#the-challenges-questions-answered) · [How the SDK is used](#how-the-sdk-is-used) · [How we tested it](#how-we-tested-it) · [Run it yourself](#run-it-yourself) · [Consent and data](#consent-and-data-handling)
 

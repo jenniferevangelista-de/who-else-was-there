@@ -71,7 +71,7 @@ It is a desktop app in Electron, in English and Portuguese, with original music 
 
 **Demo, with the live signal:**
 
-{% embed https://youtu.be/_erHqEuyfW0 %}
+{% embed https://youtu.be/Z8e7KSFJ59o %}
 
 **Pitch:**
 

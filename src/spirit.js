@@ -28,13 +28,13 @@ export function answer(qid, ev) {
     },
     from: still && {
       board: "THIS HOUSE", cites: [still.id],
-      luna: `She lived here, in this same house, long ago. One night something told her to stay. She went out by that door anyway, and she never came home.`,
+      luna: `She lived here, in this same house. Odette was Marina's mother. Years ago something told her to stay. She went out by that door anyway, and she never came home.`,
       bigotes: `A glass spelled two words. What I measured is a face with 0 beats per minute, and that face cannot tell me where it is from.`,
     },
     protect: still && held && {
       board: "SOMETHING BAD", cites: [still.id, held.id],
-      luna: `She has stood at that door ever since, trying to warn whoever leaves. Everyone walked past her. Marina is the first one who stopped. She held her breath at second ${sec(held.t0)}, and she stayed. Now I know what she is: a guardian spirit. She was trying to protect Marina from something bad that was about to happen.`,
-      bigotes: `Marina stayed home. That part I can sign. Who asked her to is not something I can measure.`,
+      luna: `She has stood at that door ever since. That night a car was waiting for her daughter. Marina held her breath at second ${sec(held.t0)}, and she stayed. Twenty minutes later that car crashed. Now I know what she is: a guardian spirit. A mother who would not let her daughter leave by that door too.`,
+      bigotes: `Marina stayed home, and the car crashed. Those two I can sign. Who asked her to stay is not something I can measure.`,
     },
     alive: still ? {
       board: "NO", cites: [still.id],
@@ -89,7 +89,7 @@ export const SPIRIT_KINDS = ["The Guardian", "The Haunter", "The Watcher", "The 
 export function spiritFor(ev) {
   const still = find(ev, "no_pulse"), held = find(ev, "held_breath"), face2 = find(ev, "second_face");
   const jump = find(ev, "pulse_jump"), shade = find(ev, "only_shadow"), veiled = find(ev, "unreadable"), alive = find(ev, "region_alive");
-  if (still && held) return { archetype: "The Guardian", name: "Odette", unknown: "A face with no pulse, at the foot of the stairs. Ask the glass.", story: "She lived in this house long ago. One night she felt she should stay, went out by that same door, and never came home.", goal: "to stop anyone else from leaving by that door", cites: [still.id, held.id] };
+  if (still && held) return { archetype: "The Guardian", name: "Odette", unknown: "A face with no pulse, at the foot of the stairs. Ask the glass.", story: "Marina's mother. Years ago she felt she should stay, went out by that same door, and never came home.", goal: "to keep her daughter from leaving by that door", cites: [still.id, held.id] };
   if (still && jump) return { archetype: "The Haunter", name: "Silas", story: "A still face, and a living pulse that jumped beside it.", goal: "to be felt", cites: [still.id, jump.id] };
   if (still) return { archetype: "The Watcher", name: "Odette", story: "A face on the wall that never blinks.", goal: "to be noticed", cites: [still.id] };
   if (alive) return { archetype: "The Intruder", name: "Someone", story: "Not a spirit at all. Someone alive, in the corner of the frame.", goal: "unknown", cites: [alive.id] };

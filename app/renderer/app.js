@@ -107,11 +107,9 @@ function tapeHTML(tools = false) {
   return `<div class="tape" id="tape">
     ${state.mode === "replay" ? `<canvas class="scene" width="1280" height="720"></canvas>` : `<video playsinline muted></video>`}
     <div class="overlay"><div class="rec"><i></i>${state.ownTape ? "REC · YOUR VIDEO" : "REC · HALLWAY"}</div><div class="stamp" id="stamp" ${state.ownTape ? "hidden" : ""}>NOV 02 · 21:43:00</div>
-    <div class="flashlight" hidden></div></div>
-    <button class="torch" title="Flashlight">🔦</button></div>
-    <div class="timeline ${tools ? "scrubs" : ""}" id="timeline"><div class="head" id="head"></div></div>
-    ${tools ? `<div class="tape-tools" id="tapeTools" hidden><span class="drag-hint">⟷ Drag the marker to move through the recording</span><button class="btn-soft" id="watchAgain">↺ Watch again</button></div>
-    <div class="tl-legend" id="tlLegend" hidden></div>` : ""}`;
+    </div></div>
+    <div class="timeline" id="timeline"><div class="head" id="head"></div></div>
+    ${tools ? `<div class="tl-legend" id="tlLegend" hidden></div>` : ""}`;
 }
 function playTape({ until, onTime, rate = 1 }) {
   // replay: draws the sample scene; live: plays the client's video
@@ -137,12 +135,6 @@ function playTape({ until, onTime, rate = 1 }) {
 // the hunter's flashlight: the hallway goes dark and the mouse becomes the beam
 function wireTape(el) {
   const tape = $("#tape", el); if (!tape) return;
-  const beam = tape.querySelector(".flashlight"), btn = tape.querySelector(".torch");
-  btn.addEventListener("click", (e) => { e.stopPropagation(); beam.hidden = !beam.hidden; btn.classList.toggle("on", !beam.hidden); sound.beep(300, 40); });
-  tape.addEventListener("mousemove", (e) => {
-    const b = tape.getBoundingClientRect();
-    const k = screenZoom(tape); beam.style.setProperty("--x", (e.clientX - b.left) / k + "px"); beam.style.setProperty("--y", (e.clientY - b.top) / k + "px");
-  });
   // the timeline: press anywhere or drag the marker to move through the recording
   const tl = $("#timeline", el); if (!tl?.classList.contains("scrubs")) return;
   const at = (e) => { const b = tl.getBoundingClientRect(); return Math.max(0, Math.min(1, (e.clientX - b.left) / b.width)) * state.duration; };
@@ -319,7 +311,7 @@ const SCREENS = [
       <div class="card">
         <div class="kicker">Case 01 · The Door · a message from Marina</div>
         <h2>"Something told me to stay."</h2>
-        <p class="lead">"It was the night of November 2nd. Bag ready, keys in my hand, coat on. Everything was fine. Then I got to the door and this feeling hit me, so strong I couldn't breathe. <b>Stay home.</b> I took my coat off and I stayed. I live alone, and I saw nothing. But the hallway camera was on. Can you look?"</p>
+        <p class="lead">"It was the night of November 2nd. Bag ready, keys in my hand, coat on, a car waiting outside. Then I got to the door and it felt like a hand on my shoulder, so heavy I couldn't breathe. <b>Stay home.</b> I cancelled the car, took my coat off and stayed. Twenty minutes later that same car crashed on the avenue. I live alone, and I saw nothing. But the hallway camera was on. Can you look?"</p>
         <p class="muted">Marina is a character. ${state.mode === "replay" ? "Her tape is drawn for this demo and the readings on the next screens are <b>sample numbers</b>" : "Her tape is staged for this demo with everyone's consent and the readings are measured from it by Presage SmartSpectra"}.</p>
         ${say("luna", "A woman alone, a door she couldn't open. Let's see who else was in that hallway.")}
       </div>
@@ -494,16 +486,9 @@ const SCREENS = [
       state.tapeDone = true; updateNav();
       markTimeline(buildEvidence(state.scans));
       beatAt(el, state.tapeT, false);
-      $("#tapeTools", el).hidden = false;
       $("#anStatus", el).textContent = "Analysis finished: two faces in the frame, one pulse so far.";
-      const replay = async () => {
-        state.tapeT = 0;
-        await playTape({ until: state.duration, rate: state.mode === "replay" ? 1.5 : 1, onTime: (t) => beatAt(el, t, true) });
-        if (document.body.contains(el) && !$("#timeline", el).classList.contains("grabbed")) beatAt(el, state.tapeT, false);
-      };
-      $("#watchAgain", el).addEventListener("click", replay);
-      nextUp([{ label: "↺ Watch the tape again", do: replay }, { label: "Read the second face →", main: true, do: forward }]);
-      toast("Tip: drag the marker to look at any second. 🔦 turns on the flashlight.", 4500);
+      nextUp([{ label: "Read the second face →", main: true, do: forward }]);
+      setTimeout(() => { if (document.body.contains(el) && SCREENS[state.i].id === "tape") forward(); }, 4200);   // the second face is found: straight on to reading it
       $("#tapeNotes", el).insertAdjacentHTML("beforeend", L(`<p class="cliff" style="padding:10px 0"><span class="line" style="font-size:34px">Who is the <em>second face</em>?</span></p>`));
     } },
 
@@ -619,9 +604,8 @@ const SCREENS = [
       <div class="card dark">
         <div class="kicker">Ask the spirit</div>
         <p class="muted" style="margin-top:0">It speaks only through the glass, three words at most. Every answer must point at a measured moment, or the glass stays still.</p>
-        ${state.live ? "" : `<button class="btn-soft" id="useBreath" style="color:var(--cream);margin-bottom:10px">Move it with my breath (camera)</button>`}
         <div class="scanstat" id="liveStat" style="margin-bottom:10px" hidden><div class="msg" id="liveMsg"></div><div class="bar"><div class="fill"></div></div></div>
-        <div class="breath-meter" style="margin-bottom:10px">breath <div class="bar"><div class="fill" id="breathFill"></div></div><span id="talkFlag"></span></div>
+        <div class="breath-meter" style="margin-bottom:10px" ${state.live ? "" : "hidden"}>breath <div class="bar"><div class="fill" id="breathFill"></div></div><span id="talkFlag"></span></div>
         <div class="questions" id="qs" style="margin-top:12px">${QUESTIONS.map((q) => `<button class="q" data-q="${q.id}">${q.text}</button>`).join("")}</div>
         <p class="hush" id="hush"></p>
         <div id="answers"></div>
@@ -630,10 +614,6 @@ const SCREENS = [
     enter(el) {
       music.start();
       const seen = new Set(), sp = spiritFor(state.evidence), order = ["who", "from", "alive", "why", "protect"];
-      $("#useBreath", el)?.addEventListener("click", (e) => {
-        if (!state.consent) { state.afterConsent = "board"; return goTo("consent"); }
-        e.currentTarget.remove(); startLive(el, createScope(document.createElement("canvas")), "#board-has-no-scope");
-      });
       let busy = false;
       const ask = async (qid, label) => {
         if (busy) return; busy = true;
@@ -712,6 +692,7 @@ const SCREENS = [
     enter(el) {
       if (!state.report) return nextUp([{ label: "Enter the Room →", main: true, do: () => goTo("room") }]);
       bindReport(el, () => scheduleFit(true));
+      if (state.report.source !== "video" && (state.live || state.fakeLive)) { el.insertAdjacentHTML("beforeend", L(miniBoardHTML())); scheduleFit(true); }   // your results, and the glass still moving with your breath
       nextUp(state.report.source === "video"
         ? [{ label: "Proof and tests →", main: true, do: () => openProof("report") }, { label: "Main menu", do: () => goTo("menu") }, { label: "Save report", do: () => saveReport(el) }]
         : [{ label: "Proof and tests →", main: true, do: () => openProof("report") }, { label: "Save report", do: () => saveReport(el) }, { label: "Back to the Room", do: () => goTo("room") }, { label: "Main menu", do: () => goTo("menu") }]);
@@ -759,7 +740,7 @@ const SCREENS = [
     <div class="cliff">
       <div class="stamp-closed">CASE CLOSED</div>
       <div class="line">Odette. <em>The Guardian.</em></div>
-      <p class="sub">She stood at that door so Marina would not go out that night. Marina stayed home, and she is safe.</p>
+      <p class="sub">Marina's mother stood at that door so her daughter would not go out that night. The car Marina cancelled crashed twenty minutes later. Marina stayed home, and she is safe.</p>
       <p class="sub">The crew ran. Nobody has gone back for the glass.</p>
       <p class="sub" style="font-size:15px">Marina and Odette are fiction. The numbers in this case are samples.</p>
       <div class="kicker" style="margin-top:22px;color:var(--gold)">The séance is over</div>
@@ -781,7 +762,7 @@ SCREENS.push({ id: "menu", chapter: "Main menu", next: "Start with the 30 nights
       </div>
     </div>` });
 SCREENS.sort((a, b) => ORDER.indexOf(a.id) - ORDER.indexOf(b.id));
-const MARINA_LINE = "It was the night of November 2nd. Bag ready, keys in my hand, coat on. Everything was fine. Then I got to the door and this feeling hit me, so strong I couldn't breathe. Stay home. I took my coat off and I stayed. I live alone, and I saw nothing. But the hallway camera was on. Can you look?";
+const MARINA_LINE = "It was the night of November 2nd. Bag ready, keys in my hand, coat on, a car waiting outside. Then I got to the door and it felt like a hand on my shoulder, so heavy I couldn't breathe. Stay home. I cancelled the car, took my coat off and stayed. Twenty minutes later that same car crashed on the avenue. I live alone, and I saw nothing. But the hallway camera was on. Can you look?";
 
 // ------------------------------------------------------------------ the end of the séance: I AM HERE, and the glass breaks
 async function finale(el) {
@@ -862,7 +843,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
   if (!state.liveSdk) {   // no key: a gentle simulated breath and pulse, clearly labelled
     if (state.web && navigator.mediaDevices?.getUserMedia) {   // web demo: show the person, keep every number labelled simulated
       try {
-        const s = await navigator.mediaDevices.getUserMedia({ audio: false, video: true });
+        const s = await navigator.mediaDevices.getUserMedia({ audio: false, video: { facingMode: "user" } });
         state.webCam = s; const v = $("#me"); if (v) { v.srcObject = s; v.play(); $("#mePh")?.remove(); }
         camUI(true);
         say_("Web demo: you see yourself, but Presage runs only in the desktop app, so these readings are simulated. Your image stays in this browser.");
@@ -883,7 +864,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
         fake.pulse.push({ t, v: 70 + scare + Math.sin(t) * 0.8, conf: 85 });
         state.view.scope.set(fake.pulse.at(-1).v); const bpm = document.querySelector(`${state.view.sel} [data-bpm]`); if (bpm) bpm.textContent = Math.round(fake.pulse.at(-1).v);
       }
-      const f = document.getElementById("breathFill"); if (f) f.style.width = v * 100 + "%";
+      breathLevel(v);
       if (v < 0.05) state.lastExhale = performance.now();
     }, 50);
     const st = document.querySelector(`${sel} [data-state]`); if (st) st.textContent = "SIMULATED";
@@ -914,7 +895,7 @@ async function startLive(el, scope, sel = "#scopeMe") {
         const recent = trace.slice(-60); if (recent.length < 5) return;
         const vs = recent.map((p) => p.v), lo = Math.min(...vs), hi = Math.max(...vs);
         const level = hi > lo ? (vs.at(-1) - lo) / (hi - lo) : 0.5;
-        const f = $("#breathFill"); if (f) f.style.width = level * 100 + "%";
+        breathLevel(level);
         if (level < 0.15) state.lastExhale = performance.now();
       },
       onValidation: (code, hint) => { if (code && hint && !found) { if ($("#liveStat")) say_(hint, true); else toast(hint, 1800); } },
@@ -929,6 +910,24 @@ async function startLive(el, scope, sel = "#scopeMe") {
     });
   } catch (e) { camUI(false); toast(e.message, 6000); }
 }
+/** Your breath, 0 (all the way out) to 1 (all the way in): the meter on the board and the little glass on your report follow it. */
+function breathLevel(v) {
+  const f = document.getElementById("breathFill"); if (f) f.style.width = v * 100 + "%";
+  const g = document.getElementById("miniGlass"); if (g) g.style.left = 14 + (1 - v) * 72 + "%";
+  const k = document.getElementById("miniTalk"); if (k) k.textContent = state.talking ? "you're talking · the glass waits" : "";
+}
+const miniBoardHTML = () => `
+  <div class="card dark mini-seance" id="miniSeance">
+    <div>
+      <div class="kicker">One last thing · ${state.live ? "your breath, live" : "simulated breath"}</div>
+      <h2 style="font-size:28px;margin:2px 0 6px">The glass is still listening</h2>
+      <p style="margin:0"><b>Breathe out slowly</b> and watch the glass slide toward YES. Breathe in and it comes back. That is how the spirit board moves: with the breath of the living.</p>
+    </div>
+    <div>
+      <div class="mini-board"><span class="no">NO</span><span class="yes">YES</span><img id="miniGlass" src="img/planchette.svg" alt="the glass"></div>
+      <p class="muted" style="margin:8px 0 0;font-size:14px">${state.live ? "Chest movement measured by Presage SmartSpectra, right now." : "In the web demo the breath is simulated. In the desktop app, Presage SmartSpectra reads your real breath."} <span id="miniTalk" style="color:var(--mint)"></span> ${state.webCam || state.live ? "Your camera is still on for this. It turns off when you leave this page, or at the top right." : ""}</p>
+    </div>
+  </div>`;
 async function waitExhale() {
   if (!state.live && !state.fakeLive) return sleep(900);
   const asked = performance.now();
@@ -977,8 +976,7 @@ async function makeReport() {
   const scan = state.live?.scan ?? state.fakeScan; if (!scan) return;
   state.report = buildReport(scan, { stats: state.live ? window.__presageStats : null, simulated: !state.live, glassAt: state.glassStoppedAt ?? null, when: new Date().toISOString() });
   state.glassStoppedAt = null;
-  await cameraOff();
-  goTo("report");
+  goTo("report");   // the camera stays on while you read it: the little glass on the report moves with your breath
 }
 function saveReport(el) {
   const a = document.createElement("a");
@@ -1104,6 +1102,7 @@ function go(i, isBack) {
   if (!isBack && state.started && i !== state.i) state.hist.push(state.i);
   state.started = true;
   if (state.ownTape && !["tape", "report"].includes(SCREENS[i].id)) leaveOwnTape();
+  if (state.started && SCREENS[state.i]?.id === "report" && !["report", "room"].includes(SCREENS[i].id)) cameraOff();   // done reading your report: the camera goes off by itself
   document.body.classList.remove("closing", "redflash");
   music.stop(SCREENS[i].id !== "board");
   if (i >= SCREENS.findIndex((x) => x.id === "locker") && !state.evidence.length) state.evidence = buildEvidence(sampleScans());

@@ -73,7 +73,7 @@ TL, _t = [], 0.4
 for n in narr:
     d, it = n["dur"], {**n, "t0": _t}
     if n["kind"] == "card":
-        seg_len = d + {"hello": 0.2, "bye": 3.4}.get(n["id"], 1.4)     # the intro stays short, the close holds on the link
+        seg_len = d + {"hello": 0.2, "bye": 3.0}.get(n["id"], 1.4)     # the intro stays short, the close holds on the link
     else:
         live_clip = n["kind"] in CLIP and CLIP[n["kind"]][1]
         if live_clip:
@@ -81,7 +81,7 @@ for n in narr:
         else:
             s = scenes[n.get("scene") or {"live": "room", "tape": "tape"}.get(n["kind"], n["id"])]     # no consented video: the analysis screen on the sample tape, tagged as sample
             v0, v1 = s["start"], max(s["start"] + .5, s["end"] - .35)   # never hold on the first frame of the next screen
-        tail = 2.2 if n["id"] == "point" else 1.8 if n["id"] == "end" else 1.4 if n["id"] == "cold" else 0.9
+        tail = 1.3 if n["id"] == "point" else 1.6 if n["id"] == "scare" else 0.9 if n["id"] == "cold" else 0.55
         speed = 1.0 if live_clip else min(3.0, max(1.0, (v1 - v0) / (d + tail)))     # a live reading always plays at real speed
         if not live_clip and (v1 - v0) / (d + tail) > 3.0:
             v0 = v1 - 3.0 * (d + tail)                 # a long screen keeps its ending instead of leaving the voice in dead air

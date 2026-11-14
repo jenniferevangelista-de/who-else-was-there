@@ -38,20 +38,20 @@ assert (TOTAL, CORRECT, RUNS, LIVING, GHOSTED) == (19000, 1000, 1000, 400, 0)   
 LINES = [
     ("hook", ["Every face in this video has a heartbeat.", "Except one."]),
     ("idea", ["Hi, I'm Jennifer Evangelista.", "Camera vitals usually measure the pulse that is there.", "I built a game that hunts for the pulse that is missing."]),
-    ("tape", ["Three tiny ghost hunters get a hallway tape.", "Two faces in the frame.", "One pulse. And one face at zero beats per minute."]),
+    ("tape", ["Marina stopped at her door, where her mother once left and never came back.", "Her hallway tape shows two faces.", "One pulse. And one face at zero beats per minute."]),
     ("board", ["Then you ask the spirit.", "The glass moves only when you breathe out.", "Start talking, and it waits."]),
     ("seven", ["And that is the difference: we use everything.", *[r[0] + "." for r in ROWS], "Seven signals, and every one has a job."]),
     ("live", ["And it's real.", "On a plain webcam, Presage SmartSpectra reads the numbers on this screen, live."]),
     ("yours", ["Or upload a video of your own.", "Everyone in it has to agree first.", "Presage reads it, and you get a report and a verdict."]),
     ("cite", ["There is no language model.", "Every word the spirit says must cite a measured number, or it vanishes."]),
-    ("kinds", ["Seven kinds of spirit, picked from the evidence.", "Luna deciphers what it wants.", "Doctor Bigotes refuses to sign."]),
+    ("kinds", ["Seven kinds of spirit, picked from the evidence.", "This one is a guardian: a mother at her daughter's door.", "Doctor Bigotes refuses to sign."]),
     ("scans", ["The computer vision belongs to Presage, so I tested my own layer.", "Nineteen thousand synthetic scans, each with a known answer.",
                "One thousand verdicts out of one thousand, correct.", "Living faces called a ghost: zero of four hundred."]),
     ("rules", ["A held breath is found from four seconds up.", "A steady pulse never fires. A jump of eight does."]),
     ("breaks", ["Then I pushed the noise until my rules broke.", "Here is exactly where.", "Because a detector you can't trust is just a ghost story."]),
     ("consent", ["The camera is yours, and consent comes first.", "No frame saved. No video recorded. SDK telemetry off.", "It's a game, never a medical device."]),
     ("entry", ["Entered in Most Creative or Delightful Use.", "And every requirement is met."]),
-    ("end", ["Ghost Hunt.", "Who else was there?"]),
+    ("end", ["Ghost Hunt.", "Who else was there?", "Play it now in your browser."]),
 ]
 SPIRITS = ["Guardian", "Haunter", "Watcher", "Intruder", "Shade", "Veiled", "Visitor"]
 REQUIRED = ["Working app on the SmartSpectra SDK", "Live Presage signals, shown on screen", "DEV post on the official template", "Public code with setup steps", "Demo video", "No login needed",
@@ -369,7 +369,7 @@ def kinds(s):
     st = s["st"]
     chips = "".join(f'<div id="kd-c{i}" class="a" style="left:{90 + i * 250}px;top:250px;width:236px;height:104px;line-height:104px;text-align:center;border-radius:52px;font-size:44px;font-weight:600;background:#3a2a50;color:#f6f0ff">{n}</div>' for i, n in enumerate(SPIRITS))
     body = f'''<div id="kd-t" class="a d" style="left:90px;top:70px;font-size:130px">Seven kinds of spirit</div>{chips}
-<div id="kd-l" class="a" style="left:90px;top:440px;width:1040px;background:#fff8f0;color:#2a1838;border-radius:18px;padding:34px 42px 34px 240px;height:330px"><img src="assets/img/luna.svg" class="a" style="left:30px;top:60px;width:190px"><div style="font-size:40px;font-weight:600;color:#c23a6d">Luna deciphers what it wants</div><div class="d" style="font-size:66px;margin-top:10px">To stop anyone else from leaving by that door.</div></div>
+<div id="kd-l" class="a" style="left:90px;top:440px;width:1040px;background:#fff8f0;color:#2a1838;border-radius:18px;padding:34px 42px 34px 240px;height:330px"><img src="assets/img/luna.svg" class="a" style="left:30px;top:60px;width:190px"><div style="font-size:40px;font-weight:600;color:#c23a6d">Luna deciphers what it wants</div><div class="d" style="font-size:66px;margin-top:10px">To keep her daughter from the road that took her.</div></div>
 <div id="kd-b" class="a" style="left:1170px;top:520px;width:680px;background:#241636;border-radius:18px;padding:30px 34px 30px 190px;height:250px"><img src="assets/img/bigotes.svg" class="a" style="left:18px;top:42px;width:160px"><div style="font-size:40px;font-weight:600;color:#9af5c8">Dr. Bigotes</div><div style="font-size:44px;margin-top:8px">"Who asked her to is not something I can measure."</div></div>
 <div id="kd-e" class="a s" style="left:90px;top:830px;font-size:62px;color:#9af5c8">Guardian = a face with no pulse + a held breath</div>'''
     js = ft("#kd-t", st[0])
@@ -393,8 +393,9 @@ def end(s):
     st = s["st"]
     body = '''<div id="en-a" class="a" style="left:0;top:40px;width:1920px;text-align:center;font-size:210px;line-height:1;color:#ff86b8;font-weight:700">Ghost Hunt</div>
 <div id="en-b" class="a d" style="left:0;top:760px;width:1920px;text-align:center;font-size:150px">Who Else Was There?</div>
-<div id="en-c" class="a" style="left:0;top:950px;width:1920px;text-align:center;font-size:44px;color:#d8c6ea">Jennifer Evangelista &middot; built on Presage SmartSpectra</div>'''
-    write(s, "", body, ft("#en-a", st[0], "opacity:0,scale:.9", "opacity:1,scale:1", .5) + ft("#en-b", st[1]) + ft("#en-c", st[1] + .5, "opacity:0", "opacity:1"))
+<div id="en-c" class="a" style="left:0;top:950px;width:1920px;text-align:center;font-size:44px;color:#d8c6ea">Jennifer Evangelista &middot; built on Presage SmartSpectra</div>
+<div id="en-d" class="a pill" style="left:360px;top:560px;width:1200px;text-align:center;font-size:46px;background:#9af5c8;color:#2a1840">Play it now: jenniferevangelista-de.github.io/who-else-was-there</div>'''
+    write(s, "", body, ft("#en-a", st[0], "opacity:0,scale:.9", "opacity:1,scale:1", .5) + ft("#en-b", st[1]) + ft("#en-c", st[1] + .5, "opacity:0", "opacity:1") + ft("#en-d", st[2], "opacity:0,scale:.9", "opacity:1,scale:1"))
 
 
 WISP = '''<svg id="wisp" viewBox="0 0 120 140" width="240" height="280" style="position:absolute;left:0;top:0;z-index:50;overflow:visible" data-layout-ignore>

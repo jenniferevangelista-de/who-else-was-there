@@ -18,7 +18,7 @@ LIVING = P["faces"]["living"]["runs"] + P["faces"]["dim_living"]["runs"]
 GHOSTED = P["faces"]["living"]["called_a_ghost"] + P["faces"]["dim_living"]["called_a_ghost"]
 
 VOICE = "en-US-AvaNeural"
-STYLE = {"jennifer": dict(rate="-4%", pitch="+0Hz"), "wisp": dict(rate="+4%", pitch="+16Hz")}
+STYLE = {"jennifer": dict(rate="+4%", pitch="+0Hz"), "wisp": dict(rate="+12%", pitch="+16Hz")}   # a brisk pace: the whole film stays under three minutes
 
 # key, kind (rec = the real app, live = the real app with a live camera, card = drawn), who, title, line, extras
 # extras: "clip" = the window of recordings/live.mp4 a live scene plays, "scene" = the tour scene a rec line plays over
@@ -26,17 +26,18 @@ URL = "jenniferevangelista-de.github.io/who-else-was-there"
 LINES = [
     ("cold", "live", "wisp", "Read live, right now", "This is a heartbeat, read live from a plain webcam by Presage SmartSpectra. Every face has one. Except one.", {"clip": [0.0, 9.0]}),
     ("hello", "card", "jennifer", "Ghost Hunt", "I'm Jennifer Evangelista. This is Ghost Hunt."),
-    ("crew", "rec", "wisp", "The crew", "I'm Wisp. I work with three tiny ghost hunters. Luna believes. Doctor Bigotes doubts. Xochi writes it all down."),
-    ("case", "rec", "wisp", "Something told her to stay", "Marina was about to go out, keys in her hand. At the door, a feeling hit her so hard she couldn't breathe. Stay home. She lives alone, and she saw nothing. But the hallway camera was on."),
-    ("tape", "rec", "wisp", "The second face", "Watch the dark stairs behind her. Second eight. The detector reports two faces in the frame. Marina never turns around."),
-    ("door", "rec", "wisp", "She stopped at the door", "At the door the lamp flickers. She holds her breath for almost four seconds, and her pulse climbs."),
-    ("point", "rec", "wisp", "Zero beats per minute", "The detector finds the second face by itself and locks on, right behind her. A face. Zero beats per minute. It never breathed. This tape is drawn, so its numbers are samples. On a real tape, the SDK reads every face."),
-    ("board", "rec", "wisp", "The board", "Then the spirit answers on the board. The glass only moves when you breathe out. Start talking, and it waits. Her name is Odette."),
-    ("reading", "rec", "wisp", "The Guardian", "She left by that door long ago and never came home. Now she warns whoever leaves, and Marina is the first who stopped. Luna calls her a guardian. Doctor Bigotes refuses to sign it."),
-    ("end", "rec", "wisp", "Case closed", "The crew says goodbye. Then the glass moves on its own. I am here. Case closed."),
-    ("room", "live", "wisp", "The Room, live", "Now it's your turn. In the Room, Presage SmartSpectra reads your pulse and your breathing live from the webcam, and the numbers on screen are yours.", {"clip": [4.0, 14.5]}),
+    ("crew", "rec", "wisp", "The crew", "I'm Wisp. Three tiny ghost hunters work this case. Luna believes. Doctor Bigotes doubts. Xochi writes it all down."),
+    ("case", "rec", "wisp", "Something told her to stay", "Marina had her keys in her hand and a car waiting. At the door it felt like a hand on her shoulder. Stay home. When she was nine, her mother went out by that same door and never came back. So she stayed. Twenty minutes later, that car crashed."),
+    ("tape", "rec", "wisp", "The second face", "Her hallway camera was on. Second eight, on the dark stairs behind her: the detector reports two faces. Marina never turns around."),
+    ("door", "rec", "wisp", "She stopped at the door", "At the door she holds her breath for almost four seconds, and her pulse climbs."),
+    ("point", "rec", "wisp", "Zero beats per minute", "The detector locks on the second face. Zero beats per minute. This tape is drawn, so its numbers are samples. On a real video, the SDK reads every face."),
+    ("board", "rec", "wisp", "The board", "Then you ask the spirit. The glass only moves when you breathe out. Start talking, and it waits. Her name is Odette."),
+    ("reading", "rec", "wisp", "A mother at the door", "Odette is Marina's mother. She could not save herself on that road. So she stood at that door, and saved her little girl. Luna calls her a guardian. Doctor Bigotes refuses to sign it."),
+    ("end", "rec", "wisp", "Goodbye", "The crew says goodbye, and Odette goes back to her daughter's door. Then the glass moves on its own."),
+    ("scare", "rec", "wisp", "I am here", "I am here. That is not Odette. It is what she was holding back."),
+    ("room", "live", "wisp", "The Room, live", "Now it's your turn. In the Room, Presage SmartSpectra reads your pulse and your breathing live from the webcam. The numbers on screen are yours.", {"clip": [4.0, 14.5]}),
     ("upload", "rec", "wisp", "Bring your own video", "Or bring a video of your own. The button stays locked until you confirm that everyone in it agreed."),
-    ("report", "rec", "wisp", "The report", "Camera or video, it ends the same way: the report. The numbers, the technology that read them, and the result: no spirit detected. This time."),
+    ("report", "rec", "wisp", "The report", "Camera or video, it ends with a report: the numbers, the technology that read them, and a verdict. No spirit detected. This time."),
     ("tested", "rec", "wisp", "Cite or vanish", f"One rule keeps it honest: cite or vanish. Every line the spirit says must cite a measured number, and an unreadable face is never a ghost. Doctor Bigotes tested it: a living face was called a ghost {GHOSTED} times in {LIVING}."),
     ("consent", "rec", "wisp", "The rules of the house", "The camera turns on only when you press a button. No video is recorded, and this is a game, never a medical device."),
     ("bye", "card", "jennifer", "Play it now", "Ghost Hunt: Who Else Was There? A heartbeat is the evidence. Play it now in your browser, at the link on screen."),

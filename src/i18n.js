@@ -69,7 +69,7 @@ const PHRASES = Object.entries({
     "\"Foi na noite de 2 de novembro. Bolsa pronta, chaves na mão, um carro me esperando lá fora. Na porta, senti como se uma mão segurasse o meu ombro, tão pesada que eu não conseguia respirar. <b>Fique em casa.</b> Quando eu tinha nove anos, a minha mãe saiu por aquela mesma porta e nunca mais voltou. Então eu fiquei. Vinte minutos depois, aquele mesmo carro bateu na avenida. Moro sozinha e não vi nada. Mas a câmera do corredor estava ligada. Vocês podem olhar?\"",
   // the board
   ">YES</span>": ">SIM</span>", ">NO</span>": ">NÃO</span>", ">GOODBYE</span>": ">ADEUS</span>",
-  "BEHIND HER": "ATRAS DELA", "DANGER": "PERIGO", "STILL INSIDE": "AINDA AQUI", "NO FACE": "SEM ROSTO", "I AM HERE": "ESTOU AQUI",
+  "BEHIND HER": "ATRAS DELA", "DANGER": "PERIGO", "STILL INSIDE": "AINDA AQUI", "NO FACE": "SEM ROSTO", "I AM HERE": "EU ESTOU AQUI",
   // cold open and crew
   "Every face in this video has a heartbeat.": "Todo rosto neste vídeo tem batimento.", "<em>Except one.</em>": "<em>Menos um.</em>", "Except one.": "Menos um.",
   "A ghost hunt where the evidence is a pulse.": "Uma caça aos fantasmas em que a prova é o pulso.",

@@ -812,7 +812,8 @@ async function finale(el) {
     board.append(sh);
   }
   $("#spell", el).classList.add("broken");
-  await sleep(900);
+  await sleep(650);
+  await fx.scream(L(a.board).split(" "));                                        // the whole screen says it
   $("#answers", el).innerHTML = say("luna", a.luna, a.cites);                    // it followed them
   await heard(3400);
   $("#answers", el).insertAdjacentHTML("beforeend", say("xochi", "Odette was standing between Marina and that door. Between Marina and something."));

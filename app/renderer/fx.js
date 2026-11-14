@@ -55,6 +55,22 @@ export const fx = {
   thud() { sound.beep(52, 900, 0.2); sound.beep(38, 1300, 0.16); },
   /** A low tone that rises under a scene, to tighten it. */
   riser(ms = 1800) { for (let i = 0; i < 6; i++) setTimeout(() => sound.beep(60 + i * 14, ms / 4, 0.05 + i * 0.012), (i * ms) / 6); },
+  /** The scare: the screen goes black and the words land one at a time, as big as the screen. */
+  async scream(words, hold = 1900) {
+    const quiet = calm(), d = layer("fx-scream"), eyes = document.createElement("img"), box = document.createElement("div");
+    eyes.src = "img/stalker.svg"; eyes.alt = ""; d.append(eyes, box);
+    const longest = Math.max(...words.map((w) => w.length));
+    box.style.fontSize = `min(${Math.floor(210 / longest)}vw, ${Math.floor(105 / words.length)}vh)`;   // every word fits the width, all of them fit the height
+    for (const w of words) {
+      const b = document.createElement("b"); b.textContent = w; box.append(b);
+      this.thud(); sound.beep(96, 420, 0.22);
+      if (!quiet) { d.classList.add("hit"); setTimeout(() => d.classList.remove("hit"), 90); }   // one white frame per word, never a strobe
+      await sleep(quiet ? 800 : 620);
+    }
+    d.classList.add("all"); sound.sting(); this.thud();
+    await sleep(hold);
+    d.classList.add("out"); await sleep(320); d.remove();
+  },
   /** A title card between acts. It fades over the screen and gets out of the way. */
   card(kicker, title, ms = 1900) {
     const d = layer("fx-card");

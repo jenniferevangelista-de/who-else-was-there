@@ -53,7 +53,10 @@ Each finding becomes a numbered card, such as a second face, a held breath or a 
 ### 6. Ask the spirit
 ![The spirit board](docs/screens/board.jpg)
 
-Pick a question and breathe out to move the glass. If you start talking, it waits. The spirit's file fills in as it answers: its name, its past, and what kind of spirit it is. Luna deciphers what it wants, and Dr. Bigotes refuses to sign it.
+Pick a question and breathe out to move the glass. If you start talking, it waits. Say goodbye to see the ending: nobody is breathing out, the glass moves anyway, and the whole screen says it.
+
+![The ending](docs/screens/scare.jpg)
+ The spirit's file fills in as it answers: its name, its past, and what kind of spirit it is. Luna deciphers what it wants, and Dr. Bigotes refuses to sign it.
 
 The kind is picked from the evidence, never at random:
 

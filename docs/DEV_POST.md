@@ -14,6 +14,10 @@ Its pulse reads **0 beats per minute**.
 
 *(Marina is a character, and her tape is drawn. In the game, "0 BPM" means the detector got no reliable pulse from that face. It is a story clue, never a health result: a living person in bad light can get it too.)*
 
+**▶ Play it now, no install:** [jenniferevangelista-de.github.io/who-else-was-there](https://jenniferevangelista-de.github.io/who-else-was-there/). It opens in the browser, on a computer or a phone.
+
+This game only exists because of Presage SmartSpectra: without a pulse read from a plain camera, there is no way to tell which face is missing one.
+
 | | |
 | --- | --- |
 | **Signals** | 7 live Presage SmartSpectra signals: pulse, chest movement, breathing rate, talking, blinks, expression, validation status |
@@ -31,6 +35,19 @@ Plenty of people would play it for real. In a 2009 Pew Research Center survey, *
 
 Three tiny ghost hunters point a new instrument at Marina's tape, the Ghost Detector. Living faces have a heartbeat. The face that does not is the case.
 
+**The story, in four beats**
+
+| | What happens | What the detector measured |
+| --- | --- | --- |
+| 1 | Marina stops at her door and stays home | A held breath of almost 4 seconds, and her pulse climbing |
+| 2 | A second face stands on the stairs behind her | Two faces in the frame, one of them at 0 beats per minute |
+| 3 | You ask the spirit, and it answers: Odette, her mother, who left by that door and never came back | The glass moves only when your own chest breathes out |
+| 4 | The crew says goodbye. Then something else writes on the board | Nobody is breathing out. The glass moves anyway |
+
+![The ending: the whole screen says I AM HERE](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/screens/scare.jpg)
+
+Odette was a mother standing between her daughter and that door. The ending asks the question in the title one more time: who else was there?
+
 | Point | Ask | Report |
 | --- | --- | --- |
 | ![The detector locked on a second face that reads 0 beats per minute](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/screens/point.jpg) | ![The spirit board, where the glass moves only when you breathe out](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/screens/board.jpg) | ![The report with a verdict, built only from measured cards](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/screens/report.jpg) |
@@ -43,10 +60,10 @@ Three tiny ghost hunters point a new instrument at Marina's tape, the Ghost Dete
 - **Collect evidence cards** that jump to the exact moment on the tape.
 - **Ask the spirit** on a board that moves only when **you** breathe out, and waits if you talk.
 - **Learn what it is.** Each spirit gets one of seven kinds, picked from the evidence: Guardian, Haunter, Watcher, Intruder, Shade, Veiled or Visitor. Luna, the medium, deciphers what it wants. Dr. Bigotes, the skeptic, refuses to sign it. Xochi writes it all down.
-- **Get read yourself in The Room:** your real pulse, breathing and expression, live from your camera. A figure moves only when you blink. On your report, a small spirit board keeps listening: breathe out and the glass slides to YES.
+- **Get read yourself in The Room:** your real pulse, breathing and expression, live from your camera. A figure moves only when you blink. On your report, a small spirit board keeps listening: breathe out and the glass slides to YES. In the web demo, the report writes itself after ten seconds on sample numbers, so you can read one without installing anything.
 - **Upload your own video,** once you confirm everyone in it agreed. Presage reads it as it plays, and you get a report with a verdict: is there a spirit in it?
 
-![Nine screens of the app. From top left: the crew, the 30 nights, the tape, one spot, the spirit board, The Room, the dossier, the proof tab and the rules.](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/preview_sheet.jpg)
+![Nine screens of the app. From top left: the crew, the 30 nights, the tape, one spot, the spirit board, The Room, the main menu, the proof tab and the rules.](https://raw.githubusercontent.com/jenniferevangelista-de/who-else-was-there/main/docs/preview_sheet.jpg)
 
 It is a desktop app in Electron, in English and Portuguese, with original music and voices. Marina's story is drawn and tagged as sample data on every screen. The Room and uploaded videos are real SDK readings.
 
